@@ -11,5 +11,23 @@ data_raw <- haven::read_sav("_SharedFolder_datagotchi-santé/data/raw/Datagotch
 
 data_clean <- data.frame(id = 1:nrow(data_raw))
 
+
+## ses -------------------------------------------------------------------------
+
+source("code/cleaning/ses.R")
+
+
+## lifestyle -------------------------------------------------------------------
+
+source("code/cleaning/lifestyle.R")
+
+
+## Bien-être -------------------------------------------------------------------
+
+source("code/cleaning/bien_etre.R")
+
+
 # Save it --------------------------------------------------------------------
-saveRDS(data_clean, "_Shared_DatagotchiUS/data/cleaning_2024/data_clean.rds")
+
+saveRDS(data_clean, "_SharedFolder_datagotchi-santé/data/clean/datagotchi-sante_clean.rds")
+
