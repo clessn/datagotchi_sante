@@ -11,6 +11,11 @@ data_raw <- haven::read_sav("_SharedFolder_datagotchi-santé/data/raw/Datagotchi
 
 data_clean <- data.frame(id = 1:nrow(data_raw))
 
+# ATTENTION CHECK: Please select \"often\" for this answer to confirm that you are paying attention."
+table(data_raw$autogestion_7)
+attributes(data_raw$autogestion_7)
+data_clean$attention_check_ok <- ifelse(data_raw$autogestion_7 == 3, 1, 0)
+table(data_clean$attention_check_ok)
 
 ## ses -------------------------------------------------------------------------
 
@@ -30,6 +35,10 @@ source("code/cleaning/bien_etre.R")
 ## Comp santé --------------------------------------------------------------
 
 source("code/cleaning/comp_sante.R")
+
+## Discrimination -----------------------------------------------------------
+
+source("code/cleaning/discrimination.R")
 
 # Save it --------------------------------------------------------------------
 
