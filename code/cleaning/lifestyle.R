@@ -32,8 +32,11 @@
 
 ## Meat ------------------------------------------------------------------------
 
-
-
+attributes(data_raw$meat)
+table(data_raw$meat)
+data_clean$lifestyle_meat <- NA
+data_clean$lifestyle_meat <- (data_raw$meat - 1) / 6
+table(data_clean$lifestyle_meat)
 
 ## Alcool pref -----------------------------------------------------------------
 
