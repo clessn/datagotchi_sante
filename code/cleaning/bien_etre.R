@@ -107,9 +107,45 @@ data_clean$bien_etre_pleasure_doing_things <- NA
 data_clean$bien_etre_pleasure_doing_things <- (data_raw$PHQ4_1 - 1) / 3
 table(data_clean$bien_etre_pleasure_doing_things)
 
+
+## PHQ4_2 ------------------------------------------------------------------
+
+attributes(data_raw$PHQ4_2)
+table(data_raw$PHQ4_2)
+data_clean$bien_etre_sad <- NA
+data_clean$bien_etre_sad <- (data_raw$PHQ4_2 - 1) / 3
+table(data_clean$bien_etre_sad)
+
+
+## PHQ4_3 ------------------------------------------------------------------
+
+attributes(data_raw$PHQ4_3)
+table(data_raw$PHQ4_3)
+data_clean$bien_etre_nervous <- NA
+data_clean$bien_etre_nervous <- (data_raw$PHQ4_3 - 1) / 3
+table(data_clean$bien_etre_nervous)
+
+
+## PHQ4_4 ------------------------------------------------------------------
+
+attributes(data_raw$PHQ4_4)
+table(data_raw$PHQ4_4)
+data_clean$bien_etre_worries <- NA
+data_clean$bien_etre_worries <- (data_raw$PHQ4_4 - 1) / 3
+table(data_clean$bien_etre_worries)
+
+
 ## hsa_stress__vie -------------------------------------------------------------
 
-
+attributes(data_raw$hsa_stress__vie)
+table(data_raw$hsa_stress__vie)
+data_clean$bien_etre_stress_vie <- NA
+data_clean$bien_etre_stress_vie <- (data_raw$hsa_stress__vie - 1) / 4
+table(data_clean$bien_etre_stress_vie)
 
 
 ## Maladies -------------------------------------------------------------------- 
+
+attributes(data_raw$maladies_1)
+
+

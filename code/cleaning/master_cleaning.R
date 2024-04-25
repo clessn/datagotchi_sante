@@ -40,6 +40,12 @@ source("code/cleaning/comp_sante.R")
 
 source("code/cleaning/discrimination.R")
 
+
+
+## Comport socio -----------------------------------------------------------
+
+source("code/cleaning/comport_socio.R")
+
 # Save it --------------------------------------------------------------------
 
 saveRDS(data_clean, "_SharedFolder_datagotchi-santé/data/clean/datagotchi-sante_clean.rds")
