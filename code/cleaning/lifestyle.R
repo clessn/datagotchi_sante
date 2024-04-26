@@ -147,8 +147,9 @@ table(data_clean$lifestyle_nature_october_april)
 
 ## Movie pref ------------------------------------------------------------------
 
-
-
+table(data_raw$movie_pref)
+data_clean$lifestyle_movie_pref <- (data_raw$movie_pref)
+table(data_clean$lifestyle_movie_pref)
 
 
 ## Style -----------------------------------------------------------------------
@@ -168,11 +169,25 @@ data_clean$lifestyle_style[data_raw$style == 9] <- "Other"
 data_clean$lifestyle_style <- factor(data_clean$lifestyle_style)
 table(data_clean$lifestyle_style)
 
+## Style autre-----------------------------------------------------------------------
+
+attributes(data_raw$style_9_TEXT)
+table(data_raw$style_9_TEXT)
+data_clean$lifestyle_style_other <- NA
+data_clean$lifestyle_style_other <- (data_raw$style_9_TEXT)
+table(data_clean$lifestyle_style_other)
+
 ## Style altermatif
+
 
 
 ## Music pref ------------------------------------------------------------------
 
+attributes(data_raw$music_pref)
+table(data_raw$music_pref)
+data_clean$lifestyle_music_pref <- NA
+data_clean$lifestyle_music_pref <- (data_raw$music_pref)
+table(data_clean$lifestyle_music_pref)
 
 ## Temps écran -----------------------------------------------------------------
 
