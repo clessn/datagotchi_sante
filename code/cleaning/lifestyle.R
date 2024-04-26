@@ -40,48 +40,109 @@ table(data_clean$lifestyle_meat)
 
 ## Alcool pref -----------------------------------------------------------------
 
-
+attributes(data_raw$alcool_pref)
+table(data_raw$alcool_pref)
+data_clean$lifestyle_alcool_pref <- NA
+data_clean$lifestyle_alcool_pref[data_raw$alcool_pref == 1] <- "Craft or microbrewery beer"
+data_clean$lifestyle_alcool_pref[data_raw$alcool_pref == 2] <- "Regular beer"
+data_clean$lifestyle_alcool_pref[data_raw$alcool_pref == 3] <- "Spirit drink"
+data_clean$lifestyle_alcool_pref[data_raw$alcool_pref == 4] <- "Cocktail"
+data_clean$lifestyle_alcool_pref[data_raw$alcool_pref == 5] <- "White wine"
+data_clean$lifestyle_alcool_pref[data_raw$alcool_pref == 6] <- "Sparkling wine or champagne"
+data_clean$lifestyle_alcool_pref[data_raw$alcool_pref == 7] <- "Rosé wine"
+data_clean$lifestyle_alcool_pref[data_raw$alcool_pref == 8] <- "Red wine"
+data_clean$lifestyle_alcool_pref[data_raw$alcool_pref == 9] <- "I do not drink alcohol"
+data_clean$lifestyle_alcool_pref <- factor(data_clean$lifestyle_alcool_pref)
+table(data_clean$lifestyle_alcool_pref)
 
 
 ## Smoking ---------------------------------------------------------------------
 
+attributes(data_raw$smoking)
+table(data_raw$smoking)
+data_clean$lifestyle_smoking_freq <- NA
+data_clean$lifestyle_smoking_freq <- (data_raw$smoking - 1) / 6
+table(data_clean$lifestyle_smoking_freq)
 
 
 
 
 ## Cannabis --------------------------------------------------------------------
 
+attributes(data_raw$cannabis)
+table(data_raw$cannabis)
+data_clean$lifestyle_cannabis <- NA
+data_clean$lifestyle_cannabis <- (data_raw$cannabis - 1) / 6
+table(data_clean$lifestyle_cannabis)
 
 
 ## Hunting ---------------------------------------------------------------------
 
-
+attributes(data_raw$act_hunting)
+table(data_raw$act_hunting)
+data_clean$lifestyle_hunting <- NA
+data_clean$lifestyle_hunting <- (data_raw$act_hunting - 1) / 4
+table(data_clean$lifestyle_hunting)
 
 ## Fishing ---------------------------------------------------------------------
 
+attributes(data_raw$act_fishing)
+table(data_raw$act_fishing)
+data_clean$lifestyle_fishing <- NA
+data_clean$lifestyle_fishing <- (data_raw$act_fishing - 1) / 4
+table(data_clean$lifestyle_fishing)
 
 
 ## Act_motorized ---------------------------------------------------------------
 
-
+attributes(data_raw$act_motorized)
+table(data_raw$act_motorized)
+data_clean$lifestyle_motorized <- NA
+data_clean$lifestyle_motorized <- (data_raw$act_motorized - 1) / 4
+table(data_clean$lifestyle_motorized)
 
 ## Friends ---------------------------------------------------------------------
 
+attributes(data_raw$act_friends)
+table(data_raw$act_friends)
+data_clean$lifestyle_friends_activity <- NA
+data_clean$lifestyle_friends_activity <- (data_raw$act_friends - 1) / 4
+table(data_clean$lifestyle_friends_activity)
 
 
 
 ## Volunteer -------------------------------------------------------------------
 
+attributes(data_raw$act_volunteer)
+table(data_raw$act_volunteer)
+data_clean$lifestyle_volunteer <- NA
+data_clean$lifestyle_volunteer <- (data_raw$act_volunteer - 1) / 4
+table(data_clean$lifestyle_volunteer)
 
 
 
 ## Museum ----------------------------------------------------------------------
 
-
+attributes(data_raw$act_museum)
+table(data_raw$act_museum)
+data_clean$lifestyle_museum <- NA
+data_clean$lifestyle_museum <- (data_raw$act_museum - 1) / 4
+table(data_clean$lifestyle_museum)
 
 
 ## Nature ----------------------------------------------------------------------
 
+attributes(data_raw$act_nature_1)
+table(data_raw$act_nature_1)
+data_clean$lifestyle_nature_may_september <- NA
+data_clean$lifestyle_nature_may_september <- (data_raw$act_nature_1 - 1) / 4
+table(data_clean$lifestyle_nature_may_september)
+
+attributes(data_raw$act_nature_2)
+table(data_raw$act_nature_2)
+data_clean$lifestyle_nature_october_april <- NA
+data_clean$lifestyle_nature_october_april <- (data_raw$act_nature_2 - 1) / 4
+table(data_clean$lifestyle_nature_october_april)
 
 
 ## Movie pref ------------------------------------------------------------------
