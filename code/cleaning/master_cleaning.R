@@ -46,6 +46,10 @@ source("code/cleaning/discrimination.R")
 
 source("code/cleaning/comport_socio.R")
 
+# Services santé ---------------------------------------------------------------
+
+source("code/cleaning/services_sante.R")
+
 # Save it --------------------------------------------------------------------
 
 saveRDS(data_clean, "_SharedFolder_datagotchi-santé/data/clean/datagotchi-sante_clean.rds")
