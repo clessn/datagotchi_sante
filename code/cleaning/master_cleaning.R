@@ -40,8 +40,6 @@ source("code/cleaning/comp_sante.R")
 
 source("code/cleaning/discrimination.R")
 
-
-
 ## Comport socio -----------------------------------------------------------
 
 source("code/cleaning/comport_socio.R")
