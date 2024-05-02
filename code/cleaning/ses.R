@@ -2,11 +2,51 @@
 
 ## Genre -----------------------------------------------------------------------
 
+## Male
+
+attributes(data_raw$genre)
+table(data_raw$genre)
+data_clean$ses_male <- NA
+data_clean$ses_male[data_raw$genre == 1] <- 1
+data_clean$ses_male[data_raw$genre != 1] <- 0
+table(data_clean$ses_male)
+
+## Female
+
+data_clean$ses_female <- NA
+data_clean$ses_female[data_raw$genre == 2] <- 1
+data_clean$ses_female[data_raw$genre != 2] <- 0
+table(data_clean$ses_female)
+
+## Factor 
+
+data_clean$ses_genre <- NA
+data_clean$ses_genre[data_raw$genre == 1] <- "male"
+data_clean$ses_genre[data_raw$genre == 2] <- "female"
+data_clean$ses_genre[data_raw$genre == 3] <- "transgender_male"
+data_clean$ses_genre[data_raw$genre == 4] <- "transgender_woman"
+data_clean$ses_genre[data_raw$genre == 5] <- "non_binary"
+data_clean$ses_genre[data_raw$genre == 6] <- "queer"
+data_clean$ses_genre[data_raw$genre == 7] <- "agender"
+data_clean$ses_genre[data_raw$genre == 8] <- "other"
+table(data_clean$ses_genre)
 
 ## Orientation sexuelle --------------------------------------------------------
 
+attributes(data_raw$orientation)
+data_clean$ses_sexual_orientation <- NA
+data_clean$ses_sexual_orientation[data_raw$orientation == 1] <- "heterosexual"
+data_clean$ses_sexual_orientation[data_raw$orientation == 2] <- "bisexual"
+data_clean$ses_sexual_orientation[data_raw$orientation == 3] <- "gay_lesbian"
+data_clean$ses_sexual_orientation[data_raw$orientation == 4] <- "other"
+data_clean$ses_sexual_orientation <- factor(data_clean$ses_sexual_orientation, levels = c("heterosexual",
+                                                                                          "bisexual",
+                                                                                          "gay_lesbian",
+                                                                                          "other"))
+table(data_clean$ses_sexual_orientation)
 
 ## Âge -------------------------------------------------------------------------
+
 
 
 
