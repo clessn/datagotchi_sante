@@ -109,6 +109,7 @@ table(data_clean$ses_langue_maternelle)
 
 ## Occupation ------------------------------------------------------------------
 
+attributes(data_raw$occupation_1)
 
 
 
