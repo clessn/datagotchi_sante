@@ -272,6 +272,7 @@ table(data_clean$ses_poids)
 
 ## Taille ----------------------------------------------------------------------
 
+# Taille ça va attendre un boute.
 
 ## Code postal -----------------------------------------------------------------
 
@@ -284,13 +285,29 @@ table(data_clean$ses_code_postal)
 
 ## Travail deplacement ---------------------------------------------------------
 
-
+attributes(data_raw$travail_deplacement)
+table(data_raw$travail_deplacement)
+data_clean$ses_travail_deplacement <- NA
+data_clean$ses_travail_deplacement[data_raw$travail_deplacement == 1] <- "less_than_15_min"
+data_clean$ses_travail_deplacement[data_raw$travail_deplacement == 2] <- "15_30_min"
+data_clean$ses_travail_deplacement[data_raw$travail_deplacement == 3] <- "30_60_min"
+data_clean$ses_travail_deplacement[data_raw$travail_deplacement == 4] <- "1_2_hours"
+data_clean$ses_travail_deplacement[data_raw$travail_deplacement == 5] <- "2+_hours"
+data_clean$ses_travail_deplacement[data_raw$travail_deplacement == 6] <- "wfh"
+data_clean$ses_travail_deplacement <- factor(data_clean$ses_travail_deplacement, levels = c("less_than_15_min", "15_30_min", "30_60_min", "1_2_hours", "2+_hours", "wfh"))
+table(data_clean$ses_travail_deplacement)
 
 
 ## Milieu vie ------------------------------------------------------------------
 
-
-
+attributes(data_raw$milieu_vie)
+table(data_raw$milieu_vie)
+data_clean$ses_urban_rural <- NA
+data_clean$ses_urban_rural[data_raw$milieu_vie == 1] <- "city"
+data_clean$ses_urban_rural[data_raw$milieu_vie == 2] <- "suburb"
+data_clean$ses_urban_rural[data_raw$milieu_vie == 3] <- "rural"
+data_clean$ses_urban_rural <- factor(data_clean$ses_urban_rural, levels = c("city", "suburb", "rural"))
+table(data_clean$ses_urban_rural)
 
 
 ## Habitation ------------------------------------------------------------------
