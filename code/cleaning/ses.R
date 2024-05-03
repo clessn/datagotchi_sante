@@ -120,13 +120,95 @@ attributes(data_raw$occupation_1)
 
 ## Travail domaine -------------------------------------------------------------
 
+### travail_domaine_1
 
+attributes(data_raw$travail_domaine_1)
+table(data_raw$travail_domaine_1)
+data_clean$ses_travail_management <- 0
+data_clean$ses_travail_management[data_raw$travail_domaine_1 == 1] <- 1
+table(data_clean$ses_travail_management)
 
+### travail_domaine_2
 
+attributes(data_raw$travail_domaine_2)
+table(data_raw$travail_domaine_2)
+data_clean$ses_travail_finance <- 0
+data_clean$ses_travail_finance[data_raw$travail_domaine_2 == 1] <- 1
+table(data_clean$ses_travail_finance)
+
+### travail_domaine_3
+
+attributes(data_raw$travail_domaine_3)
+table(data_raw$travail_domaine_3)
+data_clean$ses_travail_natural_sciences <- 0
+data_clean$ses_travail_natural_sciences[data_raw$travail_domaine_3 == 1] <- 1
+table(data_clean$ses_travail_natural_sciences)
+
+### travail_domaine_4
+
+attributes(data_raw$travail_domaine_4)
+table(data_raw$travail_domaine_4)
+data_clean$ses_travail_health <- 0
+data_clean$ses_travail_health[data_raw$travail_domaine_4 == 1] <- 1
+table(data_clean$ses_travail_health)
+
+### travail_domaine_5
+
+attributes(data_raw$travail_domaine_5)
+table(data_raw$travail_domaine_5)
+data_clean$ses_travail_education_law_government <- 0
+data_clean$ses_travail_education_law_government[data_raw$travail_domaine_5 == 1] <- 1
+table(data_clean$ses_travail_education_law_government)
+
+### travail_domaine_6
+
+attributes(data_raw$travail_domaine_6)
+table(data_raw$travail_domaine_6)
+data_clean$ses_travail_art_sport <- 0
+data_clean$ses_travail_art_sport[data_raw$travail_domaine_6 == 1] <- 1
+table(data_clean$ses_travail_art_sport)
+
+### travail_domaine_7
+
+attributes(data_raw$travail_domaine_7)
+table(data_raw$travail_domaine_7)
+data_clean$ses_travail_sales_services <- 0
+data_clean$ses_travail_sales_services[data_raw$travail_domaine_7 == 1] <- 1
+table(data_clean$ses_travail_sales_services)
+
+### travail_domaine_8
+
+attributes(data_raw$travail_domaine_8)
+table(data_raw$travail_domaine_8)
+data_clean$ses_travail_trades_transport <- 0
+data_clean$ses_travail_trades_transport[data_raw$travail_domaine_8 == 1] <- 1
+table(data_clean$ses_travail_trades_transport)
+
+### travail_domaine_9
+
+attributes(data_raw$travail_domaine_9)
+table(data_raw$travail_domaine_9)
+data_clean$ses_travail_transport <- 0
+data_clean$ses_travail_transport[data_raw$travail_domaine_9 == 1] <- 1
+table(data_clean$ses_travail_transport)
+
+### travail_domaine_10
+
+attributes(data_raw$travail_domaine_10)
+table(data_raw$travail_domaine_10)
+data_clean$ses_travail_manufacturing <- 0
+data_clean$ses_travail_manufacturing[data_raw$travail_domaine_10 == 1] <- 1
+table(data_clean$ses_travail_manufacturing)
+
+### travail_domaine_11
+
+attributes(data_raw$travail_domaine_11_TEXT)
+table(data_raw$travail_domaine_11_TEXT)
+data_clean$ses_travail_other <- NA
+data_clean$ses_travail_other <- data_raw$travail_domaine_11_TEXT 
+table(data_clean$ses_travail_other)
 
 ## Travail heure ---------------------------------------------------------------
-
-
 
 
 
@@ -134,13 +216,7 @@ attributes(data_raw$occupation_1)
 
 
 
-
-
-
 ## Revenu ----------------------------------------------------------------------
-
-
-
 
 
 
@@ -149,8 +225,8 @@ attributes(data_raw$occupation_1)
 
 
 
-
 ## Éducation -------------------------------------------------------------------
+
 
 
 

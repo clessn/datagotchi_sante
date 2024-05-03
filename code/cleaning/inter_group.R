@@ -1,3 +1,93 @@
+# best_cad_1
+
+attributes(data_raw$best_cad_1)
+table(data_raw$best_cad_1)
+attributes(data_raw$best_cad_1_TEXT)
+table(data_raw$best_cad_1_TEXT)
+data_clean$best_canadian_book <- NA
+data_clean$best_canadian_book <- data_raw$best_cad_1_TEXT
+data_clean$best_canadian_book[data_clean$best_canadian_book == ""] <- "don't know"
+table(data_clean$best_canadian_book)
+
+# best_cad_2
+
+attributes(data_raw$best_cad_2)
+table(data_raw$best_cad_2)
+attributes(data_raw$best_cad_2_TEXT)
+table(data_raw$best_cad_2_TEXT)
+data_clean$best_canadian_album <- NA
+data_clean$best_canadian_album <- data_raw$best_cad_2_TEXT
+data_clean$best_canadian_album[data_clean$best_canadian_album == ""] <- "don't know"
+table(data_clean$best_canadian_album)
+
+# best_cad_3
+
+attributes(data_raw$best_cad_3)
+table(data_raw$best_cad_3)
+attributes(data_raw$best_cad_3_TEXT)
+table(data_raw$best_cad_3_TEXT)
+data_clean$best_canadian_movie <- NA
+data_clean$best_canadian_movie <- data_raw$best_cad_3_TEXT
+data_clean$best_canadian_movie[data_clean$best_canadian_movie == ""] <- "don't know"
+table(data_clean$best_canadian_movie)
+
+# best_cad_4
+
+attributes(data_raw$best_cad_4)
+table(data_raw$best_cad_4)
+attributes(data_raw$best_cad_4_TEXT)
+table(data_raw$best_cad_4_TEXT)
+data_clean$best_canadian_newspaper <- NA
+data_clean$best_canadian_newspaper <- data_raw$best_cad_4_TEXT
+data_clean$best_canadian_newspaper[data_clean$best_canadian_newspaper == ""] <- "don't know"
+table(data_clean$best_canadian_newspaper)
+
+# know_fre_1
+
+attributes(data_raw$know_fre_1)
+table(data_raw$know_fre_1)
+attributes(data_raw$know_fre_1_TEXT)
+table(data_raw$know_fre_1_TEXT)
+data_clean$know_french_media_personality <- NA
+data_clean$know_french_media_personality <- data_raw$know_fre_1_TEXT
+data_clean$know_french_media_personality[data_clean$know_french_media_personality == ""] <- "don't know"
+table(data_clean$know_french_media_personality)
+
+# know_fre_2
+
+attributes(data_raw$know_fre_2)
+table(data_raw$know_fre_2)
+attributes(data_raw$know_fre_2_TEXT)
+table(data_raw$know_fre_2_TEXT)
+data_clean$know_french_singer <- NA
+data_clean$know_french_singer <- data_raw$know_fre_2_TEXT
+data_clean$know_french_singer[data_clean$know_french_singer == ""] <- "don't know"
+table(data_clean$know_french_singer)
+
+
+# know_fre_3
+
+attributes(data_raw$know_fre_3)
+table(data_raw$know_fre_3)
+attributes(data_raw$know_fre_3_TEXT)
+table(data_raw$know_fre_3_TEXT)
+data_clean$know_french_actor <- NA
+data_clean$know_french_actor <- data_raw$know_fre_3_TEXT
+data_clean$know_french_actor[data_clean$know_french_actor == ""] <- "don't know"
+table(data_clean$know_french_actor)
+
+# know_fre_4
+
+attributes(data_raw$know_fre_4)
+table(data_raw$know_fre_4)
+attributes(data_raw$know_fre_4_TEXT)
+table(data_raw$know_fre_4_TEXT)
+data_clean$know_french_writer <- NA
+data_clean$know_french_writer <- data_raw$know_fre_4_TEXT
+data_clean$know_french_writer[data_clean$know_french_writer == ""] <- "don't know"
+table(data_clean$know_french_writer)
+
+
 # know_eng_1
 
 attributes(data_raw$know_eng_1)

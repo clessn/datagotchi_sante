@@ -52,6 +52,10 @@ source("code/cleaning/services_sante.R")
 
 source("code/cleaning/inter_group.R")
 
+# exp --------------------------------------------------------------------------
+
+source("code/cleaning/exp.R")
+
 # Save it --------------------------------------------------------------------
 
 saveRDS(data_clean, "_SharedFolder_datagotchi-santé/data/clean/datagotchi-sante_clean.rds")
