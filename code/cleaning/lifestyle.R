@@ -191,5 +191,152 @@ table(data_clean$lifestyle_music_pref)
 
 ## Temps écran -----------------------------------------------------------------
 
+# temps__cran__1 -----------------------------------------
+
+attributes(data_raw$temps__cran__1)
+table(data_raw$temps__cran__1)
+data_clean$lifestyle_temps_ecran_semaine_travail <- NA
+
+
+for (i in 1:nrow(data_raw)) {
+  screen_time_str <- data_raw$temps__cran__1[i]  # Store the current value in a variable for easier handling
+  
+  # Clean up the string by removing all non-numeric and non-delimiter characters except delimiters
+  clean_str <- gsub("[^0-9/_ -]", "", screen_time_str)
+  
+  if (grepl("[/_ -]", clean_str)) {
+    # If there's any of the specified delimiters, split the string
+    num_parts <- strsplit(clean_str, "[/_ -]")[[1]]
+    num_values <- as.numeric(num_parts)  # Convert to numeric
+    if (any(is.na(num_values))) {
+      # Handle any NA values that may result from conversion (e.g., empty strings)
+      num_values <- num_values[!is.na(num_values)]
+    }
+    if (length(num_values) > 0) {
+      data_clean$lifestyle_temps_ecran_semaine_travail[i] <- max(num_values, na.rm = TRUE)  # Assign the maximum value if non-empty
+    } else {
+      # Assign a default value or handle empty num_values vector appropriately
+      data_clean$lifestyle_temps_ecran_semaine_travail[i] <- NA  # Or some other default or error handling
+    }
+  } else if (grepl("min", screen_time_str)) {
+    # If "min" is found, convert from minutes to hours
+    data_clean$lifestyle_temps_ecran_semaine_travail[i] <- as.numeric(gsub("[^0-9]", "", screen_time_str)) / 60
+  } else {
+    # Assume the input is in hours and just remove non-numeric characters
+    data_clean$lifestyle_temps_ecran_semaine_travail[i] <- as.numeric(gsub("[^0-9]", "", screen_time_str))
+  }
+}
+
+table(data_clean$lifestyle_temps_ecran_semaine_travail) 
+
+
+# temps__cran__2 ---------------------------------------
+
+attributes(data_raw$temps__cran__2)
+table(data_raw$temps__cran__2)
+data_clean$lifestyle_temps_ecran_finsemaine_travail <- NA
+
+
+for (i in 1:nrow(data_raw)) {
+  screen_time_str <- data_raw$temps__cran__2[i]  # Store the current value in a variable for easier handling
+  
+  # Clean up the string by removing all non-numeric and non-delimiter characters except delimiters
+  clean_str <- gsub("[^0-9/_ -]", "", screen_time_str)
+  
+  if (grepl("[/_ -]", clean_str)) {
+    # If there's any of the specified delimiters, split the string
+    num_parts <- strsplit(clean_str, "[/_ -]")[[1]]
+    num_values <- as.numeric(num_parts)  # Convert to numeric
+    if (any(is.na(num_values))) {
+      # Handle any NA values that may result from conversion (e.g., empty strings)
+      num_values <- num_values[!is.na(num_values)]
+    }
+    if (length(num_values) > 0) {
+      data_clean$lifestyle_temps_ecran_finsemaine_travail[i] <- max(num_values, na.rm = TRUE)  # Assign the maximum value if non-empty
+    } else {
+      # Assign a default value or handle empty num_values vector appropriately
+      data_clean$lifestyle_temps_ecran_finsemaine_travail[i] <- NA  # Or some other default or error handling
+    }
+  } else if (grepl("min", screen_time_str)) {
+    # If "min" is found, convert from minutes to hours
+    data_clean$lifestyle_temps_ecran_finsemaine_travail[i] <- as.numeric(gsub("[^0-9]", "", screen_time_str)) / 60
+  } else {
+    # Assume the input is in hours and just remove non-numeric characters
+    data_clean$lifestyle_temps_ecran_finsemaine_travail[i] <- as.numeric(gsub("[^0-9]", "", screen_time_str))
+  }
+}
+
+table(data_clean$lifestyle_temps_ecran_finsemaine_travail)
+
+# temps__cran__3 ----------------------------------------
+
+attributes(data_raw$temps__cran__3)
+table(data_raw$temps__cran__3)
+data_clean$lifestyle_temps_ecran_semaine_loisir <- NA
+
+
+for (i in 1:nrow(data_raw)) {
+  screen_time_str <- data_raw$temps__cran__3[i]  # Store the current value in a variable for easier handling
+  
+  # Clean up the string by removing all non-numeric and non-delimiter characters except delimiters
+  clean_str <- gsub("[^0-9/_ -]", "", screen_time_str)
+  
+  if (grepl("[/_ -]", clean_str)) {
+    # If there's any of the specified delimiters, split the string
+    num_parts <- strsplit(clean_str, "[/_ -]")[[1]]
+    num_values <- as.numeric(num_parts)  # Convert to numeric
+    if (any(is.na(num_values))) {
+      # Handle any NA values that may result from conversion (e.g., empty strings)
+      num_values <- num_values[!is.na(num_values)]
+    }
+    data_clean$lifestyle_temps_ecran_semaine_loisir[i] <- max(num_values, na.rm = TRUE)  # Assign the maximum value
+  } else if (grepl("min", screen_time_str)) {
+    # If "min" is found, convert from minutes to hours
+    data_clean$lifestyle_temps_ecran_semaine_loisir[i] <- as.numeric(gsub("[^0-9]", "", screen_time_str)) / 60
+  } else {
+    # Assume the input is in hours and just remove non-numeric characters
+    data_clean$lifestyle_temps_ecran_semaine_loisir[i] <- as.numeric(gsub("[^0-9]", "", screen_time_str))
+  }
+}
+
+table(data_clean$lifestyle_temps_ecran_semaine_loisir)  # Display the table of cleaned data
+
+
+# temps__cran__4 ---------------------------------------
+
+attributes(data_raw$temps__cran__4)
+table(data_raw$temps__cran__4)
+data_clean$lifestyle_temps_ecran_finsemaine_loisir <- NA
+
+for (i in 1:nrow(data_raw)) {
+  screen_time_str <- data_raw$temps__cran__4[i]  # Store the current value in a variable for easier handling
+  
+  # Clean up the string by removing all non-numeric and non-delimiter characters except delimiters
+  clean_str <- gsub("[^0-9/_ -]", "", screen_time_str)
+  
+  if (grepl("[/_ -]", clean_str)) {
+    # If there's any of the specified delimiters, split the string
+    num_parts <- strsplit(clean_str, "[/_ -]")[[1]]
+    num_values <- as.numeric(num_parts)  # Convert to numeric
+    if (any(is.na(num_values))) {
+      # Handle any NA values that may result from conversion (e.g., empty strings)
+      num_values <- num_values[!is.na(num_values)]
+    }
+    if (length(num_values) > 0) {
+      data_clean$lifestyle_temps_ecran_finsemaine_loisir[i] <- max(num_values, na.rm = TRUE)  # Assign the maximum value if non-empty
+    } else {
+      # Assign a default value or handle empty num_values vector appropriately
+      data_clean$lifestyle_temps_ecran_finsemaine_loisir[i] <- NA  # Or some other default or error handling
+    }
+  } else if (grepl("min", screen_time_str)) {
+    # If "min" is found, convert from minutes to hours
+    data_clean$lifestyle_temps_ecran_finsemaine_loisir[i] <- as.numeric(gsub("[^0-9]", "", screen_time_str)) / 60
+  } else {
+    # Assume the input is in hours and just remove non-numeric characters
+    data_clean$lifestyle_temps_ecran_finsemaine_loisir[i] <- as.numeric(gsub("[^0-9]", "", screen_time_str))
+  }
+}
+
+table(data_clean$lifestyle_temps_ecran_finsemaine_loisir)
 
 
