@@ -140,12 +140,213 @@ table(data_clean$bien_etre_worries)
 attributes(data_raw$hsa_stress__vie)
 table(data_raw$hsa_stress__vie)
 data_clean$bien_etre_stress_vie <- NA
-data_clean$bien_etre_stress_vie <- (data_raw$hsa_stress__vie - 1) / 4
+data_clean$bien_etre_stress_vie <- (data_raw$hsa_stress_vie - 1) / 4
 table(data_clean$bien_etre_stress_vie)
 
 
-## Maladies -------------------------------------------------------------------- 
+## maladies_1 -------------------------------------------------------------------- 
 
 attributes(data_raw$maladies_1)
+table(data_raw$maladies_1)
+data_clean$bien_etre_chronic_problems <- data_raw$maladies_1
+data_clean$bien_etre_chronic_problems[is.na(data_raw$maladies_1)] <- 0
+table(data_clean$bien_etre_chronic_problems)
 
+
+## maladies_2 --------------------------------------------------------------
+
+attributes(data_raw$maladies_2)
+table(data_raw$maladies_2)
+data_clean$bien_etre_asthma <- data_raw$maladies_2
+data_clean$bien_etre_asthma[is.na(data_raw$maladies_2)] <- 0
+table(data_clean$bien_etre_asthma)
+
+
+## maladies_3 --------------------------------------------------------------
+
+attributes(data_raw$maladies_3)
+table(data_raw$maladies_3)
+data_clean$bien_etre_copd <- data_raw$maladies_3
+data_clean$bien_etre_copd[is.na(data_raw$maladies_3)] <- 0
+table(data_clean$bien_etre_copd)
+
+
+## maladies_4 --------------------------------------------------------------
+
+attributes(data_raw$maladies_4)      
+table(data_raw$maladies_4)
+data_clean$bien_etre_sleep_apnea <- data_raw$maladies_4
+data_clean$bien_etre_sleep_apnea[is.na(data_raw$maladies_4)] <- 0
+table(data_clean$bien_etre_sleep_apnea)
+
+
+## maladies_5 --------------------------------------------------------------
+
+attributes(data_raw$maladies_5)
+table(data_raw$maladies_5)
+data_clean$bien_etre_fibromyalgia <- data_raw$maladies_5
+data_clean$bien_etre_fibromyalgia[is.na(data_raw$maladies_5)] <- 0
+table(data_clean$bien_etre_fibromyalgia)
+
+
+## maladies_6 --------------------------------------------------------------
+
+attributes(data_raw$maladies_6)
+table(data_raw$maladies_6)
+data_clean$bien_etre_joint_problems <- data_raw$maladies_6
+data_clean$bien_etre_joint_problems[is.na(data_raw$maladies_6)] <- 0
+table(data_clean$bien_etre_joint_problems)
+
+
+## maladies_7 --------------------------------------------------------------
+
+attributes(data_raw$maladies_7)
+table(data_raw$maladies_7)
+data_clean$bien_etre_back_pain <- data_raw$maladies_7
+data_clean$bien_etre_back_pain[is.na(data_raw$maladies_7)] <- 0
+table(data_clean$bien_etre_back_pain)
+
+
+## maladies_8 --------------------------------------------------------------
+
+attributes(data_raw$maladies_8)
+table(data_raw$maladies_8)
+data_clean$bien_etre_osteoporosis <- data_raw$maladies_8
+data_clean$bien_etre_osteoporosis[is.na(data_raw$maladies_8)] <- 0
+table(data_clean$bien_etre_osteoporosis)
+
+
+## maladies_9 --------------------------------------------------------------
+
+attributes(data_raw$maladies_9)
+table(data_raw$maladies_9)
+data_clean$bien_etre_hypertension <- data_raw$maladies_9
+data_clean$bien_etre_hypertension[is.na(data_raw$maladies_9)] <- 0
+table(data_clean$bien_etre_hypertension)
+
+
+## maladies_10 -------------------------------------------------------------
+
+attributes(data_raw$maladies_10)
+table(data_raw$maladies_10)
+data_clean$bien_etre_cholesterol_lipids <- data_raw$maladies_10
+data_clean$bien_etre_cholesterol_lipids[is.na(data_raw$maladies_10)] <- 0
+table(data_clean$bien_etre_cholesterol_lipids)
+
+
+## maladies_11 -------------------------------------------------------------
+
+attributes(data_raw$maladies_11)
+table(data_raw$maladies_11)
+data_clean$bien_etre_celiac_disease <- data_raw$maladies_11
+data_clean$bien_etre_celiac_disease[is.na(data_raw$maladies_11)] <- 0
+table(data_clean$bien_etre_celiac_disease)
+
+
+## maladies_12 -------------------------------------------------------------
+
+attributes(data_raw$maladies_12)
+table(data_raw$maladies_12)
+data_clean$bien_etre_instestinal_disease <- data_raw$maladies_12
+data_clean$bien_etre_instestinal_disease[is.na(data_raw$maladies_12)] <- 0
+table(data_clean$bien_etre_instestinal_disease)
+
+
+## maladies_13 ------------------------------------------------------------
+
+attributes(data_raw$maladies_13)
+table(data_raw$maladies_13)
+data_clean$bien_etre_heart_disease <- data_raw$maladies_13
+data_clean$bien_etre_heart_disease[is.na(data_raw$maladies_13)] <- 0
+table(data_clean$bien_etre_heart_disease)
+
+
+## maladies_14 -------------------------------------------------------------
+
+attributes(data_raw$maladies_14)
+table(data_raw$maladies_14, useNA = "always")
+data_clean$bien_etre_stroke_disorders <- data_raw$maladies_14
+data_clean$bien_etre_stroke_disorders[is.na(data_raw$maladies_14)] <- 0
+table(data_clean$bien_etre_stroke_disorders)
+
+
+## maladies_15 -------------------------------------------------------------
+
+attributes(data_raw$maladies_15)
+table(data_raw$maladies_15)
+data_clean$bien_etre_diabetes <- data_raw$maladies_15
+data_clean$bien_etre_diabetes[is.na(data_raw$maladies_15)] <- 0
+table(data_clean$bien_etre_diabetes)
+
+
+## maladies_16 -------------------------------------------------------------
+
+attributes(data_raw$maladies_16)
+table(data_raw$maladies_16)
+data_clean$bien_etre_cancer <- data_raw$maladies_16
+data_clean$bien_etre_cancer[is.na(data_raw$maladies_16)] <- 0
+table(data_clean$bien_etre_cancer)
+
+
+## maladies_17 -------------------------------------------------------------
+
+attributes(data_raw$maladies_17)
+table(data_raw$maladies_17)
+data_clean$bien_etre_thyroid_problems <- data_raw$maladies_17
+data_clean$bien_etre_thyroid_problems[is.na(data_raw$maladies_17)] <- 0
+table(data_clean$bien_etre_thyroid_problems)
+
+
+## maladies_18 -------------------------------------------------------------
+
+attributes(data_raw$maladies_18)
+table(data_raw$maladies_18, useNA = "always")
+data_clean$bien_etre_alzheimers_dementia <- data_raw$maladies_18
+data_clean$bien_etre_alzheimers_dementia[is.na(data_raw$maladies_18)] <- 0
+table(data_clean$bien_etre_alzheimers_dementia)
+
+
+## maladies_19 -------------------------------------------------------------
+
+attributes(data_raw$maladies_19)
+table(data_raw$maladies_19)
+data_clean$bien_etre_chronic_fatigue <- data_raw$maladies_19
+data_clean$bien_etre_chronic_fatigue[is.na(data_raw$maladies_19)] <- 0
+table(data_clean$bien_etre_chronic_fatigue)
+
+
+## maladies_20 -------------------------------------------------------------
+
+attributes(data_raw$maladies_20)
+table(data_raw$maladies_20)
+data_clean$bien_etre_renal_failure <- data_raw$maladies_20
+data_clean$bien_etre_renal_failure[is.na(data_raw$maladies_20)] <- 0
+table(data_clean$bien_etre_renal_failure)
+
+
+## maladies_21 -------------------------------------------------------------
+
+attributes(data_raw$maladies_21)
+table(data_raw$maladies_21)
+data_clean$bien_etre_liver_disease <- data_raw$maladies_21
+data_clean$bien_etre_liver_disease[is.na(data_raw$maladies_21)] <- 0
+table(data_clean$bien_etre_liver_disease)
+
+
+## maladies_22 -------------------------------------------------------------
+
+attributes(data_raw$maladies_22)
+table(data_raw$maladies_22)
+data_clean$bien_etre_abdomen_ulcers <- data_raw$maladies_22
+data_clean$bien_etre_abdomen_ulcers[is.na(data_raw$maladies_22)] <- 0
+table(data_clean$bien_etre_abdomen_ulcers)
+
+
+## maladies_23 -------------------------------------------------------------
+
+attributes(data_raw$maladies_23)
+table(data_raw$maladies_23)
+data_clean$bien_etre_allergies <- data_raw$maladies_23
+data_clean$bien_etre_allergies[is.na(data_raw$maladies_23)] <- 0
+table(data_clean$bien_etre_allergies)
 

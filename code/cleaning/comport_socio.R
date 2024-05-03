@@ -52,7 +52,10 @@ table(data_clean$comport_socio_group_beliefs)
 ## nb_friends_dispo --------------------------------------------------------
 
 attributes(data_raw$nb_friends_dispo)
-
+table(data_raw$nb_friends_dispo)
+data_clean$comport_socio_immediate_friends <- NA
+data_clean$comport_socio_immediate_friends <- (data_raw$nb_friends_dispo -1) / 13
+table(data_clean$comport_socio_immediate_friends)
 
 
 ## nb_friends_dispo_2 ------------------------------------------------------
