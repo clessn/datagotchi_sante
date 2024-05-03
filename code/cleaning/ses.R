@@ -109,13 +109,100 @@ table(data_clean$ses_langue_maternelle)
 
 ## Occupation ------------------------------------------------------------------
 
-attributes(data_raw$occupation_1)
+# Occupation 1
 
+attributes(data_raw$occupation_1)
+table(data_raw$occupation_1)
+data_clean$ses_occupation_self_employed <- 0
+data_clean$ses_occupation_self_employed[data_raw$occupation_1 == 1] <- 1
+table(data_clean$ses_occupation_self_employed)
+
+# Occupation 2
+
+attributes(data_raw$occupation_2)
+table(data_raw$occupation_2)
+data_clean$ses_occupation_salaried_work <- 0
+data_clean$ses_occupation_salaried_work[data_raw$occupation_2 == 1] <- 1
+table(data_clean$ses_occupation_salaried_work)
+
+# Occupation 3
+
+attributes(data_raw$occupation_3)
+table(data_raw$occupation_3)
+data_clean$ses_occupation_retired <- 0
+data_clean$ses_occupation_retired[data_raw$occupation_3 == 1] <- 1
+table(data_clean$ses_occupation_retired)
+
+# Occupation 4
+
+attributes(data_raw$occupation_4)
+table(data_raw$occupation_4)
+data_clean$ses_occupation_unemployed <- 0
+data_clean$ses_occupation_unemployed[data_raw$occupation_4 == 1] <- 1
+table(data_clean$ses_occupation_unemployed)
+
+# Occupation 5
+
+attributes(data_raw$occupation_5)
+table(data_raw$occupation_5)
+data_clean$ses_occupation_student <- 0
+data_clean$ses_occupation_student[data_raw$occupation_5 == 1] <- 1
+table(data_clean$ses_occupation_student)
+
+# Occupation 6 
+
+attributes(data_raw$occupation_6)
+table(data_raw$occupation_6)
+data_clean$ses_occupation_caregiver <- 0
+data_clean$ses_occupation_caregiver[data_raw$occupation_6 == 1] <- 1
+table(data_clean$ses_occupation_caregiver)
+
+# Occupation 7
+
+attributes(data_raw$occupation_7)
+table(data_raw$occupation_7)
+data_clean$ses_occupation_parent <- 0
+data_clean$ses_occupation_parent[data_raw$occupation_7 == 1] <- 1
+table(data_clean$ses_occupation_parent)
+
+# Occupation 8 
+
+attributes(data_raw$occupation_8)
+table(data_raw$occupation_8)
+data_clean$ses_occupation_handicap <- 0
+data_clean$ses_occupation_handicap[data_raw$occupation_8 == 1] <- 1
+table(data_clean$ses_occupation_handicap)
+
+# Occupation 9 
+
+attributes(data_raw$occupation_9)
+table(data_raw$occupation_9)
+data_clean$ses_occupation_multiple_job_self_employment <- 0
+data_clean$ses_occupation_multiple_job_self_employment[data_raw$occupation_9 == 1] <- 1
+table(data_clean$ses_occupation_multiple_job_self_employment)
+
+# Occupation 12 
+
+attributes(data_raw$occupation_12)
+table(data_raw$occupation_12)
+data_clean$ses_occupation_multiple_job_salaried <- 0
+data_clean$ses_occupation_multiple_job_salaried[data_raw$occupation_12 == 1] <- 1
+table(data_clean$ses_occupation_multiple_job_salaried)
+
+# Occupation 13
+
+attributes(data_raw$occupation_13)
+table(data_raw$occupation_13)
+data_clean$ses_occupation_unemployed_social_assistance <- 0
+data_clean$ses_occupation_unemployed_social_assistance[data_raw$occupation_13 == 1] <- 1
+table(data_clean$ses_occupation_unemployed_social_assistance)
 
 
 ## Travail emploi --------------------------------------------------------------
 
-
+attributes(data_raw$travail_emploi)
+table(data_raw$travail_emploi)
+data_clean$ses_emploi <- data_raw
 
 
 ## Travail domaine -------------------------------------------------------------
@@ -232,6 +319,11 @@ table(data_clean$ses_travail_other)
 
 ## Pays origine ----------------------------------------------------------------
 
+<<<<<<< HEAD
+attributes(data_raw$pays_origine)
+table(data_raw$pays_origine)
+data_clean$ses_pays_origine <- data_raw$pays_origine
+=======
 
 
 
@@ -257,6 +349,7 @@ data_clean$ses_visible_minority[data_raw$origines_ethniques == 1] <- 0
 data_clean$ses_visible_minority[data_raw$origines_ethniques != 1] <- 1
 table(data_clean$ses_visible_minority)
 
+>>>>>>> 9da3aff54ade7dc66ca6652b95db506ce8295e83
 
 ## Religion --------------------------------------------------------------------
 
