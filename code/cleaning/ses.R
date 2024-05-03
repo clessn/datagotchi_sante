@@ -109,59 +109,184 @@ table(data_clean$ses_langue_maternelle)
 
 ## Occupation ------------------------------------------------------------------
 
-attributes(data_raw$occupation_1)
+# Occupation 1
 
+attributes(data_raw$occupation_1)
+table(data_raw$occupation_1)
+data_clean$ses_occupation_self_employed <- 0
+data_clean$ses_occupation_self_employed[data_raw$occupation_1 == 1] <- 1
+table(data_clean$ses_occupation_self_employed)
+
+# Occupation 2
+
+attributes(data_raw$occupation_2)
+table(data_raw$occupation_2)
+data_clean$ses_occupation_salaried_work <- 0
+data_clean$ses_occupation_salaried_work[data_raw$occupation_2 == 1] <- 1
+table(data_clean$ses_occupation_salaried_work)
+
+# Occupation 3
+
+attributes(data_raw$occupation_3)
+table(data_raw$occupation_3)
+data_clean$ses_occupation_retired <- 0
+data_clean$ses_occupation_retired[data_raw$occupation_3 == 1] <- 1
+table(data_clean$ses_occupation_retired)
+
+# Occupation 4
+
+attributes(data_raw$occupation_4)
+table(data_raw$occupation_4)
+data_clean$ses_occupation_unemployed <- 0
+data_clean$ses_occupation_unemployed[data_raw$occupation_4 == 1] <- 1
+table(data_clean$ses_occupation_unemployed)
+
+# Occupation 5
+
+attributes(data_raw$occupation_5)
+table(data_raw$occupation_5)
+data_clean$ses_occupation_student <- 0
+data_clean$ses_occupation_student[data_raw$occupation_5 == 1] <- 1
+table(data_clean$ses_occupation_student)
+
+# Occupation 6 
+
+attributes(data_raw$occupation_6)
+table(data_raw$occupation_6)
+data_clean$ses_occupation_caregiver <- 0
+data_clean$ses_occupation_caregiver[data_raw$occupation_6 == 1] <- 1
+table(data_clean$ses_occupation_caregiver)
+
+# Occupation 7
+
+attributes(data_raw$occupation_7)
+table(data_raw$occupation_7)
+data_clean$ses_occupation_parent <- 0
+data_clean$ses_occupation_parent[data_raw$occupation_7 == 1] <- 1
+table(data_clean$ses_occupation_parent)
+
+# Occupation 8 
+
+attributes(data_raw$occupation_8)
+table(data_raw$occupation_8)
+data_clean$ses_occupation_handicap <- 0
+data_clean$ses_occupation_handicap[data_raw$occupation_8 == 1] <- 1
+table(data_clean$ses_occupation_handicap)
+
+# Occupation 9 
+
+attributes(data_raw$occupation_9)
+table(data_raw$occupation_9)
+data_clean$ses_occupation_multiple_job_self_employment <- 0
+data_clean$ses_occupation_multiple_job_self_employment[data_raw$occupation_9 == 1] <- 1
+table(data_clean$ses_occupation_multiple_job_self_employment)
+
+# Occupation 12 
+
+attributes(data_raw$occupation_12)
+table(data_raw$occupation_12)
+data_clean$ses_occupation_multiple_job_salaried <- 0
+data_clean$ses_occupation_multiple_job_salaried[data_raw$occupation_12 == 1] <- 1
+table(data_clean$ses_occupation_multiple_job_salaried)
+
+# Occupation 13
+
+attributes(data_raw$occupation_13)
+table(data_raw$occupation_13)
+data_clean$ses_occupation_unemployed_social_assistance <- 0
+data_clean$ses_occupation_unemployed_social_assistance[data_raw$occupation_13 == 1] <- 1
+table(data_clean$ses_occupation_unemployed_social_assistance)
 
 
 ## Travail emploi --------------------------------------------------------------
 
-
+attributes(data_raw$travail_emploi)
+table(data_raw$travail_emploi)
+data_clean$ses_emploi <- data_raw
 
 
 ## Travail domaine -------------------------------------------------------------
 
-
+attributes(data_raw$travail_domaine_1)
 
 
 
 ## Travail heure ---------------------------------------------------------------
 
-
-
+attributes(data_raw$travail_heures)
+table(data_raw$travail_heures)
+data_clean$ses_travail_heures <- data_raw$travail_heures
 
 
 ## Télétravail heure -----------------------------------------------------------
 
-
-
-
-
+attributes(data_raw$teletravail_heures)
+table(data_raw$teletravail_heures)
+data_clean$ses_teletravail_heures <- data_raw$teletravail_heures
 
 ## Revenu ----------------------------------------------------------------------
 
-
-
-
+attributes(data_raw$revenu)
+table(data_raw$revenu)
+data_clean$ses_revenu <- NA
+data_clean$ses_revenu[data_raw$revenu == 1] <- "no_income"
+data_clean$ses_revenu[data_raw$revenu == 2] <- "1_30000"
+data_clean$ses_revenu[data_raw$revenu == 3] <- "30001_60000"
+data_clean$ses_revenu[data_raw$revenu == 4] <- "60001_90000"
+data_clean$ses_revenu[data_raw$revenu == 5] <- "90001_110000"
+data_clean$ses_revenu[data_raw$revenu == 6] <- "110001_150000"
+data_clean$ses_revenu[data_raw$revenu == 7] <- "150001_200000"
+data_clean$ses_revenu[data_raw$revenu == 8] <- "200000_more"
+table(data_clean$ses_revenu)
+data_clean$ses_revenu <- factor(data_clean$ses_revenu, levels = c("no_income",
+                                                                  "1_30000",
+                                                                  "30001_60000",
+                                                                  "60001_90000",
+                                                                  "90001_110000",
+                                                                  "110001_150000",
+                                                                  "150001_200000",
+                                                                  "200000_more"
+))
+table(data_clean$ses_revenu)
 
 
 ## Perception revenu -----------------------------------------------------------
 
-
-
-
+attributes(data_raw$percep_revenu)
+table(data_raw$percep_revenu)
+data_clean$ses_percep_revenu <- NA
+data_clean$ses_percep_revenu <- (data_raw$percep_revenu - 1) / 4
+table(data_clean$ses_percep_revenu)
 
 ## Éducation -------------------------------------------------------------------
 
-
-
+attributes(data_raw$education)
+table(data_raw$education)
+data_clean$ses_education <- NA
+data_clean$ses_education[data_raw$education == 1] <- "no_schooling"
+data_clean$ses_education[data_raw$education == 2] <- "elementary_school"
+data_clean$ses_education[data_raw$education == 3] <- "high_school"
+data_clean$ses_education[data_raw$education == 4] <- "cegep"
+data_clean$ses_education[data_raw$education == 5] <- "bachelor"
+data_clean$ses_education[data_raw$education == 6] <- "master"
+data_clean$ses_education[data_raw$education == 7] <- "phd"
+table(data_clean$ses_education)
+data_clean$ses_education <- factor(data_clean$ses_education, levels = c("no_schooling",
+                                                                        "elementary_school",
+                                                                        "high_school",
+                                                                        "cegep",
+                                                                        "bachelor",
+                                                                        "master",
+                                                                        "phd"
+))
+table(data_clean$ses_education)
 
 
 ## Pays origine ----------------------------------------------------------------
 
-
-
-
-
+attributes(data_raw$pays_origine)
+table(data_raw$pays_origine)
+data_clean$ses_pays_origine <- data_raw$pays_origine
 
 ## Religion --------------------------------------------------------------------
 
