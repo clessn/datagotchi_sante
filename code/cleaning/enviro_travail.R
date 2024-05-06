@@ -2,17 +2,17 @@
 
 attributes(data_raw$DemPsy_1)
 table(data_raw$DemPsy_1)
-data_clean$enviro_lack_time_for_tasks <- NA
-data_clean$enviro_lack_time_for_tasks <- (data_raw$DemPsy_1 -1) / 4
-table(data_clean$enviro_lack_time_for_tasks)
+data_clean$enviro_work_lack_time_for_tasks <- NA
+data_clean$enviro_work_lack_time_for_tasks <- (data_raw$DemPsy_1 -1) / 4
+table(data_clean$enviro_work_lack_time_for_tasks)
 
 # DemPsy_2 ---------------------------------------------------------------------
 
 attributes(data_raw$DemPsy_2)
 table(data_raw$DemPsy_2)
-data_clean$enviro_one_task_at_a_time <- NA
-data_clean$enviro_one_task_at_a_time <- (data_raw$DemPsy_2 -1) / 4
-table(data_clean$enviro_one_task_at_a_time)
+data_clean$enviro_work_one_task_at_a_time <- NA
+data_clean$enviro_work_one_task_at_a_time <- (data_raw$DemPsy_2 -1) / 4
+table(data_clean$enviro_work_one_task_at_a_time)
 
 # DemPsy_3 ---------------------------------------------------------------------
 
@@ -26,9 +26,9 @@ table(data_clean$enviro_work_contradictory)
 
 attributes(data_raw$DemPsy_4)
 table(data_raw$DemPsy_4)
-data_clean$enviro_heavy_workload <- NA
-data_clean$enviro_heavy_workload <- (data_raw$DemPsy_4 -1) / 4
-table(data_clean$enviro_heavy_workload)
+data_clean$enviro_work_heavy_workload <- NA
+data_clean$enviro_work_heavy_workload <- (data_raw$DemPsy_4 -1) / 4
+table(data_clean$enviro_work_heavy_workload)
 
 # DemPsy_5 ---------------------------------------------------------------------
 
