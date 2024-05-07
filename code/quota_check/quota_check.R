@@ -1,6 +1,6 @@
 library(dplyr)
 
-data <- haven::read_sav("_SharedFolder_datagotchi-santé/data/raw/Datagotchi-Santé_Pilote_May 5, 2024_21.22.sav") %>% 
+data <- haven::read_sav("_SharedFolder_datagotchi-santé/data/raw/Datagotchi-Santé_Pilote_May 6, 2024_16.48.sav") %>% 
     filter(Finished == 1)
 
 # filter data for Quebec
@@ -42,6 +42,8 @@ attributes(data$genre)
 data_woman <- data %>%
   filter(genre != 1)
 
+data_men <- data %>%
+  filter(genre == 1)
 # filter for people between 18 and 29 years old
 
 attributes(data$age)
@@ -81,9 +83,15 @@ attributes(data$pays_origine)
 data_immigrant <- data %>%
   filter(pays_origine != 44)
 
+data_non_immigrant <- data  %>% 
+  filter(pays_origine == 44)
+
 # filter for people who are not white 
 
 attributes(data$origines_ethniques)
 
 data_not_white <- data %>%
   filter(origines_ethniques != 1)
+
+data_white <- data %>%
+  filter(origines_ethniques == 1)
