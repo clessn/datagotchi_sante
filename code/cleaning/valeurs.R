@@ -56,3 +56,33 @@ table(data_raw$values_inventory_11)
 data_clean$valeurs_organized <- sondr::finverser(data_raw$values_inventory_11 -1) / 5
 table(data_clean$valeurs_organized)
 
+
+
+
+
+
+## climate_worry__1 --------------------------------------------------------
+
+attributes(data_raw$climate_worry__1)
+table(data_raw$climate_worry__1)
+data_clean$valeurs_worry_climate_change <- NA
+data_clean$valeurs_worry_climate_change <- (data_raw$climate_worry__1 - 1) / 4
+table(data_clean$valeurs_worry_climate_change)
+
+
+## climate_worry__2 --------------------------------------------------------
+
+attributes(data_raw$climate_worry__2)
+table(data_raw$climate_worry__2)
+data_clean$valeurs_worry_future <- NA
+data_clean$valeurs_worry_future <- (data_raw$climate_worry__2 - 1) / 4
+table(data_clean$valeurs_worry_future)
+
+
+## climate_worry__3 --------------------------------------------------------
+
+attributes(data_raw$climate_worry__3)
+table(data_raw$climate_worry__3)
+data_clean$valeurs_worry_climate_people <- NA
+data_clean$valeurs_worry_climate_people <- (data_raw$climate_worry__3 - 1) / 4
+table(data_clean$valeurs_worry_climate_people)
