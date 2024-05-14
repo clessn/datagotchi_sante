@@ -163,6 +163,5 @@ data_clean$comp_sante_tobacco_freq_bin[data_raw$conso_drogue__3 %in% 2:7] <- 1
 table(data_clean$comp_sante_tobacco_freq_bin)
 
 
-
 attributes(data_raw$act_physique_godin_1)
 table(data_raw$act_physique_godin_1)
