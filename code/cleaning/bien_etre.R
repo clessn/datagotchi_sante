@@ -1,3 +1,4 @@
+library(sondr)
 # Bloc bien-Être
 
 ## CSM_Comparison --------------------------------------------------------------
@@ -34,71 +35,155 @@ table(data_clean$bien_etre_satisfied_with_life)
 attributes(data_raw$CSM_QA2_1)
 table(data_raw$CSM_QA2_1)
 
-data_clean$bien_etre_important_contribution_society <- (data_raw$CSM_QA2_1 - 1) / 5
+data_clean$bien_etre_important_contribution_society <- NA
+data_clean$bien_etre_important_contribution_society[data_raw$CSM_QA2_1 == 1] <- 1
+data_clean$bien_etre_important_contribution_society[data_raw$CSM_QA2_1 == 2] <- 0.8
+data_clean$bien_etre_important_contribution_society[data_raw$CSM_QA2_1 == 3] <- 0.6
+data_clean$bien_etre_important_contribution_society[data_raw$CSM_QA2_1 == 4] <- 0.4
+data_clean$bien_etre_important_contribution_society[data_raw$CSM_QA2_1 == 5] <- 0.2
+data_clean$bien_etre_important_contribution_society[data_raw$CSM_QA2_1 == 6] <- 0
+
 table(data_clean$bien_etre_important_contribution_society)
 
 ### CSM_QA2_2 ----------------------------------------------------------------
 attributes(data_raw$CSM_QA2_2)
 table(data_raw$CSM_QA2_2)
 
-data_clean$bien_etre_sense_belonging_community <- (data_raw$CSM_QA2_2 - 1) / 5
+data_clean$bien_etre_sense_belonging_community <- NA
+data_clean$bien_etre_sense_belonging_community[data_raw$CSM_QA2_2 == 1] <- 1
+data_clean$bien_etre_sense_belonging_community[data_raw$CSM_QA2_2 == 2] <- 0.8
+data_clean$bien_etre_sense_belonging_community[data_raw$CSM_QA2_2 == 3] <- 0.6
+data_clean$bien_etre_sense_belonging_community[data_raw$CSM_QA2_2 == 4] <- 0.4
+data_clean$bien_etre_sense_belonging_community[data_raw$CSM_QA2_2 == 5] <- 0.2
+data_clean$bien_etre_sense_belonging_community[data_raw$CSM_QA2_2 == 6] <- 0
+
 table(data_clean$bien_etre_sense_belonging_community)
 
 ### CSM_QA2_3 ----------------------------------------------------------------
 attributes(data_raw$CSM_QA2_3)
 table(data_raw$CSM_QA2_3)
 
-data_clean$bien_etre_society_becomes_better_place <- (data_raw$CSM_QA2_3 - 1) / 5
+data_clean$bien_etre_society_becomes_better_place <- NA
+data_clean$bien_etre_society_becomes_better_place[data_raw$CSM_QA2_3 == 1] <- 1
+data_clean$bien_etre_society_becomes_better_place[data_raw$CSM_QA2_3 == 2] <- 0.8
+data_clean$bien_etre_society_becomes_better_place[data_raw$CSM_QA2_3 == 3] <- 0.6
+data_clean$bien_etre_society_becomes_better_place[data_raw$CSM_QA2_3 == 4] <- 0.4
+data_clean$bien_etre_society_becomes_better_place[data_raw$CSM_QA2_3 == 5] <- 0.2
+data_clean$bien_etre_society_becomes_better_place[data_raw$CSM_QA2_3 == 6] <- 0
+
 table(data_clean$bien_etre_society_becomes_better_place)
 
 ### CSM_QA2_4 ----------------------------------------------------------------
 attributes(data_raw$CSM_QA2_4)
 table(data_raw$CSM_QA2_4)
 
-data_clean$bien_etre_people_fundamentally_good <- (data_raw$CSM_QA2_4 - 1) / 5
+data_clean$bien_etre_people_fundamentally_good <- NA
+data_clean$bien_etre_people_fundamentally_good[data_raw$CSM_QA2_4 == 1] <- 1
+data_clean$bien_etre_people_fundamentally_good[data_raw$CSM_QA2_4 == 2] <- 0.8
+data_clean$bien_etre_people_fundamentally_good[data_raw$CSM_QA2_4 == 3] <- 0.6
+data_clean$bien_etre_people_fundamentally_good[data_raw$CSM_QA2_4 == 4] <- 0.4
+data_clean$bien_etre_people_fundamentally_good[data_raw$CSM_QA2_4 == 5] <- 0.2
+data_clean$bien_etre_people_fundamentally_good[data_raw$CSM_QA2_4 == 6] <- 0
+
 table(data_clean$bien_etre_people_fundamentally_good)
 
 ### CSM_QA2_5 ----------------------------------------------------------------
 attributes(data_raw$CSM_QA2_5)
 table(data_raw$CSM_QA2_5)
 
-data_clean$bien_etre_society_makes_sense <- (data_raw$CSM_QA2_5 - 1) / 5
+data_clean$bien_etre_society_makes_sense <- NA
+data_clean$bien_etre_society_makes_sense[data_raw$CSM_QA2_5 == 1] <- 1
+data_clean$bien_etre_society_makes_sense[data_raw$CSM_QA2_5 == 2] <- 0.8
+data_clean$bien_etre_society_makes_sense[data_raw$CSM_QA2_5 == 3] <- 0.6
+data_clean$bien_etre_society_makes_sense[data_raw$CSM_QA2_5 == 4] <- 0.4
+data_clean$bien_etre_society_makes_sense[data_raw$CSM_QA2_5 == 5] <- 0.2
+data_clean$bien_etre_society_makes_sense[data_raw$CSM_QA2_5 == 6] <- 0
+
 table(data_clean$bien_etre_society_makes_sense)
 
 ### CSM_QA2_6 ----------------------------------------------------------------
 attributes(data_raw$CSM_QA2_6)
 table(data_raw$CSM_QA2_6)
 
-data_clean$bien_etre_like_personality <- (data_raw$CSM_QA2_6 - 1) / 5
+data_clean$bien_etre_like_personality <- NA
+data_clean$bien_etre_like_personality[data_raw$CSM_QA2_6 == 1] <- 1
+data_clean$bien_etre_like_personality[data_raw$CSM_QA2_6 == 2] <- 0.8
+data_clean$bien_etre_like_personality[data_raw$CSM_QA2_6 == 3] <- 0.6
+data_clean$bien_etre_like_personality[data_raw$CSM_QA2_6 == 4] <- 0.4
+data_clean$bien_etre_like_personality[data_raw$CSM_QA2_6 == 5] <- 0.2
+data_clean$bien_etre_like_personality[data_raw$CSM_QA2_6 == 6] <- 0
+
 table(data_clean$bien_etre_like_personality)
 
 ### CSM_QA2_7 ----------------------------------------------------------------
 attributes(data_raw$CSM_QA2_7)
-table(data_raw$CSM_QA2_7)
+table(data_raw$CSM_QA2_7, useNA = "always")
 
-data_clean$bien_etre_handling_responsibilities <- (data_raw$CSM_QA2_7 - 1) / 5
+data_clean$bien_etre_handling_responsibilities <- NA
+data_clean$bien_etre_handling_responsibilities[data_raw$CSM_QA2_7 == 1] <- 1
+data_clean$bien_etre_handling_responsibilities[data_raw$CSM_QA2_7 == 2] <- 0.8
+data_clean$bien_etre_handling_responsibilities[data_raw$CSM_QA2_7 == 3] <- 0.6
+data_clean$bien_etre_handling_responsibilities[data_raw$CSM_QA2_7 == 4] <- 0.4
+data_clean$bien_etre_handling_responsibilities[data_raw$CSM_QA2_7 == 5] <- 0.2
+data_clean$bien_etre_handling_responsibilities[data_raw$CSM_QA2_7 == 6] <- 0
+
 table(data_clean$bien_etre_handling_responsibilities)
 
 ### CSM_QA2_8 ----------------------------------------------------------------
 attributes(data_raw$CSM_QA2_8)
 table(data_raw$CSM_QA2_8)
 
-data_clean$bien_etre_warm_relationships_with_people <- (data_raw$CSM_QA2_8 - 1) / 5
+data_clean$bien_etre_warm_relationships_with_people <- NA
+data_clean$bien_etre_warm_relationships_with_people[data_raw$CSM_QA2_8 == 1] <- 1
+data_clean$bien_etre_warm_relationships_with_people[data_raw$CSM_QA2_8 == 2] <- 0.8
+data_clean$bien_etre_warm_relationships_with_people[data_raw$CSM_QA2_8 == 3] <- 0.6
+data_clean$bien_etre_warm_relationships_with_people[data_raw$CSM_QA2_8 == 4] <- 0.4
+data_clean$bien_etre_warm_relationships_with_people[data_raw$CSM_QA2_8 == 5] <- 0.2
+data_clean$bien_etre_warm_relationships_with_people[data_raw$CSM_QA2_8 == 6] <- 0
+
 table(data_clean$bien_etre_warm_relationships_with_people)
 
 ### CSM_QA2_9 ----------------------------------------------------------------
 attributes(data_raw$CSM_QA2_9)
 table(data_raw$CSM_QA2_9)
 
-data_clean$bien_etre_better_person <- (data_raw$CSM_QA2_9 - 1) / 5
+data_clean$bien_etre_better_person <- NA
+data_clean$bien_etre_better_person[data_raw$CSM_QA2_9 == 1] <- 1
+data_clean$bien_etre_better_person[data_raw$CSM_QA2_9 == 2] <- 0.8
+data_clean$bien_etre_better_person[data_raw$CSM_QA2_9 == 3] <- 0.6
+data_clean$bien_etre_better_person[data_raw$CSM_QA2_9 == 4] <- 0.4
+data_clean$bien_etre_better_person[data_raw$CSM_QA2_9 == 5] <- 0.2
+data_clean$bien_etre_better_person[data_raw$CSM_QA2_9 == 6] <- 0
+
 table(data_clean$bien_etre_better_person)
 
 ### CSM_QA2_10 ---------------------------------------------------------------
 attributes(data_raw$CSM_QA2_10)
 table(data_raw$CSM_QA2_10)
 
+data_clean$bien_etre_able_express_opinions <- NA
+data_clean$bien_etre_able_express_opinions[data_raw$CSM_QA2_10 == 1] <- 1
+data_clean$bien_etre_able_express_opinions[data_raw$CSM_QA2_10 == 2] <- 0.8
+data_clean$bien_etre_able_express_opinions[data_raw$CSM_QA2_10 == 3] <- 0.6
+data_clean$bien_etre_able_express_opinions[data_raw$CSM_QA2_10 == 4] <- 0.4
+data_clean$bien_etre_able_express_opinions[data_raw$CSM_QA2_10 == 5] <- 0.2
+data_clean$bien_etre_able_express_opinions[data_raw$CSM_QA2_10 == 6] <- 0
 
+table(data_clean$bien_etre_able_express_opinions)
 
+### CSM_QA2_11 ---------------------------------------------------------------
+attributes(data_raw$CSM_QA2_11)
+table(data_raw$CSM_QA2_11)
+
+data_clean$bien_etre_life_has_meaning <- NA
+data_clean$bien_etre_life_has_meaning[data_raw$CSM_QA2_11 == 1] <- 1
+data_clean$bien_etre_life_has_meaning[data_raw$CSM_QA2_11 == 2] <- 0.8
+data_clean$bien_etre_life_has_meaning[data_raw$CSM_QA2_11 == 3] <- 0.6
+data_clean$bien_etre_life_has_meaning[data_raw$CSM_QA2_11 == 4] <- 0.4
+data_clean$bien_etre_life_has_meaning[data_raw$CSM_QA2_11 == 5] <- 0.2
+data_clean$bien_etre_life_has_meaning[data_raw$CSM_QA2_11 == 6] <- 0
+
+table(data_clean$bien_etre_life_has_meaning)
 ## PHQ4_1 ----------------------------------------------------------------------
 
 attributes(data_raw$PHQ4_1)
