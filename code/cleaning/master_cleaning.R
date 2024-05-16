@@ -30,6 +30,14 @@ source("code/cleaning/bien_etre.R")
 
 source("code/cleaning/comp_sante.R")
 
+## Enviro travail
+
+source("code/cleaning/enviro_travail.R")
+
+## enviro quartier
+
+source("code/cleaning/enviro_quartier.R")
+
 ## Discrimination -----------------------------------------------------------
 
 source("code/cleaning/discrimination.R")

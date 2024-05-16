@@ -537,17 +537,49 @@ data_clean$ses_urban_rural[data_raw$milieu_vie == 3] <- "rural"
 data_clean$ses_urban_rural <- factor(data_clean$ses_urban_rural, levels = c("city", "suburb", "rural"))
 table(data_clean$ses_urban_rural)
 
-
 ## Habitation ------------------------------------------------------------------
+attributes(data_raw$habitation)
+table(data_raw$habitation)
+data_clean$ses_habitation <- NA
+data_clean$ses_habitation[data_raw$habitation == 1] <- "Apartment in a building that has fewer than five storeys"
+data_clean$ses_habitation[data_raw$habitation == 2] <- "Loft"
+data_clean$ses_habitation[data_raw$habitation == 3] <- "Condo"
+data_clean$ses_habitation[data_raw$habitation == 4] <- "High-rise apartment building"
+data_clean$ses_habitation[data_raw$habitation == 5] <- "Detached house"
+data_clean$ses_habitation[data_raw$habitation == 6] <- "Townhouse"
+data_clean$ses_habitation[data_raw$habitation == 7] <- "Duplex"
+data_clean$ses_habitation[data_raw$habitation == 8] <- "Cooperative"
+data_clean$ses_habitation[data_raw$habitation == 9] <- "Social housing"
+data_clean$ses_habitation[data_raw$habitation == 10] <- "Mobile home (boat, van, RV, etc.)"
+data_clean$ses_habitation[data_raw$habitation == 11] <- "Other (please specify)"
 
 
-
+data_clean$ses_habitation <- factor(data_clean$ses_habitation)  
+table(data_clean$ses_habitation)
 
 ## Province --------------------------------------------------------------------
+attributes(data_raw$province_)
+table(data_raw$province_)
+data_clean$ses_province_ <- NA
+data_clean$ses_province_[data_raw$province_ == 1] <- "Alberta"
+data_clean$ses_province_[data_raw$province_ == 2] <- "British Columbia"
+data_clean$ses_province_[data_raw$province_ == 3] <- "Prince Edward Island"
+data_clean$ses_province_[data_raw$province_ == 4] <- "Manitoba"
+data_clean$ses_province_[data_raw$province_ == 5] <- "New Brunswick"
+data_clean$ses_province_[data_raw$province_ == 6] <- "Nova Scotia"
+data_clean$ses_province_[data_raw$province_ == 7] <- "Nunavut"
+data_clean$ses_province_[data_raw$province_ == 8] <- "Ontario"
+data_clean$ses_province_[data_raw$province_ == 9] <- "Quebec"
+data_clean$ses_province_[data_raw$province_ == 10] <- "Saskatchewan"
+data_clean$ses_province_[data_raw$province_ == 11] <- "Newfoudland and Labrado"
+data_clean$ses_province_[data_raw$province_ == 12] <- "Northwest Territories"
+data_clean$ses_province_[data_raw$province_ == 13] <- "Yukon"
 
 
-
+data_clean$ses_habitation <- factor(data_clean$ses_habitation)  
+table(data_clean$ses_habitation)
 
 ## 
+
 
 
