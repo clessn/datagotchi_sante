@@ -162,6 +162,29 @@ data_clean$comp_sante_tobacco_freq_bin[data_raw$conso_drogue__3 == 1] <- 0
 data_clean$comp_sante_tobacco_freq_bin[data_raw$conso_drogue__3 %in% 2:7] <- 1
 table(data_clean$comp_sante_tobacco_freq_bin)
 
+# Activité physique High intensity
 
 attributes(data_raw$act_physique_godin_1)
 table(data_raw$act_physique_godin_1)
+data_clean$comp_sante_physical_activity_high_intensity <- NA
+valid_indices <- which(data_raw$act_physique_godin_1 %in% 0:14)
+data_clean$comp_sante_physical_activity_high_intensity[valid_indices] <- as.numeric(data_raw$act_physique_godin_1[valid_indices])
+table(data_clean$comp_sante_physical_activity_high_intensity)
+
+# Activité physique moderate activity
+
+attributes(data_raw$act_physique_godin_2)
+table(data_raw$act_physique_godin_2)
+data_clean$comp_sante_physical_activity_moderate_intensity <- NA
+valid_indices <- which(data_raw$act_physique_godin_2 %in% 0:28)
+data_clean$comp_sante_physical_activity_moderate_intensity[valid_indices] <- as.numeric(data_raw$act_physique_godin_2[valid_indices])
+table(data_clean$comp_sante_physical_activity_moderate_intensity)
+
+# Activité physique low intensity
+
+attributes(data_raw$act_physique_godin_3)
+table(data_raw$act_physique_godin_3)
+data_clean$comp_sante_physical_activity_low_intensity <- NA
+valid_indices <- which(data_raw$act_physique_godin_3 %in% 0:28)
+data_clean$comp_sante_physical_activity_low_intensity[valid_indices] <- as.numeric(data_raw$act_physique_godin_3[valid_indices])
+table(data_clean$comp_sante_physical_activity_low_intensity)
