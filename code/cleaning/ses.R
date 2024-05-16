@@ -541,19 +541,17 @@ table(data_clean$ses_urban_rural)
 attributes(data_raw$habitation)
 table(data_raw$habitation)
 data_clean$ses_habitation <- NA
-data_clean$ses_habitation[data_raw$habitation == 1] <- "Apartment in a building that has fewer than five storeys"
-data_clean$ses_habitation[data_raw$habitation == 2] <- "Loft"
-data_clean$ses_habitation[data_raw$habitation == 3] <- "Condo"
-data_clean$ses_habitation[data_raw$habitation == 4] <- "High-rise apartment building"
-data_clean$ses_habitation[data_raw$habitation == 5] <- "Detached house"
-data_clean$ses_habitation[data_raw$habitation == 6] <- "Townhouse"
-data_clean$ses_habitation[data_raw$habitation == 7] <- "Duplex"
-data_clean$ses_habitation[data_raw$habitation == 8] <- "Cooperative"
-data_clean$ses_habitation[data_raw$habitation == 9] <- "Social housing"
-data_clean$ses_habitation[data_raw$habitation == 10] <- "Mobile home (boat, van, RV, etc.)"
-data_clean$ses_habitation[data_raw$habitation == 11] <- "Other (please specify)"
-
-
+data_clean$ses_habitation[data_raw$habitation == 1] <- "less_than_5_stories"
+data_clean$ses_habitation[data_raw$habitation == 2] <- "loft"
+data_clean$ses_habitation[data_raw$habitation == 3] <- "condo"
+data_clean$ses_habitation[data_raw$habitation == 4] <- "high_rise"
+data_clean$ses_habitation[data_raw$habitation == 5] <- "house"
+data_clean$ses_habitation[data_raw$habitation == 6] <- "townhouse"
+data_clean$ses_habitation[data_raw$habitation == 7] <- "duplex"
+data_clean$ses_habitation[data_raw$habitation == 8] <- "cooperative"
+data_clean$ses_habitation[data_raw$habitation == 9] <- "social_housing"
+data_clean$ses_habitation[data_raw$habitation == 10] <- "mobile_home"
+data_clean$ses_habitation[data_raw$habitation == 11] <- "other"
 data_clean$ses_habitation <- factor(data_clean$ses_habitation)  
 table(data_clean$ses_habitation)
 

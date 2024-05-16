@@ -151,6 +151,11 @@ data_clean$quartier_opportunities_health[data_raw$quartier_opportunite == 4] <- 
 data_clean$quartier_health_opportunities <- factor(data_clean$quartier_opportunities_health, levels = c("Strongly disagree", "Disagree", "Agree", "Strongly agree"))  
 table(data_clean$quartier_opportunities_health)
 
+## quartier satisfaction -------------------------------------------------------
 
-
+attributes(data_raw$quartier_satisf_1)
+table(data_raw$quartier_satisf_1)
+data_clean$quartier_satisfaction <- NA
+data_clean$quartier_satisfaction <- data_raw$quartier_satisf_1 / 10
+table(data_clean$quartier_satisfaction)
 
