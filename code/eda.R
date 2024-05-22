@@ -5,3 +5,7 @@ data <- data_raw %>%
 # Aperçu des valeurs pour chaque variable
 summary(data)
 
+# Vérifier les valeurs manquantes
+missing_values <- colSums(is.na(data))
+missing_values[missing_values > 0]
+
