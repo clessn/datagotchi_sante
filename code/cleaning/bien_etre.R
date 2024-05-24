@@ -225,7 +225,7 @@ table(data_clean$bien_etre_worries)
 attributes(data_raw$hsa_stress__vie)
 table(data_raw$hsa_stress__vie)
 data_clean$bien_etre_stress_vie <- NA
-data_clean$bien_etre_stress_vie <- (data_raw$hsa_stress_vie - 1) / 4
+data_clean$bien_etre_stress_vie <- (data_raw$hsa_stress__vie - 1) / 4
 table(data_clean$bien_etre_stress_vie)
 
 
