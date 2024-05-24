@@ -1,12 +1,8 @@
 
-data <- data_raw
+data <- data_clean
 
 # Ajouter la colonne de score
 data$score_norm <- data_score$score_norm
-
-# On ne prend que les répondants qui ont fini le questionnaire
-data <- data %>%
-  filter(Finished == 1)
 
 # Vérifier les valeurs manquantes
 missing_values <- colSums(is.na(data))

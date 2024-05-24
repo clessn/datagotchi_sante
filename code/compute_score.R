@@ -1,3 +1,4 @@
+# Faire tourner master_cleaning avant
 # Dataframe qui contient les score de santé mentale pour chaque répondant, les scores sont calculés selon la méthodologie de ESSAIM
 data_score <- data.frame(id = 1:nrow(data_clean))
 
