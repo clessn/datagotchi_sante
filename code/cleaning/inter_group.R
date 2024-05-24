@@ -141,7 +141,7 @@ data_clean$french_speaking_friends[data_raw$friends_1 == 1] <- "1_2"
 data_clean$french_speaking_friends[data_raw$friends_1 == 2] <- "3_4"
 data_clean$french_speaking_friends[data_raw$friends_1 == 3] <- "5_6"
 data_clean$french_speaking_friends[data_raw$friends_1 == 4] <- "7+"
-data_clean$french_speaking_friends <- factor(data_clean$french_speaking_friends, levels = c("1_2", "3_4", "5_6", "7+"))
+data_clean$french_speaking_friends<- factor(data_clean$french_speaking_friends, levels = c("1_2", "3_4", "5_6", "7+"))
 table(data_clean$french_speaking_friends)
 
 # friends_2
@@ -153,7 +153,7 @@ data_clean$english_speaking_friends[data_raw$friends_2 == 1] <- "1_2"
 data_clean$english_speaking_friends[data_raw$friends_2 == 2] <- "3_4"
 data_clean$english_speaking_friends[data_raw$friends_2 == 3] <- "5_6"
 data_clean$english_speaking_friends[data_raw$friends_2 == 4] <- "7+"
-data_clean$english_speaking_friends <- factor(data_clean$english_speaking_friends, levels = c("1_2", "3_4", "5_6", "7+"))
+data_clean$english_speaking_friends<- factor(data_clean$english_speaking_friends, levels = c("1_2", "3_4", "5_6", "7+"))
 table(data_clean$english_speaking_friends)
 
 # friends_3
@@ -165,7 +165,7 @@ data_clean$other_language_speaking_friends[data_raw$friends_3 == 1] <- "1_2"
 data_clean$other_language_speaking_friends[data_raw$friends_3 == 2] <- "3_4"
 data_clean$other_language_speaking_friends[data_raw$friends_3 == 3] <- "5_6"
 data_clean$other_language_speaking_friends[data_raw$friends_3 == 4] <- "7+"
-data_clean$other_language_speaking_friends <- factor(data_clean$other_language_speaking_friends, levels = c("1_2", "3_4", "5_6", "7+"))
+data_clean$other_language_speaking_friends<- factor(data_clean$other_language_speaking_friends, levels = c("1_2", "3_4", "5_6", "7+"))
 table(data_clean$other_language_speaking_friends)
 
 # ling_1
