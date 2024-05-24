@@ -7,6 +7,10 @@ library(dplyr)
 
 data_raw <- haven::read_sav("_SharedFolder_datagotchi-santé/data/raw/Datagotchi-Santé_Pilote_May 24, 2024_10.51.sav")
 
+## keep only finished questionnaires
+data_raw <- data_raw %>%
+  filter(code == "complete")
+
 # Clean variables ---------------------------------------------------------
 
 data_clean <- data.frame(id = 1:nrow(data_raw))
