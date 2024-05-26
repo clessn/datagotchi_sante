@@ -1,4 +1,5 @@
-# values_inventory
+# values_inventory--------------------------------------------------------------
+
 attributes(data_raw$values_inventory_1)
 table(data_raw$values_inventory_1)
 data_clean$valeurs_respect_elders <- sondr::finverser(data_raw$values_inventory_1 -1) / 5
