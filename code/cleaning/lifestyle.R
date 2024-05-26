@@ -110,6 +110,7 @@ table(data_clean$lifestyle_consumption)
 
 
 ## Coffee ----------------------------------------------------------------------
+
 attributes(data_raw$coffee)
 table(data_raw$coffee)
 data_clean$lifestyle_coffee <- NA
@@ -266,9 +267,6 @@ table(data_raw$style_9_TEXT)
 data_clean$lifestyle_style_other <- NA
 data_clean$lifestyle_style_other <- (data_raw$style_9_TEXT)
 table(data_clean$lifestyle_style_other)
-
-## Style altermatif
-
 
 
 ## Music pref ------------------------------------------------------------------
