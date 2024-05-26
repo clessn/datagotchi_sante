@@ -363,14 +363,20 @@ for (i in 1:nrow(data_raw)) {
 table(data_clean$lifestyle_temps_ecran_finsemaine_travail)
 
 # temps__cran__3 ----------------------------------------
-
+# Display attributes and table for the column
 attributes(data_raw$temps__cran__3)
 table(data_raw$temps__cran__3)
+
+# Initialize the column with NA values
 data_clean$lifestyle_temps_ecran_semaine_loisir <- NA
 
-
+# Loop through each entry to process the screen time strings
 for (i in 1:nrow(data_raw)) {
-  screen_time_str <- data_raw$temps__cran__3[i]  # Store the current value in a variable for easier handling
+  screen_time_str <- as.character(data_raw$temps__cran__3[i])  # Ensure the value is treated as a string
+  
+  if (is.na(screen_time_str)) {
+    next  # Skip if the screen time string is NA
+  }
   
   # Clean up the string by removing all non-numeric and non-delimiter characters except delimiters
   clean_str <- gsub("[^0-9/_ -]", "", screen_time_str)
@@ -379,21 +385,34 @@ for (i in 1:nrow(data_raw)) {
     # If there's any of the specified delimiters, split the string
     num_parts <- strsplit(clean_str, "[/_ -]")[[1]]
     num_values <- as.numeric(num_parts)  # Convert to numeric
+    
     if (any(is.na(num_values))) {
       # Handle any NA values that may result from conversion (e.g., empty strings)
       num_values <- num_values[!is.na(num_values)]
     }
-    data_clean$lifestyle_temps_ecran_semaine_loisir[i] <- max(num_values, na.rm = TRUE)  # Assign the maximum value
+    
+    if (length(num_values) > 0) {
+      data_clean$lifestyle_temps_ecran_semaine_loisir[i] <- max(num_values, na.rm = TRUE)  # Assign the maximum value
+    } else {
+      data_clean$lifestyle_temps_ecran_semaine_loisir[i] <- NA
+    }
   } else if (grepl("min", screen_time_str)) {
     # If "min" is found, convert from minutes to hours
-    data_clean$lifestyle_temps_ecran_semaine_loisir[i] <- as.numeric(gsub("[^0-9]", "", screen_time_str)) / 60
+    minutes <- as.numeric(gsub("[^0-9]", "", screen_time_str))
+    if (!is.na(minutes)) {
+      data_clean$lifestyle_temps_ecran_semaine_loisir[i] <- minutes / 60
+    } else {
+      data_clean$lifestyle_temps_ecran_semaine_loisir[i] <- NA
+    }
   } else {
     # Assume the input is in hours and just remove non-numeric characters
-    data_clean$lifestyle_temps_ecran_semaine_loisir[i] <- as.numeric(gsub("[^0-9]", "", screen_time_str))
+    hours <- as.numeric(gsub("[^0-9]", "", screen_time_str))
+    data_clean$lifestyle_temps_ecran_semaine_loisir[i] <- ifelse(!is.na(hours), hours, NA)
   }
 }
 
-table(data_clean$lifestyle_temps_ecran_semaine_loisir)  # Display the table of cleaned data
+# Display the table of cleaned data
+table(data_clean$lifestyle_temps_ecran_semaine_loisir, useNA = "ifany")
 
 
 # temps__cran__4 ---------------------------------------
@@ -432,5 +451,3 @@ for (i in 1:nrow(data_raw)) {
 }
 
 table(data_clean$lifestyle_temps_ecran_finsemaine_loisir)
-
-

@@ -16,7 +16,6 @@ data_clean <- data.frame(id = 1:nrow(data_raw))
 
 source("code/cleaning/ses.R")
 
-
 ## lifestyle -------------------------------------------------------------------
 
 source("code/cleaning/lifestyle.R")
