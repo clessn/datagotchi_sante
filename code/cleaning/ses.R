@@ -489,14 +489,31 @@ table(data_clean$ses_single)
 ## This takes the value from the data_raw$poids_1_TEXT variable and converts it to a numeric value then converts it to pounds (it's in kilo)
 ## then it takes the value from the data_raw$poids_2_TEXT variable and converts it to a numeric value.
 
+# Inspect the attributes and distribution of data
 attributes(data_raw$poids)
 table(data_raw$poids, useNA = "ifany")
 table(data_raw$poids_1_TEXT, useNA = "ifany")
 table(data_raw$poids_2_TEXT, useNA = "ifany")
+
+# Convert 'poids_1_TEXT' and 'poids_2_TEXT' to numeric safely
+data_raw <- data_raw %>%
+  mutate(
+    poids_1_TEXT = suppressWarnings(as.numeric(poids_1_TEXT)),
+    poids_2_TEXT = suppressWarnings(as.numeric(poids_2_TEXT))
+  )
+
+# Initialize 'ses_poids' in 'data_clean'
 data_clean$ses_poids <- NA
-data_clean$ses_poids <- ifelse(data_raw$poids == 1 & !is.na(data_raw$poids_1_TEXT), as.numeric(data_raw$poids_1_TEXT) * 2.20462, data_clean$ses_poids)
-data_clean$ses_poids <- ifelse(data_raw$poids == 2 & !is.na(data_raw$poids_2_TEXT), as.numeric(data_raw$poids_2_TEXT), data_clean$ses_poids)
-table(data_clean$ses_poids)
+
+# Update 'ses_poids' based on conditions
+data_clean <- data_clean %>%
+  mutate(
+    ses_poids = ifelse(data_raw$poids == 1 & !is.na(data_raw$poids_1_TEXT), data_raw$poids_1_TEXT * 2.20462, ses_poids),
+    ses_poids = ifelse(data_raw$poids == 2 & !is.na(data_raw$poids_2_TEXT), data_raw$poids_2_TEXT, ses_poids)
+  )
+
+# Inspect the cleaned data
+table(data_clean$ses_poids, useNA = "ifany")
 
 ## Taille ----------------------------------------------------------------------
 
