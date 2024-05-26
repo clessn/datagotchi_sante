@@ -118,3 +118,4 @@ rm(list = c("data_attention_check2", "data_attention_check2b", "data_raw_issue_a
 
 saveRDS(data_clean, "_SharedFolder_datagotchi-santé/data/clean/datagotchi-sante_clean.rds")
 
+

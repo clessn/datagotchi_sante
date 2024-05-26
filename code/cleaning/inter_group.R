@@ -156,3 +156,5 @@ data_clean$english_speaking_skills <- data_raw$ling_2 / 10
 table(data_clean$english_speaking_skills)
 
 
+
+

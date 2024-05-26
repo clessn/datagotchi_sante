@@ -176,7 +176,3 @@ attributes(data_raw$SoutSup_8)
 table(data_raw$SoutSup_8)
 data_clean$enviro_travail_superior_work_together <- sondr::finverser(data_raw$SoutSup_8 -1) / 4
 table(data_clean$enviro_travail_superior_work_together)
-
-
-
-

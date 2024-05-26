@@ -451,3 +451,7 @@ data_clean$bien_etre_allergies <- data_raw$maladies_23
 data_clean$bien_etre_allergies[is.na(data_raw$maladies_23)] <- 0
 table(data_clean$bien_etre_allergies)
 
+
+
+
+
