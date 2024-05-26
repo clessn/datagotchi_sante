@@ -447,15 +447,15 @@ data_clean$ses_enfants[data_raw$enfants == 2] <- "1"
 data_clean$ses_enfants[data_raw$enfants == 3] <- "2"
 data_clean$ses_enfants[data_raw$enfants == 4] <- "3"
 data_clean$ses_enfants[data_raw$enfants == 5] <- "4"
-data_clean$ses_enfants[data_raw$enfants == 6] <- "5 or more"
-data_clean$ses_enfants <- factor(data_clean$ses_enfants, levels = c("0", "1", "2", "3", "4", "5 or more"))  
+data_clean$ses_enfants[data_raw$enfants == 6] <- "5_or_more"
+data_clean$ses_enfants <- factor(data_clean$ses_enfants, levels = c("0", "1", "2", "3", "4", "5_or_more"))  
 table(data_clean$ses_enfants)
 
 ## Enfants bin
 
 data_clean$ses_enfants_bin <- NA
-data_clean$ses_enfants_bin[data_raw$enfants == 0] <- 0
-data_clean$ses_enfants_bin[data_raw$enfants != 0] <- 1
+data_clean$ses_enfants_bin[data_raw$enfants == 1] <- 0
+data_clean$ses_enfants_bin[data_raw$enfants != 1] <- 1
 table(data_clean$ses_enfants_bin)
 
 ## Statut marital --------------------------------------------------------------
@@ -550,8 +550,9 @@ table(data_raw$milieu_vie)
 data_clean$ses_urban_rural <- NA
 data_clean$ses_urban_rural[data_raw$milieu_vie == 1] <- "city"
 data_clean$ses_urban_rural[data_raw$milieu_vie == 2] <- "suburb"
-data_clean$ses_urban_rural[data_raw$milieu_vie == 3] <- "rural"
-data_clean$ses_urban_rural <- factor(data_clean$ses_urban_rural, levels = c("city", "suburb", "rural"))
+data_clean$ses_urban_rural[data_raw$milieu_vie == 3] <- "small_town"
+data_clean$ses_urban_rural[data_raw$milieu_vie == 4] <- "rural"
+data_clean$ses_urban_rural <- factor(data_clean$ses_urban_rural, levels = c("city", "suburb", "small_town", "rural"))
 table(data_clean$ses_urban_rural)
 
 ## Habitation ------------------------------------------------------------------
