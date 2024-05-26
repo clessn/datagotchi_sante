@@ -77,6 +77,7 @@ attributes(data_raw$issue_ai_data_2_3)
 attributes(data_raw$issue_ai_data_2_4)
 attributes(data_raw$issue_ai_data_2_5)
 
+
 data_raw_issue_ai_data_2 <- data_raw %>% 
   select(issue_ai_data_2_1, issue_ai_data_2_2, issue_ai_data_2_3, issue_ai_data_2_4, issue_ai_data_2_5) %>% 
   mutate(## change all columns to numeric
@@ -114,14 +115,16 @@ data_attention_check2b <- data_raw_issue_ai_data_2 %>%
 data_clean <- left_join(data_clean, data_attention_check2, by = "id") %>% 
   left_join(., data_attention_check2b, by = "id")
 
+rm(list = c("data_attention_check2", "data_attention_check2b", "data_raw_issue_ai_data_2"))
+
+# ATTENTION CHECK 3: Please select \"Like me\" for this answer to confirm that you are paying attention."
+
 attributes(data_raw$values_inventory_4)
 table(data_raw$values_inventory_4)
 data_clean$attention_check_ok_2 <- NA
 data_clean$attention_check_ok_2[data_raw$values_inventory_4 == 2] <- 1
 data_clean$attention_check_ok_2[data_raw$values_inventory_4 != 2] <- 0
 table(data_clean$attention_check_ok_2)
-
-rm(list = c("data_attention_check2", "data_attention_check2b", "data_raw_issue_ai_data_2"))
 
 saveRDS(data_clean, "_SharedFolder_datagotchi-santé/data/clean/datagotchi-sante_clean.rds")
 

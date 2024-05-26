@@ -53,7 +53,6 @@ table(data_clean$valeurs_organized)
 ## perso_1 --------------------------------------------------------
 attributes(data_raw$perso_1)
 table(data_raw$perso_1)
-
 data_clean$valeurs_extraverted_enthusiastic <- NA
 data_clean$valeurs_extraverted_enthusiastic[data_raw$perso_1 == 1] <- 1
 data_clean$valeurs_extraverted_enthusiastic[data_raw$perso_1 == 2] <- 0.83
@@ -62,7 +61,6 @@ data_clean$valeurs_extraverted_enthusiastic[data_raw$perso_1 == 4] <- 0.5
 data_clean$valeurs_extraverted_enthusiastic[data_raw$perso_1 == 5] <- 0.33
 data_clean$valeurs_extraverted_enthusiastic[data_raw$perso_1 == 6] <- 0.17
 data_clean$valeurs_extraverted_enthusiastic[data_raw$perso_1 == 7] <- 0
-
 table(data_clean$valeurs_extraverted_enthusiastic)
 
 ## perso_2 --------------------------------------------------------
@@ -70,20 +68,13 @@ attributes(data_raw$perso_2)
 table(data_raw$perso_2)
 
 data_clean$valeurs_critical_quarrelsome <- NA
-data_clean$valeurs_critical_quarrelsome[data_raw$perso_2 == 1] <- 1
-data_clean$valeurs_critical_quarrelsome[data_raw$perso_2 == 2] <- 0.83
-data_clean$valeurs_critical_quarrelsome[data_raw$perso_2 == 3] <- 0.67
-data_clean$valeurs_critical_quarrelsome[data_raw$perso_2 == 4] <- 0.5
-data_clean$valeurs_critical_quarrelsome[data_raw$perso_2 == 5] <- 0.33
-data_clean$valeurs_critical_quarrelsome[data_raw$perso_2 == 6] <- 0.17
-data_clean$valeurs_critical_quarrelsome[data_raw$perso_2 == 7] <- 0
-
+data_clean$valeurs_critical_quarrelsome <- sondr::clean_likert_numeric_vector(data_raw$perso_2)
 table(data_clean$valeurs_critical_quarrelsome)
 
 ## perso_3 --------------------------------------------------------
+
 attributes(data_raw$perso_3)
 table(data_raw$perso_3)
-
 data_clean$valeurs_dependable_self_disciplined <- NA
 data_clean$valeurs_dependable_self_disciplined[data_raw$perso_3 == 1] <- 1
 data_clean$valeurs_dependable_self_disciplined[data_raw$perso_3 == 2] <- 0.83
@@ -92,7 +83,6 @@ data_clean$valeurs_dependable_self_disciplined[data_raw$perso_3 == 4] <- 0.5
 data_clean$valeurs_dependable_self_disciplined[data_raw$perso_3 == 5] <- 0.33
 data_clean$valeurs_dependable_self_disciplined[data_raw$perso_3 == 6] <- 0.17
 data_clean$valeurs_dependable_self_disciplined[data_raw$perso_3 == 7] <- 0
-
 table(data_clean$valeurs_dependable_self_disciplined)
 
 ## perso_4 --------------------------------------------------------
