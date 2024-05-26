@@ -1,8 +1,5 @@
 # Bloc Comport_Socio
 
-
-
-
 ## nb_friends_home_/ -------------------------------------------------------
 
 attributes(data_raw$nb_friends_home_1)
@@ -54,7 +51,8 @@ table(data_clean$comport_socio_group_beliefs)
 attributes(data_raw$nb_friends_dispo)
 table(data_raw$nb_friends_dispo)
 data_clean$comport_socio_immediate_friends <- NA
-data_clean$comport_socio_immediate_friends <- (data_raw$nb_friends_dispo -1) / 13
+data_clean$comport_socio_immediate_friends <- data_raw$nb_friends_dispo
+data_clean$comport_socio_immediate_friends[data_raw$nb_friends_dispo > 100] <- NA
 table(data_clean$comport_socio_immediate_friends)
 
 
@@ -101,3 +99,4 @@ table(data_raw$poly_rel)
 data_clean$comport_socio_poly_relation <- NA
 data_clean$comport_socio_poly_relation <- (data_raw$poly_rel - 1) / 3
 table(data_clean$comport_socio_poly_relation)
+

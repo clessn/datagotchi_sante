@@ -14,13 +14,6 @@ table(data_raw$values_inventory_3)
 data_clean$valeurs_care_for_others <- sondr::finverser(data_raw$values_inventory_3 -1) / 5
 table(data_clean$valeurs_care_for_others)
 
-attributes(data_raw$values_inventory_4)
-table(data_raw$values_inventory_4)
-data_clean$attention_check_ok_2 <- NA
-data_clean$attention_check_ok_2[data_raw$values_inventory_4 == 2] <- 1
-data_clean$attention_check_ok_2[data_raw$values_inventory_4 != 2] <- 0
-table(data_clean$attention_check_ok_2)
-
 attributes(data_raw$values_inventory_5)
 table(data_raw$values_inventory_5)
 data_clean$valeurs_equal_opportunity_for_everyone <- sondr::finverser(data_raw$values_inventory_5 -1) / 5
