@@ -500,7 +500,7 @@ table(data_clean$ses_poids)
 
 ## Taille ----------------------------------------------------------------------
 
-# Taille ça va attendre un boute.
+# voir code/cleaning/taille_gpt.R
 
 ## Code postal -----------------------------------------------------------------
 
