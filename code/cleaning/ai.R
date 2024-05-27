@@ -45,9 +45,10 @@ data_clean$ai_take_care_protect_personal_data <- data_raw_ai_data_2$ai_take_care
 
 rm(list = c("data_raw_ai_data_2"))
 
+table(data_clean$ai_take_care_protect_personal_data)
+
 # I agree that the government uses my numeric personal data, if it is for the public good
 attributes(data_raw$issue_ai_data_3)
 table(data_raw$issue_ai_data_3)
 data_clean$ai_government_use_numeric_data_public_good <- sondr::clean_likert_numeric_vector(data_raw$issue_ai_data_3)
 table(data_clean$ai_government_use_numeric_data_public_good)
-

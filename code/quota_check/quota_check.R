@@ -1,7 +1,9 @@
 library(dplyr)
 
-data <- haven::read_sav("_SharedFolder_datagotchi-santé/data/raw/Datagotchi-Santé_Pilote_May 6, 2024_16.48.sav") %>% 
-    filter(Finished == 1)
+data <- haven::read_sav("/Users/camillepelletier/Dropbox/git/datagotchi_sante/_SharedFolder_datagotchi-santé/data/raw/Datagotchi-Santé_Pilote_May 24, 2024_10.51.sav") %>% 
+  filter(code == "complete")
+    
+
 
 # filter data for Quebec
 
@@ -9,6 +11,7 @@ attributes(data$province_)
 
 data_quebec <- data %>%
   filter(province_ == 9)
+table(data$province_, useNA = "ifany")
 
 # filter data for prairie provinces
 
@@ -95,3 +98,4 @@ data_not_white <- data %>%
 
 data_white <- data %>%
   filter(origines_ethniques == 1)
+

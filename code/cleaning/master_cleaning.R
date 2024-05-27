@@ -5,10 +5,7 @@ library(dplyr)
 
 ## load raw data here
 
-data_raw <- haven::read_sav("_SharedFolder_datagotchi-santé/data/raw/Datagotchi-Santé_Pilote_May 24, 2024_10.51.sav")
-
-## keep only finished questionnaires
-data_raw <- data_raw %>%
+data_raw <- haven::read_sav("_SharedFolder_datagotchi-santé/data/raw/datagotchi_sante/data_raw.sav")  %>% 
   filter(code == "complete")
 
 # Clean variables ---------------------------------------------------------
@@ -18,7 +15,6 @@ data_clean <- data.frame(id = 1:nrow(data_raw))
 ## ses -------------------------------------------------------------------------
 
 source("code/cleaning/ses.R")
-
 
 ## lifestyle -------------------------------------------------------------------
 
@@ -81,6 +77,7 @@ attributes(data_raw$issue_ai_data_2_3)
 attributes(data_raw$issue_ai_data_2_4)
 attributes(data_raw$issue_ai_data_2_5)
 
+
 data_raw_issue_ai_data_2 <- data_raw %>% 
   select(issue_ai_data_2_1, issue_ai_data_2_2, issue_ai_data_2_3, issue_ai_data_2_4, issue_ai_data_2_5) %>% 
   mutate(## change all columns to numeric
@@ -120,5 +117,15 @@ data_clean <- left_join(data_clean, data_attention_check2, by = "id") %>%
 
 rm(list = c("data_attention_check2", "data_attention_check2b", "data_raw_issue_ai_data_2"))
 
+# ATTENTION CHECK 3: Please select \"Like me\" for this answer to confirm that you are paying attention."
+
+attributes(data_raw$values_inventory_4)
+table(data_raw$values_inventory_4)
+data_clean$attention_check3_ok <- NA
+data_clean$attention_check3_ok[data_raw$values_inventory_4 == 2] <- 1
+data_clean$attention_check3_ok[data_raw$values_inventory_4 != 2] <- 0
+table(data_clean$attention3_check_ok)
+
 saveRDS(data_clean, "_SharedFolder_datagotchi-santé/data/clean/datagotchi-sante_clean.rds")
+
 

@@ -31,6 +31,7 @@ data_clean$ses_genre[data_raw$genre == 7] <- "agender"
 data_clean$ses_genre[data_raw$genre == 8] <- "other"
 table(data_clean$ses_genre)
 
+
 ## Orientation sexuelle --------------------------------------------------------
 
 attributes(data_raw$orientation)
@@ -39,10 +40,7 @@ data_clean$ses_sexual_orientation[data_raw$orientation == 1] <- "heterosexual"
 data_clean$ses_sexual_orientation[data_raw$orientation == 2] <- "bisexual"
 data_clean$ses_sexual_orientation[data_raw$orientation == 3] <- "gay_lesbian"
 data_clean$ses_sexual_orientation[data_raw$orientation == 4] <- "other"
-data_clean$ses_sexual_orientation <- factor(data_clean$ses_sexual_orientation, levels = c("heterosexual",
-                                                                                          "bisexual",
-                                                                                          "gay_lesbian",
-                                                                                          "other"))
+data_clean$ses_sexual_orientation <- factor(data_clean$ses_sexual_orientation)
 table(data_clean$ses_sexual_orientation)
 
 ## Âge -------------------------------------------------------------------------
@@ -101,10 +99,7 @@ data_clean$ses_langue_maternelle[data_raw$langue_maternelle == 1] <- "francais"
 data_clean$ses_langue_maternelle[data_raw$langue_maternelle == 2] <- "anglais"
 data_clean$ses_langue_maternelle[data_raw$langue_maternelle == 3] <- "autre"
 table(data_clean$ses_langue_maternelle)
-data_clean$ses_langue_maternelle <- factor(data_clean$ses_langue_maternelle, levels = c("francais",
-                                                                      "anglais",
-                                                                      "autre"
-                                                                            ))
+data_clean$ses_langue_maternelle <- factor(data_clean$ses_langue_maternelle)
 table(data_clean$ses_langue_maternelle)
 
 ## Occupation ------------------------------------------------------------------
@@ -400,7 +395,7 @@ data_clean$ses_origines_ethniques[data_raw$origines_ethniques == 4] <- "asian"
 data_clean$ses_origines_ethniques[data_raw$origines_ethniques == 5] <- "hispanic"
 data_clean$ses_origines_ethniques[data_raw$origines_ethniques == 6] <- "arab"
 data_clean$ses_origines_ethniques[data_raw$origines_ethniques == 7] <- "other"
-data_clean$ses_origines_ethniques <- factor(data_clean$ses_origines_ethniques, levels = c("white", "black", "indigenous", "asian", "hispanic", "arab", "other"))
+data_clean$ses_origines_ethniques <- factor(data_clean$ses_origines_ethniques)
 table(data_clean$ses_origines_ethniques)
 
 ## visible minority
@@ -426,7 +421,7 @@ data_clean$ses_religion[data_raw$religion == 8] <- "catholic"
 data_clean$ses_religion[data_raw$religion == 9] <- "protestant"
 data_clean$ses_religion[data_raw$religion == 10] <- "orthodox"
 data_clean$ses_religion[data_raw$religion == 11] <- "other"
-data_clean$ses_religion <- factor(data_clean$ses_religion, levels = c("atheist", "agnostic", "buddhist", "hindu", "judaism", "muslim", "sikhism", "catholic", "protestant", "orthodox", "other"))
+data_clean$ses_religion <- factor(data_clean$ses_religion)
 table(data_clean$ses_religion)
 
 ## Religiosité -----------------------------------------------------------------
@@ -447,15 +442,15 @@ data_clean$ses_enfants[data_raw$enfants == 2] <- "1"
 data_clean$ses_enfants[data_raw$enfants == 3] <- "2"
 data_clean$ses_enfants[data_raw$enfants == 4] <- "3"
 data_clean$ses_enfants[data_raw$enfants == 5] <- "4"
-data_clean$ses_enfants[data_raw$enfants == 6] <- "5 or more"
-data_clean$ses_enfants <- factor(data_clean$ses_enfants, levels = c("0", "1", "2", "3", "4", "5 or more"))  
+data_clean$ses_enfants[data_raw$enfants == 6] <- "5_or_more"
+data_clean$ses_enfants <- factor(data_clean$ses_enfants, levels = c("0", "1", "2", "3", "4", "5_or_more"))  
 table(data_clean$ses_enfants)
 
 ## Enfants bin
 
 data_clean$ses_enfants_bin <- NA
-data_clean$ses_enfants_bin[data_raw$enfants == 0] <- 0
-data_clean$ses_enfants_bin[data_raw$enfants != 0] <- 1
+data_clean$ses_enfants_bin[data_raw$enfants == 1] <- 0
+data_clean$ses_enfants_bin[data_raw$enfants != 1] <- 1
 table(data_clean$ses_enfants_bin)
 
 ## Statut marital --------------------------------------------------------------
@@ -468,7 +463,7 @@ data_clean$ses_marrital_status[data_raw$married == 2] <- "married"
 data_clean$ses_marrital_status[data_raw$married == 3] <- "common_law"
 data_clean$ses_marrital_status[data_raw$married == 4] <- "widow"
 data_clean$ses_marrital_status[data_raw$married == 5] <- "divorced"
-data_clean$ses_marrital_status <- factor(data_clean$ses_marrital_status, levels = c("single", "married", "common_law", "widow", "divorced"))
+data_clean$ses_marrital_status <- factor(data_clean$ses_marrital_status)
 table(data_clean$ses_marrital_status)
 
 ## Status marital married
@@ -489,18 +484,35 @@ table(data_clean$ses_single)
 ## This takes the value from the data_raw$poids_1_TEXT variable and converts it to a numeric value then converts it to pounds (it's in kilo)
 ## then it takes the value from the data_raw$poids_2_TEXT variable and converts it to a numeric value.
 
+# Inspect the attributes and distribution of data
 attributes(data_raw$poids)
 table(data_raw$poids, useNA = "ifany")
 table(data_raw$poids_1_TEXT, useNA = "ifany")
 table(data_raw$poids_2_TEXT, useNA = "ifany")
+
+# Convert 'poids_1_TEXT' and 'poids_2_TEXT' to numeric safely
+data_raw <- data_raw %>%
+  mutate(
+    poids_1_TEXT = suppressWarnings(as.numeric(poids_1_TEXT)),
+    poids_2_TEXT = suppressWarnings(as.numeric(poids_2_TEXT))
+  )
+
+# Initialize 'ses_poids' in 'data_clean'
 data_clean$ses_poids <- NA
-data_clean$ses_poids <- ifelse(data_raw$poids == 1 & !is.na(data_raw$poids_1_TEXT), as.numeric(data_raw$poids_1_TEXT) * 2.20462, data_clean$ses_poids)
-data_clean$ses_poids <- ifelse(data_raw$poids == 2 & !is.na(data_raw$poids_2_TEXT), as.numeric(data_raw$poids_2_TEXT), data_clean$ses_poids)
-table(data_clean$ses_poids)
+
+# Update 'ses_poids' based on conditions
+data_clean <- data_clean %>%
+  mutate(
+    ses_poids = ifelse(data_raw$poids == 1 & !is.na(data_raw$poids_1_TEXT), data_raw$poids_1_TEXT * 2.20462, ses_poids),
+    ses_poids = ifelse(data_raw$poids == 2 & !is.na(data_raw$poids_2_TEXT), data_raw$poids_2_TEXT, ses_poids)
+  )
+
+# Inspect the cleaned data
+table(data_clean$ses_poids, useNA = "ifany")
 
 ## Taille ----------------------------------------------------------------------
 
-# Taille ça va attendre un boute.
+# voir code/cleaning/taille_gpt.R
 
 ## Code postal -----------------------------------------------------------------
 
@@ -533,8 +545,9 @@ table(data_raw$milieu_vie)
 data_clean$ses_urban_rural <- NA
 data_clean$ses_urban_rural[data_raw$milieu_vie == 1] <- "city"
 data_clean$ses_urban_rural[data_raw$milieu_vie == 2] <- "suburb"
-data_clean$ses_urban_rural[data_raw$milieu_vie == 3] <- "rural"
-data_clean$ses_urban_rural <- factor(data_clean$ses_urban_rural, levels = c("city", "suburb", "rural"))
+data_clean$ses_urban_rural[data_raw$milieu_vie == 3] <- "small_town"
+data_clean$ses_urban_rural[data_raw$milieu_vie == 4] <- "rural"
+data_clean$ses_urban_rural <- factor(data_clean$ses_urban_rural)
 table(data_clean$ses_urban_rural)
 
 ## Habitation ------------------------------------------------------------------
@@ -572,8 +585,6 @@ data_clean$ses_province_[data_raw$province_ == 10] <- "Saskatchewan"
 data_clean$ses_province_[data_raw$province_ == 11] <- "Newfoudland and Labrado"
 data_clean$ses_province_[data_raw$province_ == 12] <- "Northwest Territories"
 data_clean$ses_province_[data_raw$province_ == 13] <- "Yukon"
-
-
 data_clean$ses_habitation <- factor(data_clean$ses_habitation)  
 table(data_clean$ses_habitation)
 

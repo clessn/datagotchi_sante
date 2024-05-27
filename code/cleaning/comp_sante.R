@@ -111,15 +111,16 @@ table(data_clean$comp_sante_sleep_problem_interfere_daily_functioning)
 attributes(data_raw$alim_fruits__leg)
 table(data_raw$alim_fruits__leg)
 data_clean$comp_sante_fruit_vegetables_servings <- NA
-data_clean$comp_sante_fruit_vegetables_servings[data_raw$alim_fruits__leg == 9] <- 0
-data_clean$comp_sante_fruit_vegetables_servings[data_raw$alim_fruits__leg == 1] <- 0.5
-data_clean$comp_sante_fruit_vegetables_servings[data_raw$alim_fruits__leg == 2] <- 1
-data_clean$comp_sante_fruit_vegetables_servings[data_raw$alim_fruits__leg == 3] <- 2
-data_clean$comp_sante_fruit_vegetables_servings[data_raw$alim_fruits__leg == 4] <- 3
-data_clean$comp_sante_fruit_vegetables_servings[data_raw$alim_fruits__leg == 5] <- 4
-data_clean$comp_sante_fruit_vegetables_servings[data_raw$alim_fruits__leg == 6] <- 5
-data_clean$comp_sante_fruit_vegetables_servings[data_raw$alim_fruits__leg == 7] <- 6
-data_clean$comp_sante_fruit_vegetables_servings[data_raw$alim_fruits__leg == 8] <- 7
+data_clean$comp_sante_fruit_vegetables_servings[data_raw$alim_fruits__leg == 9] <- "dont_consume"
+data_clean$comp_sante_fruit_vegetables_servings[data_raw$alim_fruits__leg == 1] <- "less_than_1_portion_per_day"
+data_clean$comp_sante_fruit_vegetables_servings[data_raw$alim_fruits__leg == 2] <- "1_portions_per_day"
+data_clean$comp_sante_fruit_vegetables_servings[data_raw$alim_fruits__leg == 3] <- "2_portions_per_day"
+data_clean$comp_sante_fruit_vegetables_servings[data_raw$alim_fruits__leg == 4] <- "3_portions_per_day"
+data_clean$comp_sante_fruit_vegetables_servings[data_raw$alim_fruits__leg == 5] <- "4_portions_per_day"
+data_clean$comp_sante_fruit_vegetables_servings[data_raw$alim_fruits__leg == 6] <- "5_portions_per_day"
+data_clean$comp_sante_fruit_vegetables_servings[data_raw$alim_fruits__leg == 7] <- "6_portions_per_day"
+data_clean$comp_sante_fruit_vegetables_servings[data_raw$alim_fruits__leg == 8] <- "7_plus_portions_per_day"
+data_clean$comp_sante_fruit_vegetables_servings <- factor(data_clean$comp_sante_fruit_vegetables_servings)
 table(data_clean$comp_sante_fruit_vegetables_servings)
 
 # Over the past 12 months, how often have you consumed alcohol?
@@ -188,3 +189,5 @@ data_clean$comp_sante_physical_activity_low_intensity <- NA
 valid_indices <- which(data_raw$act_physique_godin_3 %in% 0:28)
 data_clean$comp_sante_physical_activity_low_intensity[valid_indices] <- as.numeric(data_raw$act_physique_godin_3[valid_indices])
 table(data_clean$comp_sante_physical_activity_low_intensity)
+
+
