@@ -121,10 +121,10 @@ rm(list = c("data_attention_check2", "data_attention_check2b", "data_raw_issue_a
 
 attributes(data_raw$values_inventory_4)
 table(data_raw$values_inventory_4)
-data_clean$attention_check_ok_2 <- NA
-data_clean$attention_check_ok_2[data_raw$values_inventory_4 == 2] <- 1
-data_clean$attention_check_ok_2[data_raw$values_inventory_4 != 2] <- 0
-table(data_clean$attention_check_ok_2)
+data_clean$attention_check3_ok <- NA
+data_clean$attention_check3_ok[data_raw$values_inventory_4 == 2] <- 1
+data_clean$attention_check3_ok[data_raw$values_inventory_4 != 2] <- 0
+table(data_clean$attention3_check_ok)
 
 saveRDS(data_clean, "_SharedFolder_datagotchi-santé/data/clean/datagotchi-sante_clean.rds")
 
