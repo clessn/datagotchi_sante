@@ -319,14 +319,15 @@ data_clean$ses_emploi <- data_raw
 
 attributes(data_raw$travail_heures)
 table(data_raw$travail_heures)
-data_clean$ses_travail_heures <- data_raw$travail_heures
-
+data_clean$ses_heures_travail <- NA
+data_clean$ses_heures_travail <- data_raw$travail_heures
 
 ## Télétravail heure -----------------------------------------------------------
 
 attributes(data_raw$teletravail_heures)
 table(data_raw$teletravail_heures)
-data_clean$ses_teletravail_heures <- data_raw$teletravail_heures
+data_clean$ses_heures_teletravail <- NA
+data_clean$ses_heures_teletravail <- data_raw$teletravail_heures
 
 ## Revenu ----------------------------------------------------------------------
 
