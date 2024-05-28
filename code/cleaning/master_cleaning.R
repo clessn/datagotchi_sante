@@ -46,29 +46,28 @@ source("code/cleaning/discrimination.R")
 
 source("code/cleaning/comport_socio.R")
 
-# Services santé ---------------------------------------------------------------
+## Services santé ---------------------------------------------------------------
 
 source("code/cleaning/services_sante.R")
 
-# inter group ------------------------------------------------------------------
+## inter group ------------------------------------------------------------------
 
 source("code/cleaning/inter_group.R")
 
-# exp --------------------------------------------------------------------------
+## exp --------------------------------------------------------------------------
 
 source("code/cleaning/exp.R")
 
-# Save it --------------------------------------------------------------------
 
-### filter for attention check
+# Filter for attention check ---------------------------------------------------
 
-# ATTENTION CHECK 1: Please select \"often\" for this answer to confirm that you are paying attention."
+## ATTENTION CHECK 1: Please select \"often\" for this answer to confirm that you are paying attention."
 table(data_raw$autogestion_7)
 attributes(data_raw$autogestion_7)
 data_clean$attention_check1_ok <- ifelse(data_raw$autogestion_7 == 3, 1, 0)
 table(data_clean$attention_check1_ok)
 
-# ATTENTION CHECK 2: multiple answers possible. Respondents need to have check issue_ai_data_2_5
+## ATTENTION CHECK 2: multiple answers possible. Respondents need to have check issue_ai_data_2_5
 
 attributes(data_raw$issue_ai_data_2_1)
 table(data_raw$issue_ai_data_2_1)
@@ -116,7 +115,7 @@ data_clean <- left_join(data_clean, data_attention_check2, by = "id") %>%
 
 rm(list = c("data_attention_check2", "data_attention_check2b", "data_raw_issue_ai_data_2"))
 
-# ATTENTION CHECK 3: Please select \"Like me\" for this answer to confirm that you are paying attention."
+## ATTENTION CHECK 3: Please select \"Like me\" for this answer to confirm that you are paying attention."
 
 attributes(data_raw$values_inventory_4)
 table(data_raw$values_inventory_4)
@@ -124,6 +123,13 @@ data_clean$attention_check3_ok <- NA
 data_clean$attention_check3_ok[data_raw$values_inventory_4 == 2] <- 1
 data_clean$attention_check3_ok[data_raw$values_inventory_4 != 2] <- 0
 table(data_clean$attention_check3_ok)
+
+
+# Computing scores based on ESSAIM scales --------------------------------------
+
+source("code/cleaning/compute_score.R")
+
+# Save it ----------------------------------------------------------------------
 
 saveRDS(data_clean, "_SharedFolder_datagotchi-santé/data/clean/datagotchi-sante_clean.rds")
 
