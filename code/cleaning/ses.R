@@ -469,17 +469,17 @@ table(data_clean$ses_marrital_status)
 
 ## Status marital married
 
-data_clean$ses_married <- NA
-data_clean$ses_married[data_raw$married == 2] <- 1
-data_clean$ses_married[data_raw$married != 2] <- 0
-table(data_clean$ses_married)
+data_clean$ses_married_bin <- NA
+data_clean$ses_married_bin[data_raw$married == 2] <- 1
+data_clean$ses_married_bin[data_raw$married != 2] <- 0
+table(data_clean$ses_married_bin)
 
 ## status marital single
 
-data_clean$ses_single <- NA
-data_clean$ses_single[data_raw$married == 1] <- 1
-data_clean$ses_single[data_raw$married != 1] <- 0
-table(data_clean$ses_single)
+data_clean$ses_single_bin <- NA
+data_clean$ses_single_bin[data_raw$married == 1] <- 1
+data_clean$ses_single_bin[data_raw$married != 1] <- 0
+table(data_clean$ses_single_bin)
 
 ## Poids -----------------------------------------------------------------------
 ## This takes the value from the data_raw$poids_1_TEXT variable and converts it to a numeric value then converts it to pounds (it's in kilo)
