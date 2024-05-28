@@ -124,7 +124,6 @@ data_clean$attention_check3_ok[data_raw$values_inventory_4 == 2] <- 1
 data_clean$attention_check3_ok[data_raw$values_inventory_4 != 2] <- 0
 table(data_clean$attention_check3_ok)
 
-
 # Computing scores based on ESSAIM scales --------------------------------------
 
 source("code/cleaning/compute_score.R")
