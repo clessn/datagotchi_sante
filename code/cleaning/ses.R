@@ -458,14 +458,14 @@ table(data_clean$ses_enfants_bin)
 
 attributes(data_raw$married)
 table(data_raw$married)
-data_clean$ses_marrital_status <- NA
-data_clean$ses_marrital_status[data_raw$married == 1] <- "single"
-data_clean$ses_marrital_status[data_raw$married == 2] <- "married"
-data_clean$ses_marrital_status[data_raw$married == 3] <- "common_law"
-data_clean$ses_marrital_status[data_raw$married == 4] <- "widow"
-data_clean$ses_marrital_status[data_raw$married == 5] <- "divorced"
-data_clean$ses_marrital_status <- factor(data_clean$ses_marrital_status)
-table(data_clean$ses_marrital_status)
+data_clean$ses_marital_status <- NA
+data_clean$ses_marital_status[data_raw$married == 1] <- "single"
+data_clean$ses_marital_status[data_raw$married == 2] <- "married"
+data_clean$ses_marital_status[data_raw$married == 3] <- "common_law"
+data_clean$ses_marital_status[data_raw$married == 4] <- "widow"
+data_clean$ses_marital_status[data_raw$married == 5] <- "divorced"
+data_clean$ses_marital_status <- factor(data_clean$ses_marital_status)
+table(data_clean$ses_marital_status)
 
 ## Status marital married
 
