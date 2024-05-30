@@ -16,3 +16,29 @@ class Constants:
     # Filenames
     RAW_FILENAME = "data_raw.sav"
     CODEBOOK_FILENAME = "frozen_codebook_may_30.csv"
+    ATTRIBUTES_FILENAME = "attributes.csv"
+    ATTRIBUTES_SANDBOX_FILENAME = "attributes_sandbox.csv"
+    FEATURES_SANDBOX_FILENAME = "features_sandbox.csv"
+    TARGETS_SANDBOX_FILENAME = "targets_sandbox.csv"
+
+    # Codebook fields
+    CODEBOOK_NAME_COL = "raw_variable_name"
+    CODEBOOK_TYPE_COL = "raw_variable_type"
+    CODEBOOK_OBSERVABILITY_COL = "observability"
+    CODEBOOK_COLS = [CODEBOOK_NAME_COL, CODEBOOK_TYPE_COL, CODEBOOK_OBSERVABILITY_COL]
+
+    CODEBOOK_TYPE_INTEGER_LABEL = "integer"
+    CODEBOOK_TYPE_FLOAT_LABEL = "float"
+    CODEBOOK_TYPE_ORDINAL_LABEL = "ordinal"
+
+    # Attribute fields
+    ATTRIBUTE_ID_COL = "ResponseId"
+
+    TARGET_COLS = [
+        "emotional_health",
+        "positive_functioning",
+        "score_tot",
+        "flourishing",
+        "languishing",
+        "moderate",
+    ]
