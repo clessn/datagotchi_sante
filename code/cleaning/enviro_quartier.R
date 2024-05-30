@@ -148,7 +148,7 @@ data_clean$quartier_opportunities_health[data_raw$quartier_opportunite == 2] <- 
 data_clean$quartier_opportunities_health[data_raw$quartier_opportunite == 3] <- "agree"
 data_clean$quartier_opportunities_health[data_raw$quartier_opportunite == 4] <- "strongly_agree"
 
-data_clean$quartier_health_opportunities <- factor(data_clean$quartier_opportunities_health, levels = c("strongly_disagree", "disagree", "agree", "strongly_agree"))  
+data_clean$quartier_opportunities_health <- factor(data_clean$quartier_opportunities_health, levels = c("strongly_disagree", "disagree", "agree", "strongly_agree"))  
 table(data_clean$quartier_opportunities_health)
 
 ## quartier satisfaction -------------------------------------------------------

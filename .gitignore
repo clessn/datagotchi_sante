@@ -189,3 +189,6 @@ _privatefolder*
 .Ruserdata
 .Rproj
 /.quarto/
+
+# .env
+.env

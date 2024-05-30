@@ -132,8 +132,8 @@ table(data_clean$comp_sante_alcohol_freq)
 # In the last 12 months, how often have you : - used cannabis (marijuana, hashish, oil, wax, cannabinoids synth.)
 attributes(data_raw$conso_drogue__1)
 table(data_raw$conso_drogue__1)
-data_clean$comp_sante_cannabis_freq_numeric <- sondr::clean_likert_numeric_vector(data_raw$conso_drogue__1)
-table(data_clean$comp_sante_cannabis_freq_numeric)
+data_clean$comp_sante_cannabis_freq <- sondr::clean_likert_numeric_vector(data_raw$conso_drogue__1)
+table(data_clean$comp_sante_cannabis_freq)
 
 data_clean$comp_sante_cannabis_freq_bin <- NA
 data_clean$comp_sante_cannabis_freq_bin[data_raw$conso_drogue__1 == 1] <- 0
@@ -143,8 +143,8 @@ table(data_clean$comp_sante_cannabis_freq_bin)
 # In the last 12 months, how often have you : - used amphetamines (methamphetamines, speeds, Vyvanse®, Concerta®, Ritalin®)?
 attributes(data_raw$conso_drogue__2)
 table(data_raw$conso_drogue__2)
-data_clean$comp_sante_amphetamines_freq_numeric <- sondr::clean_likert_numeric_vector(data_raw$conso_drogue__2)
-table(data_clean$comp_sante_amphetamines_freq_numeric)
+data_clean$comp_sante_amphetamines_freq <- sondr::clean_likert_numeric_vector(data_raw$conso_drogue__2)
+table(data_clean$comp_sante_amphetamines_freq)
 
 data_clean$comp_sante_amphetamines_freq_bin <- NA
 data_clean$comp_sante_amphetamines_freq_bin[data_raw$conso_drogue__2 == 1] <- 0
@@ -155,8 +155,8 @@ table(data_clean$comp_sante_amphetamines_freq_bin)
 # In the last 12 months, how often have you : - used tobacco (e.g. cigarettes, cigars, pipe, vaporizer)?
 attributes(data_raw$conso_drogue__3)
 table(data_raw$conso_drogue__3)
-data_clean$comp_sante_tobacco_freq_numeric <- sondr::clean_likert_numeric_vector(data_raw$conso_drogue__3)
-table(data_clean$comp_sante_tobacco_freq_numeric)
+data_clean$comp_sante_tobacco_freq <- sondr::clean_likert_numeric_vector(data_raw$conso_drogue__3)
+table(data_clean$comp_sante_tobacco_freq)
 
 data_clean$comp_sante_tobacco_freq_bin <- NA
 data_clean$comp_sante_tobacco_freq_bin[data_raw$conso_drogue__3 == 1] <- 0
