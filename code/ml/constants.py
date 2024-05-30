@@ -6,7 +6,10 @@ from pathlib import Path
 load_dotenv()
 
 class Constants:
-    DATA_PATH = Path(os.getenv('PATH'))
+    # Paths
+    DATA_PATH = Path(os.getenv('DATA_PATH'))
     RAW_PATH = DATA_PATH / 'raw'
     ML_PATH = DATA_PATH / 'ml'
 
+    # Filenames
+    RAW_FILENAME = 'data_raw.sav'
