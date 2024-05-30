@@ -65,9 +65,6 @@ compute_scores <- function(data) {
   ## Total score, varies between 0 and 70
   data$score_tot <- data$emotional_health + data$positive_functioning
   
-  ## Normalized score (set between 0 and 1)
-  data$score_norm <- data$score_tot/70
-  
   return(data)
 }
 
@@ -91,6 +88,16 @@ compute_indicators <- function(data){
     (data$flourishing==0)
     & (data$languishing==0),
     1,0)
+  
+  ## One variable categorizing the 3 categories
+  data <- data %>%
+    mutate(health_indicator = case_when(
+      data$flourishing == 1 ~ "flourishing",
+      data$languishing == 1 ~ "languishing",
+      data$moderate == 1 ~ "moderate",
+      TRUE ~ NA_character_ 
+    )) %>%
+    select(-flourishing, -languishing, -moderate)
   
   return(data)
 }
