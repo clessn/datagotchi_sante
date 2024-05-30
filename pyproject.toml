@@ -10,6 +10,8 @@ pandas = "^2.2.2"
 ipykernel = "^6.29.4"
 python-dotenv = "^1.0.1"
 pyreadstat = "^1.2.7"
+black = "^24.4.2"
+isort = "^5.13.2"
 
 [tool.poetry.dev-dependencies]
 
