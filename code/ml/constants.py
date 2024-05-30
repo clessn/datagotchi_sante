@@ -15,3 +15,4 @@ class Constants:
 
     # Filenames
     RAW_FILENAME = "data_raw.sav"
+    CODEBOOK_FILENAME = "frozen_codebook_may_30.csv"
