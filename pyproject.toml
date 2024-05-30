@@ -8,6 +8,7 @@ authors = ["Corentin Vande Kerckhove <corentinvdk@gmail.com>"]
 python = "^3.9"
 pandas = "^2.2.2"
 ipykernel = "^6.29.4"
+python-dotenv = "^1.0.1"
 
 [tool.poetry.dev-dependencies]
 

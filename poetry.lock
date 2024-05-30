@@ -411,6 +411,17 @@ python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
 six = ">=1.5"
 
 [[package]]
+name = "python-dotenv"
+version = "1.0.1"
+description = "Read key-value pairs from a .env file and set them as environment variables"
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.extras]
+cli = ["click (>=5.0)"]
+
+[[package]]
 name = "pytz"
 version = "2024.1"
 description = "World timezone definitions, modern and historical"
@@ -520,7 +531,7 @@ testing = ["pytest (>=6,<8.1.0 || >=8.2.0)", "pytest-checkdocs (>=2.4)", "pytest
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "465ddd9aab3823ea0d036df1a0116d7c30e2f2e08f03317691712880b6fad0f5"
+content-hash = "5bd86591959c8d7fba5010be20ed8a7893035f365ae7071ae395cab304fafd84"
 
 [metadata.files]
 appnope = []
@@ -562,6 +573,7 @@ pure-eval = [
 pycparser = []
 pygments = []
 python-dateutil = []
+python-dotenv = []
 pytz = []
 pywin32 = []
 pyzmq = []
