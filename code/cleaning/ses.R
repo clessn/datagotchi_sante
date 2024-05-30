@@ -6,17 +6,17 @@
 
 attributes(data_raw$genre)
 table(data_raw$genre)
-data_clean$ses_male <- NA
-data_clean$ses_male[data_raw$genre == 1] <- 1
-data_clean$ses_male[data_raw$genre != 1] <- 0
-table(data_clean$ses_male)
+data_clean$ses_male_bin <- NA
+data_clean$ses_male_bin[data_raw$genre == 1] <- 1
+data_clean$ses_male_bin[data_raw$genre != 1] <- 0
+table(data_clean$ses_male_bin)
 
 ## Female
 
-data_clean$ses_female <- NA
-data_clean$ses_female[data_raw$genre == 2] <- 1
-data_clean$ses_female[data_raw$genre != 2] <- 0
-table(data_clean$ses_female)
+data_clean$ses_female_bin <- NA
+data_clean$ses_female_bin[data_raw$genre == 2] <- 1
+data_clean$ses_female_bin[data_raw$genre != 2] <- 0
+table(data_clean$ses_female_bin)
 
 ## Factor 
 
