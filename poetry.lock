@@ -400,6 +400,17 @@ python-versions = ">=3.8"
 windows-terminal = ["colorama (>=0.4.6)"]
 
 [[package]]
+name = "pyreadstat"
+version = "1.2.7"
+description = "Reads and Writes SAS, SPSS and Stata files into/from pandas data frames."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+pandas = ">=1.2.0"
+
+[[package]]
 name = "python-dateutil"
 version = "2.9.0.post0"
 description = "Extensions to the standard Python datetime module"
@@ -531,7 +542,7 @@ testing = ["pytest (>=6,<8.1.0 || >=8.2.0)", "pytest-checkdocs (>=2.4)", "pytest
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "5bd86591959c8d7fba5010be20ed8a7893035f365ae7071ae395cab304fafd84"
+content-hash = "78ac41ec377ca8d317eb72b9c148dabed7599f33f60ba71d98664ba71d365461"
 
 [metadata.files]
 appnope = []
@@ -572,6 +583,7 @@ pure-eval = [
 ]
 pycparser = []
 pygments = []
+pyreadstat = []
 python-dateutil = []
 python-dotenv = []
 pytz = []
