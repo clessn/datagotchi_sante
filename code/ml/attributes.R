@@ -24,13 +24,18 @@ data$ol_exp_grandirq <- convert_61_to_05(data_raw$CSM_QA2_9)
 data$qol_exprimer <- convert_61_to_05(data_raw$CSM_QA2_10)
 data$qol_vie_but <- convert_61_to_05(data_raw$CSM_QA2_11)
 
-
 ## Compute target
 ### Compute scores
 data <- compute_scores(data)
 
 ### Compute binary indicators
 data <- compute_indicators(data)
+
+## Attention checks
+data <- filter_attention_checks(data, 2)
+
+## Save data
+write.csv(data, file = "_SharedFolder_datagotchi-santé/data/ml/attributes.csv")
 
 
 
@@ -90,4 +95,28 @@ compute_indicators <- function(data){
   return(data)
 }
 
+
 # Attention checks -------------------------------------------------------------
+filter_attention_checks <- function(data, attention_check_nb){
+  
+  ## ATTENTION CHECK 1: Please select \"often\" for this answer to confirm that you are paying attention."
+  data$attention_check1_ok <- ifelse(data$autogestion_7 == 3, 1, 0)
+  
+  ## ATTENTION CHECK 2: multiple answers possible. Respondents need to have check issue_ai_data_2_5
+  data$attention_check2_ok <- ifelse(is.na(data$issue_ai_data_2_5), 0, ifelse(data$issue_ai_data_2_5 == 1, 1, 0))
+  
+  ## ATTENTION CHECK 3: Please select \"Like me\" for this answer to confirm that you are paying attention."
+  data$attention_check3_ok <- ifelse(data$values_inventory_4 == 2, 1, 0)
+  
+  ## At least attention_check_nb of attention checks should be validated
+  data$attention_filter <- ifelse(rowSums(data[, c("attention_check1_ok", "attention_check2_ok", "attention_check3_ok")]) >= attention_check_nb, 1, 0)
+  
+  ## Remove participants not validating attention checks
+  data <- data %>% 
+    filter(attention_filter == 1)
+  
+  ## Remove attention check columns
+  data <- data %>% select(-attention_check1_ok, -attention_check2_ok, -attention_check3_ok, -attention_filter)
+  
+  return(data)
+}
