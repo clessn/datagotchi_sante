@@ -190,5 +190,9 @@ _privatefolder*
 .Rproj
 /.quarto/
 
+# Python related
+__pycache__
+
 # .env
 .env
+
