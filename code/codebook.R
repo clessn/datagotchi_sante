@@ -1,5 +1,5 @@
-data <- haven::read_sav("_SharedFolder_datagotchi-santé/data/raw/Datagotchi-Santé_Pilote_April 3, 2024_09.12.sav")
+data <- haven::read_sav("~/Dropbox/git/datagotchi_sante/_SharedFolder_datagotchi-santé/data/raw/data_raw.sav")
 
 codebook <- sondr::sav_to_codebook(data)
 
-write.csv(codebook, "_SharedFolder_datagotchi-santé/data/raw/codebook.csv")
+write.csv(codebook, "~/Dropbox/git/datagotchi_sante/_SharedFolder_datagotchi-santé/data/raw/raw_codebook.csv")

@@ -5,7 +5,7 @@ library(dplyr)
 
 ## load raw data here
 
-data_raw <- haven::read_sav("_SharedFolder_datagotchi-santé/data/raw/datagotchi_sante/data_raw.sav")  %>% 
+data_raw <- haven::read_sav("_SharedFolder_datagotchi-santé/data/raw/data_raw.sav")  %>% 
   filter(code == "complete")
 
 # Clean variables ---------------------------------------------------------
