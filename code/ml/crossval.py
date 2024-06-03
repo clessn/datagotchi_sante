@@ -14,14 +14,20 @@ def crossval (X, Y):
     -------
     """
 
-    # Loop on models
-    for model in Config.MODEL_LIST:
+    # Split in folds
+    kf = KFold(n_splits=Config.KFOLD, shuffle=True, random_state=Config.RANDOM_STATE)
 
-        # Split in folds
-        kf = KFold(n_splits=Config.KFOLD, shuffle=True, random_state=Config.RANDOM_STATE)
+    # Loop on folds
+    for train_index, test_index in kf.split(X):
 
-        # Loop on folds
-        for train_index, test_index in kf.split(X):
+        X_train = X[train_index]
+        X_test = X[test_index]
+            
+        # Loop on models
+        for model in Config.MODEL_LIST:
+
+            # Fit the model
+            model.fit(X_train,Y[train_index])
 
             # Loop on target
             for target in Config.TARGET_LIST:
