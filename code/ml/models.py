@@ -1,6 +1,5 @@
-from sklearn.base import BaseEstimator
-from sklearn.base import RegressorMixin
 import numpy as np
+from sklearn.base import BaseEstimator, RegressorMixin
 
 
 class MeanRegressor(BaseEstimator, RegressorMixin):
@@ -10,14 +9,14 @@ class MeanRegressor(BaseEstimator, RegressorMixin):
     def fit(self, X, y):
         """
         Fit the model by calculating the mean of the target values.
-        
+
         Parameters
         ----------
         X : array-like, shape (n_samples, n_features)
             Training data
         y : array-like, shape (n_samples,)
             Target values
-        
+
         Returns
         -------
         self : object
@@ -29,12 +28,12 @@ class MeanRegressor(BaseEstimator, RegressorMixin):
     def predict(self, X):
         """
         Predict the mean target value for all samples in X.
-        
+
         Parameters
         ----------
         X : array-like, shape (n_samples, n_features)
             Samples
-        
+
         Returns
         -------
         y_pred : array, shape (n_samples,)
@@ -51,14 +50,14 @@ class RandomValueRegressor(BaseEstimator, RegressorMixin):
     def fit(self, X, y):
         """
         Fit the model by calculating the min and max of the target values.
-        
+
         Parameters
         ----------
         X : array-like, shape (n_samples, n_features)
             Training data
         y : array-like, shape (n_samples,)
             Target values
-        
+
         Returns
         -------
         self : object
@@ -71,12 +70,12 @@ class RandomValueRegressor(BaseEstimator, RegressorMixin):
     def predict(self, X):
         """
         Predict a random value between the min and max target values for each sample in X.
-        
+
         Parameters
         ----------
         X : array-like, shape (n_samples, n_features)
             Samples
-        
+
         Returns
         -------
         y_pred : array, shape (n_samples,)

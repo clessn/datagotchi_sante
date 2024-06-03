@@ -1,9 +1,9 @@
+from config import Config as Config
 from sklearn.model_selection import KFold
 
-from config import Config as Config
 
-def crossval (X, Y):
-    """ Cross-validation (evaluation realized for each fold of each model)
+def crossval(X, Y):
+    """Cross-validation (evaluation realized for each fold of each model)
 
     Attributes
     ----------
@@ -22,17 +22,17 @@ def crossval (X, Y):
 
         X_train = X[train_index]
         X_test = X[test_index]
-            
+
         # Loop on models
         for model in Config.MODEL_LIST:
 
             # Loop on target
             for target in Config.TARGET_LIST:
 
-                y = Y[:,target]
+                y = Y[:, target]
 
                 # Fit the model
-                model.fit(X_train,y[train_index])
+                model.fit(X_train, y[train_index])
 
                 # Loop on metric
                 for metrics in Config.METRIC_LIST:
