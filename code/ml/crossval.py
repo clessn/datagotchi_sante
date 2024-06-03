@@ -26,12 +26,14 @@ def crossval (X, Y):
         # Loop on models
         for model in Config.MODEL_LIST:
 
-            # Fit the model
-            model.fit(X_train,Y[train_index])
-
             # Loop on target
             for target in Config.TARGET_LIST:
 
+                y = Y[:,target]
+
+                # Fit the model
+                model.fit(X_train,y[train_index])
+
                 # Loop on metric
                 for metrics in Config.METRIC_LIST:
-
+                    pass
