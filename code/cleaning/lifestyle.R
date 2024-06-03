@@ -21,19 +21,19 @@ table(data_clean$lifestyle_pets)
 
 attributes(data_raw$act_physique)
 table(data_raw$act_physique)
-data_clean$lifestyle_act_pyhysique <- NA
-data_clean$lifestyle_act_pyhysique[data_raw$act_physique == 1] <- "Run"
-data_clean$lifestyle_act_pyhysique[data_raw$act_physique == 2] <- "Gym"
-data_clean$lifestyle_act_pyhysique[data_raw$act_physique == 3] <- "Walk"
-data_clean$lifestyle_act_pyhysique[data_raw$act_physique == 4] <- "Swim"
-data_clean$lifestyle_act_pyhysique[data_raw$act_physique == 5] <- "Team sport"
-data_clean$lifestyle_act_pyhysique[data_raw$act_physique == 6] <- "Yoga"
-data_clean$lifestyle_act_pyhysique[data_raw$act_physique == 7] <- "Other"
-data_clean$lifestyle_act_pyhysique[data_raw$act_physique == 8] <- "I don't do physical activities"
+data_clean$lifestyle_act_physique <- NA
+data_clean$lifestyle_act_physique[data_raw$act_physique == 1] <- "Run"
+data_clean$lifestyle_act_physique[data_raw$act_physique == 2] <- "Gym"
+data_clean$lifestyle_act_physique[data_raw$act_physique == 3] <- "Walk"
+data_clean$lifestyle_act_physique[data_raw$act_physique == 4] <- "Swim"
+data_clean$lifestyle_act_physique[data_raw$act_physique == 5] <- "Team sport"
+data_clean$lifestyle_act_physique[data_raw$act_physique == 6] <- "Yoga"
+data_clean$lifestyle_act_physique[data_raw$act_physique == 7] <- "Other"
+data_clean$lifestyle_act_physique[data_raw$act_physique == 8] <- "I don't do physical activities"
 
 
-data_clean$lifestyle_act_pyhysique <- factor(data_clean$lifestyle_act_pyhysique)  
-table(data_clean$lifestyle_act_pyhysique)
+data_clean$lifestyle_act_physique <- factor(data_clean$lifestyle_act_physique)  
+table(data_clean$lifestyle_act_physique)
 
 
 ## Freq_physique ---------------------------------------------------------------

@@ -1,0 +1,3 @@
+clean-python:
+	isort .
+	black .

@@ -6,17 +6,17 @@
 
 attributes(data_raw$genre)
 table(data_raw$genre)
-data_clean$ses_male <- NA
-data_clean$ses_male[data_raw$genre == 1] <- 1
-data_clean$ses_male[data_raw$genre != 1] <- 0
-table(data_clean$ses_male)
+data_clean$ses_male_bin <- NA
+data_clean$ses_male_bin[data_raw$genre == 1] <- 1
+data_clean$ses_male_bin[data_raw$genre != 1] <- 0
+table(data_clean$ses_male_bin)
 
 ## Female
 
-data_clean$ses_female <- NA
-data_clean$ses_female[data_raw$genre == 2] <- 1
-data_clean$ses_female[data_raw$genre != 2] <- 0
-table(data_clean$ses_female)
+data_clean$ses_female_bin <- NA
+data_clean$ses_female_bin[data_raw$genre == 2] <- 1
+data_clean$ses_female_bin[data_raw$genre != 2] <- 0
+table(data_clean$ses_female_bin)
 
 ## Factor 
 
@@ -458,14 +458,14 @@ table(data_clean$ses_enfants_bin)
 
 attributes(data_raw$married)
 table(data_raw$married)
-data_clean$ses_marrital_status <- NA
-data_clean$ses_marrital_status[data_raw$married == 1] <- "single"
-data_clean$ses_marrital_status[data_raw$married == 2] <- "married"
-data_clean$ses_marrital_status[data_raw$married == 3] <- "common_law"
-data_clean$ses_marrital_status[data_raw$married == 4] <- "widow"
-data_clean$ses_marrital_status[data_raw$married == 5] <- "divorced"
-data_clean$ses_marrital_status <- factor(data_clean$ses_marrital_status)
-table(data_clean$ses_marrital_status)
+data_clean$ses_marital_status <- NA
+data_clean$ses_marital_status[data_raw$married == 1] <- "single"
+data_clean$ses_marital_status[data_raw$married == 2] <- "married"
+data_clean$ses_marital_status[data_raw$married == 3] <- "common_law"
+data_clean$ses_marital_status[data_raw$married == 4] <- "widow"
+data_clean$ses_marital_status[data_raw$married == 5] <- "divorced"
+data_clean$ses_marital_status <- factor(data_clean$ses_marital_status)
+table(data_clean$ses_marital_status)
 
 ## Status marital married
 

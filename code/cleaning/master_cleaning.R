@@ -20,11 +20,9 @@ source("code/cleaning/ses.R")
 
 source("code/cleaning/lifestyle.R")
 
-
 ## Bien-être -------------------------------------------------------------------
 
 source("code/cleaning/bien_etre.R")
-
 
 ## Comp santé --------------------------------------------------------------
 
@@ -38,17 +36,29 @@ source("code/cleaning/enviro_travail.R")
 
 source("code/cleaning/enviro_quartier.R")
 
-## Discrimination -----------------------------------------------------------
+## Services santé ---------------------------------------------------------------
 
-source("code/cleaning/discrimination.R")
+source("code/cleaning/services_sante.R")
+
+## Valeurs ---------------------------------------------------------------------
+
+source("code/cleaning/valeurs.R")
 
 ## Comport socio -----------------------------------------------------------
 
 source("code/cleaning/comport_socio.R")
 
-## Services santé ---------------------------------------------------------------
+## Discrimination -----------------------------------------------------------
 
-source("code/cleaning/services_sante.R")
+source("code/cleaning/discrimination.R")
+
+## Political behaviour ---------------------------------------------------------
+
+source("code/cleaning/political_behaviour.R")
+
+## AI --------------------------------------------------------------------------
+
+source("code/cleaning/ai.R")
 
 ## inter group ------------------------------------------------------------------
 
@@ -57,7 +67,6 @@ source("code/cleaning/inter_group.R")
 ## exp --------------------------------------------------------------------------
 
 source("code/cleaning/exp.R")
-
 
 # Filter for attention check ---------------------------------------------------
 
