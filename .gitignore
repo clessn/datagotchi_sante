@@ -196,3 +196,6 @@ __pycache__
 # .env
 .env
 
+# ipynb checkpoints
+*.ipynb_checkpoints
+
