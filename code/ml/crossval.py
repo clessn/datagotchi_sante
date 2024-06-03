@@ -20,8 +20,8 @@ def crossval(X, Y):
     # Loop on folds
     for train_index, test_index in kf.split(X):
 
-        X_train = X[train_index]
-        X_test = X[test_index]
+        X_train = X[train_index, :]
+        X_test = X[test_index, :]
 
         # Loop on models
         for model in Config.MODEL_LIST:

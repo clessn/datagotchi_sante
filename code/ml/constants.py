@@ -34,11 +34,17 @@ class Constants:
     # Attribute fields
     ATTRIBUTE_ID_COL = "ResponseId"
 
+    TARGET_EMOTIONAL_HEALTH = "emotional_health"
+    TARGET_POSITIVE_FUNCTIONING = "positive_functioning"
+    TARGET_SCORE_TOT = "score_tot"
+    TARGET_FLOURISHING = "flourishing"
+    TARGET_LANGUISHING = "languishing"
+    TARGET_MODERATE = "moderate"
     TARGET_COLS = [
-        "emotional_health",
-        "positive_functioning",
-        "score_tot",
-        "flourishing",
-        "languishing",
-        "moderate",
+        TARGET_EMOTIONAL_HEALTH,
+        TARGET_POSITIVE_FUNCTIONING,
+        TARGET_SCORE_TOT,
+        TARGET_FLOURISHING,
+        TARGET_LANGUISHING,
+        TARGET_MODERATE,
     ]

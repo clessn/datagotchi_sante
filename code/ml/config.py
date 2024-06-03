@@ -1,11 +1,16 @@
+from constants import Constants as C
+from metrics import MSE
+from models import MeanRegressor
+from models import RandomValueRegressor
+
 class Config:
     # Config variables
     KFOLD = 5
     MODEL_LIST = [
         (MeanRegressor, "Mean Regressor", {}),
-        (RandomRegressor, "Random Regressor", {}),
+        (RandomValueRegressor, "Random Regressor", {}),
     ]
-    TARGET_LIST = [score_total]
+    TARGET_LIST = [C.SCORE_TOT]
     METRIC_LIST = [MSE]
 
     # Random state
