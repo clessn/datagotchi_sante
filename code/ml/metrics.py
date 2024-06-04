@@ -1,12 +1,32 @@
+import numpy as np
 from sklearn.metrics import mean_squared_error
 
+from config import Config
+
+# Remove missing values from y vectors
+def remove_y_true_nan(y_true, y_pred):
+    true_nan_indices = np.isnan(y_true)
+
+    # Assert minimal number of targets
+    assert sum(~true_nan_indices) >= Config.N_NON_MISSING_THRESHOLD
+
+    # Filter y vectors
+    y_true_filtered = y_true[~true_nan_indices]
+    y_pred_filtered = y_pred[~true_nan_indices]
+
+    return y_true_filtered, y_pred_filtered
 
 # MSE
-def MSE(y_true, y_pred):
-    MSE = mean_squared_error(y_true, y_pred)
-    return MSE
+def get_mse(y_true, y_pred):
 
+    # Remove missing values
+    y_true_filtered, y_pred_filtered = remove_y_true_nan(y_true, y_pred)
 
-y_true = [1, 0, 0, 1]
-y_pred = [1, 0, 1, 0]
-print(MSE(y_true, y_pred))
+    # Metric
+    mse = mean_squared_error(y_true_filtered, y_pred_filtered)
+    return mse
+
+# Dictionnary of available metrics
+metrics_dict = {
+    'mse': get_mse,
+}

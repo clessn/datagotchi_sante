@@ -1,17 +1,26 @@
 from constants import Constants as C
-from metrics import MSE
-from models import MeanRegressor
-from models import RandomValueRegressor
 
 class Config:
-    # Config variables
+
+    # Number of folds for cross-validation
     KFOLD = 5
+
+    # List of models
     MODEL_LIST = [
-        (MeanRegressor, "mean_regressor", {}),
-        (RandomValueRegressor, "random_regressor", {}),
+        ("mean_regressor", {}),
+        ("random_regressor", {}),
     ]
+
+    # Target
     TARGET_NAME = C.TARGET_SCORE_TOT
-    METRIC_LIST = [MSE]
+
+    # List of metrics
+    METRIC_LIST = [
+        ("mse", {})
+    ]
+
+    # Number of non missing targets for metrics
+    N_NON_MISSING_THRESHOLD = 30
 
     # Random state
     RANDOM_STATE = 42
