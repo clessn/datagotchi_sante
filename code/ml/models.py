@@ -22,7 +22,7 @@ class MeanRegressor(BaseEstimator, RegressorMixin):
         self : object
             Returns self.
         """
-        self.mean_ = np.mean(y)
+        self.mean_ = np.nanmean(y)
         return self
 
     def predict(self, X):
@@ -63,8 +63,8 @@ class RandomValueRegressor(BaseEstimator, RegressorMixin):
         self : object
             Returns self.
         """
-        self.min_ = np.min(y)
-        self.max_ = np.max(y)
+        self.min_ = np.nanmin(y)
+        self.max_ = np.nanmax(y)
         return self
 
     def predict(self, X):
@@ -82,3 +82,4 @@ class RandomValueRegressor(BaseEstimator, RegressorMixin):
             Predicted random values
         """
         return np.random.uniform(low=self.min_, high=self.max_, size=X.shape[0])
+        

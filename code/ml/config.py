@@ -7,10 +7,10 @@ class Config:
     # Config variables
     KFOLD = 5
     MODEL_LIST = [
-        (MeanRegressor, "Mean Regressor", {}),
-        (RandomValueRegressor, "Random Regressor", {}),
+        (MeanRegressor, "mean_regressor", {}),
+        (RandomValueRegressor, "random_regressor", {}),
     ]
-    TARGET_LIST = [C.SCORE_TOT]
+    TARGET_NAME = C.TARGET_SCORE_TOT
     METRIC_LIST = [MSE]
 
     # Random state

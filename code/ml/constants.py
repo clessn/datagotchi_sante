@@ -20,6 +20,8 @@ class Constants:
     ATTRIBUTES_SANDBOX_FILENAME = "attributes_sandbox.csv"
     FEATURES_SANDBOX_FILENAME = "features_sandbox.csv"
     TARGETS_SANDBOX_FILENAME = "targets_sandbox.csv"
+    PREDICTIONS_SANDBOX_FILENAME = "predictions_sandbox.csv"
+
 
     # Codebook fields
     CODEBOOK_NAME_COL = "raw_variable_name"
