@@ -1,11 +1,10 @@
-from sklearn.model_selection import KFold
 import pandas as pd
-
-from constants import Constants as C
 from config import Config as Config
+from constants import Constants as C
 from loaders import load_features_target
 from metrics import available_metrics_dict
 from models import available_models_dict
+from sklearn.model_selection import KFold
 
 
 def crossval(X, y):
@@ -59,8 +58,8 @@ def crossval(X, y):
             y_predict = model.predict(X_test)
 
             # Add prediction to lists
-            fold_id_predict_list += [fold_index]*len(y_test)
-            model_name_predict_list += [model_name]*len(y_test)
+            fold_id_list += [fold_index] * len(y_test)
+            model_name_list += [model_name] * len(y_test)
             y_test_list += y_test.tolist()
             y_predict_list += y_predict.tolist()
 
@@ -101,5 +100,5 @@ def crossval(X, y):
 
 
 # Load data
-X,y = load_features_target()
+X, y = load_features_target()
 crossval(X, y)
