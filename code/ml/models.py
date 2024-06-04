@@ -1,6 +1,7 @@
 import numpy as np
 from sklearn.base import BaseEstimator, RegressorMixin
 
+
 class MeanRegressor(BaseEstimator, RegressorMixin):
     def __init__(self):
         self.mean_ = None
@@ -82,8 +83,9 @@ class RandomValueRegressor(BaseEstimator, RegressorMixin):
         """
         return np.random.uniform(low=self.min_, high=self.max_, size=X.shape[0])
 
+
 # Dictionnary of available models
 available_models_dict = {
-    'mean_regressor': MeanRegressor,
-    'random_regressor': RandomValueRegressor,
+    "mean_regressor": MeanRegressor,
+    "random_regressor": RandomValueRegressor,
 }

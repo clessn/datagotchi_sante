@@ -1,5 +1,6 @@
 from constants import Constants as C
 
+
 class Config:
 
     # Number of folds for cross-validation
@@ -15,9 +16,7 @@ class Config:
     TARGET_NAME = C.TARGET_SCORE_TOT
 
     # List of metrics
-    METRIC_LIST = [
-        ("mse", {})
-    ]
+    METRIC_LIST = [("mse", {})]
 
     # Number of non missing targets for metrics
     N_NON_MISSING_THRESHOLD = 30

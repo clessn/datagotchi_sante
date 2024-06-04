@@ -58,20 +58,20 @@ def crossval(X, y):
             y_predict = model.predict(X_test)
 
             # Add prediction to lists
-            fold_id_list += [fold_index] * len(y_test)
-            model_name_list += [model_name] * len(y_test)
+            fold_id_predict_list += [fold_index] * len(y_test)
+            model_name_predict_list += [model_name] * len(y_test)
             y_test_list += y_test.tolist()
             y_predict_list += y_predict.tolist()
 
             # Parameters y for metrics
             metric_param_y = {
-                'y_true' : y_test,
-                'y_pred' : y_predict,
+                "y_true": y_test,
+                "y_pred": y_predict,
             }
 
             # Loop on metric
             for metric_name, metric_param in Config.METRIC_LIST:
-                
+
                 # Metric function
                 metric_function = available_metrics_dict[metric_name]
 
@@ -85,13 +85,22 @@ def crossval(X, y):
                 metric_name_list.append(metric_name)
                 metric_value_list.append(metric_value)
 
-
     # Dict for predictions results
-    predictions_dict = {'fold_id': fold_id_predict_list, 'model_name': model_name_predict_list, 'y_test': y_test_list, 'y_predict': y_predict_list}
+    predictions_dict = {
+        "fold_id": fold_id_predict_list,
+        "model_name": model_name_predict_list,
+        "y_test": y_test_list,
+        "y_predict": y_predict_list,
+    }
     predictions_df = pd.DataFrame.from_dict(predictions_dict)
 
     # Dict for metrics results
-    metrics_dict = {'fold_id': fold_id_metric_list, 'model_name': model_name_metric_list, 'metric_name': metric_name_list, 'metric_value': metric_value_list}
+    metrics_dict = {
+        "fold_id": fold_id_metric_list,
+        "model_name": model_name_metric_list,
+        "metric_name": metric_name_list,
+        "metric_value": metric_value_list,
+    }
     metrics_df = pd.DataFrame.from_dict(metrics_dict)
 
     # To csv
