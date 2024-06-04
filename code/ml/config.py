@@ -11,6 +11,7 @@ class Config:
         ("mean_regressor", {}),
         ("random_regressor", {}),
         ("linear_regressor", {}),
+        ("extra_tree_regressor", {'random_state': 42}),
     ]
 
     # Target
@@ -23,5 +24,5 @@ class Config:
     MIN_TRAIN_SIZE = 30
     MIN_TEST_SIZE = 30
 
-    # Random state
-    RANDOM_STATE = 42
+    # Random states
+    RANDOM_STATE_SPLITTING = 42

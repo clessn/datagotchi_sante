@@ -28,7 +28,7 @@ def crossval(X, y):
     """
 
     # Split in folds
-    kf = KFold(n_splits=Config.KFOLD, shuffle=True, random_state=Config.RANDOM_STATE)
+    kf = KFold(n_splits=Config.KFOLD, shuffle=True, random_state=Config.RANDOM_STATE_SPLITTING)
 
     # Lists for predictions results
     fold_id_predict_list = []
@@ -61,7 +61,7 @@ def crossval(X, y):
         # Assert minimal number of targets
         indices_nan_y_train = np.isnan(y_train)
         assert sum(~indices_nan_y_train) >= Config.MIN_TRAIN_SIZE
-        
+
         # Remove y_train missing
         y_train = y_train[~indices_nan_y_train]
         X_train = X_train[~indices_nan_y_train]
