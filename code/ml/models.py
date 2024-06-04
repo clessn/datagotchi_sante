@@ -82,4 +82,3 @@ class RandomValueRegressor(BaseEstimator, RegressorMixin):
             Predicted random values
         """
         return np.random.uniform(low=self.min_, high=self.max_, size=X.shape[0])
-        
