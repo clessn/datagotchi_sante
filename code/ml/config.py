@@ -1,7 +1,7 @@
 from constants import Constants as C
 from metrics import MSE
-from models import MeanRegressor
-from models import RandomValueRegressor
+from models import MeanRegressor, RandomValueRegressor
+
 
 class Config:
     # Config variables

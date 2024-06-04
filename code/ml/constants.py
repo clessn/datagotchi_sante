@@ -22,7 +22,6 @@ class Constants:
     TARGETS_SANDBOX_FILENAME = "targets_sandbox.csv"
     PREDICTIONS_SANDBOX_FILENAME = "predictions_sandbox.csv"
 
-
     # Codebook fields
     CODEBOOK_NAME_COL = "raw_variable_name"
     CODEBOOK_TYPE_COL = "raw_variable_type"

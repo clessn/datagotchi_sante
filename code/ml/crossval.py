@@ -1,9 +1,8 @@
-from sklearn.model_selection import KFold
 import pandas as pd
-
-from constants import Constants as C
 from config import Config as Config
+from constants import Constants as C
 from loaders import load_features_target
+from sklearn.model_selection import KFold
 
 
 def crossval(X, y):
@@ -27,7 +26,6 @@ def crossval(X, y):
     y_test_list = []
     y_predict_list = []
 
-
     # Loop on folds
     for fold_index, (train_index, test_index) in enumerate(kf.split(X)):
 
@@ -49,8 +47,8 @@ def crossval(X, y):
             y_predict = model.predict(X_test)
 
             # Add prediction to lists
-            fold_id_list += [fold_index]*len(y_test)
-            model_name_list += [model_name]*len(y_test)
+            fold_id_list += [fold_index] * len(y_test)
+            model_name_list += [model_name] * len(y_test)
             y_test_list += y_test.tolist()
             y_predict_list += y_predict.tolist()
 
@@ -59,7 +57,12 @@ def crossval(X, y):
                 pass
 
     # Dict for results
-    predictions_dict = {'fold_id': fold_id_list, 'model_name': model_name_list, 'y_test': y_test_list, 'y_predict': y_predict_list}
+    predictions_dict = {
+        "fold_id": fold_id_list,
+        "model_name": model_name_list,
+        "y_test": y_test_list,
+        "y_predict": y_predict_list,
+    }
     predictions_df = pd.DataFrame.from_dict(predictions_dict)
 
     # To csv
@@ -67,5 +70,5 @@ def crossval(X, y):
 
 
 # Load data
-X,y = load_features_target()
+X, y = load_features_target()
 crossval(X, y)
