@@ -20,6 +20,8 @@ class Constants:
     ATTRIBUTES_SANDBOX_FILENAME = "attributes_sandbox.csv"
     FEATURES_SANDBOX_FILENAME = "features_sandbox.csv"
     TARGETS_SANDBOX_FILENAME = "targets_sandbox.csv"
+    PREDICTIONS_SANDBOX_FILENAME = "predictions_sandbox.csv"
+
 
     # Codebook fields
     CODEBOOK_NAME_COL = "raw_variable_name"
@@ -34,11 +36,17 @@ class Constants:
     # Attribute fields
     ATTRIBUTE_ID_COL = "ResponseId"
 
+    TARGET_EMOTIONAL_HEALTH = "emotional_health"
+    TARGET_POSITIVE_FUNCTIONING = "positive_functioning"
+    TARGET_SCORE_TOT = "score_tot"
+    TARGET_FLOURISHING = "flourishing"
+    TARGET_LANGUISHING = "languishing"
+    TARGET_MODERATE = "moderate"
     TARGET_COLS = [
-        "emotional_health",
-        "positive_functioning",
-        "score_tot",
-        "flourishing",
-        "languishing",
-        "moderate",
+        TARGET_EMOTIONAL_HEALTH,
+        TARGET_POSITIVE_FUNCTIONING,
+        TARGET_SCORE_TOT,
+        TARGET_FLOURISHING,
+        TARGET_LANGUISHING,
+        TARGET_MODERATE,
     ]
