@@ -27,6 +27,6 @@ def get_mse(y_true, y_pred):
     return mse
 
 # Dictionnary of available metrics
-metrics_dict = {
+available_metrics_dict = {
     'mse': get_mse,
 }

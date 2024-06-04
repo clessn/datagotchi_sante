@@ -4,8 +4,8 @@ import pandas as pd
 from constants import Constants as C
 from config import Config as Config
 from loaders import load_features_target
-from metrics import metrics_dict
-from models import models_dict
+from metrics import available_metrics_dict
+from models import available_models_dict
 
 
 def crossval(X, y):
@@ -19,7 +19,6 @@ def crossval(X, y):
     Returns
     -------
     """
-    print(metrics_dict)
 
     # Split in folds
     kf = KFold(n_splits=Config.KFOLD, shuffle=True, random_state=Config.RANDOM_STATE)
@@ -48,7 +47,7 @@ def crossval(X, y):
         for model_name, model_param in Config.MODEL_LIST:
 
             # Model class
-            model_class = models_dict[model_name]
+            model_class = available_models_dict[model_name]
 
             # Instanciate model
             model = model_class(**model_param)
@@ -75,7 +74,7 @@ def crossval(X, y):
             for metric_name, metric_param in Config.METRIC_LIST:
                 
                 # Metric function
-                metric_function = metrics_dict[metric_name]
+                metric_function = available_metrics_dict[metric_name]
 
                 # Parameters for metric
                 metric_param_extended = {**metric_param_y, **metric_param}
