@@ -1,5 +1,7 @@
 import numpy as np
 from sklearn.base import BaseEstimator, RegressorMixin
+from sklearn.linear_model import LinearRegression
+from sklearn.tree import ExtraTreeRegressor
 
 
 class MeanRegressor(BaseEstimator, RegressorMixin):
@@ -88,4 +90,6 @@ class RandomValueRegressor(BaseEstimator, RegressorMixin):
 available_models_dict = {
     "mean_regressor": MeanRegressor,
     "random_regressor": RandomValueRegressor,
+    "linear_regressor": LinearRegression,
+    "extra_tree_regressor": ExtraTreeRegressor,
 }
