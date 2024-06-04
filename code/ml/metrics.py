@@ -8,7 +8,7 @@ def remove_y_true_nan(y_true, y_pred):
     true_nan_indices = np.isnan(y_true)
 
     # Assert minimal number of targets
-    assert sum(~true_nan_indices) >= Config.N_NON_MISSING_THRESHOLD
+    assert sum(~true_nan_indices) >= Config.MIN_TEST_SIZE
 
     # Filter y vectors
     y_true_filtered = y_true[~true_nan_indices]

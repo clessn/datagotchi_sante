@@ -10,6 +10,7 @@ class Config:
     MODEL_LIST = [
         ("mean_regressor", {}),
         ("random_regressor", {}),
+        ("linear_regressor", {}),
     ]
 
     # Target
@@ -18,8 +19,9 @@ class Config:
     # List of metrics
     METRIC_LIST = [("mse", {})]
 
-    # Number of non missing targets for metrics
-    N_NON_MISSING_THRESHOLD = 30
+    # Number of non missing targets
+    MIN_TRAIN_SIZE = 30
+    MIN_TEST_SIZE = 30
 
     # Random state
     RANDOM_STATE = 42

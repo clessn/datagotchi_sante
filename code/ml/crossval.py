@@ -1,10 +1,18 @@
 import pandas as pd
+import numpy as np
+
 from config import Config as Config
 from constants import Constants as C
 from loaders import load_features_target
 from metrics import available_metrics_dict
 from models import available_models_dict
 from sklearn.model_selection import KFold
+
+# Filling missing values in X
+def fill_nan_with_value(X, values):
+    indices_nan = np.where(np.isnan(X))
+    X[indices_nan] = np.take(values, indices_nan[1])
+    return X
 
 
 def crossval(X, y):
@@ -37,11 +45,27 @@ def crossval(X, y):
     # Loop on folds
     for fold_index, (train_index, test_index) in enumerate(kf.split(X)):
 
-        X_train = X[train_index, :]
-        X_test = X[test_index, :]
-        y_train = y[train_index]
-        y_test = y[test_index]
+        # Variables X,y train and test
+        X_train = X[train_index, :].copy()
+        X_test = X[test_index, :].copy()
+        y_train = y[train_index].copy()
+        y_test = y[test_index].copy()
 
+        # Mean of values for X_train
+        mu_X_train = np.nanmean(X_train, axis=0)
+
+        # Replace missing values in X_test
+        X_train = fill_nan_with_value(X_train, mu_X_train)
+        X_test = fill_nan_with_value(X_test, mu_X_train)
+
+        # Assert minimal number of targets
+        indices_nan_y_train = np.isnan(y_train)
+        assert sum(~indices_nan_y_train) >= Config.MIN_TRAIN_SIZE
+        
+        # Remove y_train missing
+        y_train = y_train[~indices_nan_y_train]
+        X_train = X_train[~indices_nan_y_train]
+        
         # Loop on models
         for model_name, model_param in Config.MODEL_LIST:
 
