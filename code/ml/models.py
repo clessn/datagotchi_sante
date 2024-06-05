@@ -1,9 +1,10 @@
 import numpy as np
 from sklearn.base import BaseEstimator, RegressorMixin
-from sklearn.linear_model import LinearRegression
-from sklearn.tree import ExtraTreeRegressor
-from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
+from sklearn.linear_model import LinearRegression
+from sklearn.pipeline import Pipeline
+from sklearn.tree import ExtraTreeRegressor
+
 
 class MeanRegressor(BaseEstimator, RegressorMixin):
     def __init__(self):
@@ -91,14 +92,16 @@ class RandomValueRegressor(BaseEstimator, RegressorMixin):
 available_models_dict = {
     "mean_regressor": MeanRegressor(),
     "random_regressor": RandomValueRegressor(),
-    "extra_tree_regressor":
-        Pipeline([
-            ('imputer', SimpleImputer(strategy='mean')),
-            ('regressor', ExtraTreeRegressor(random_state=42)),
-        ]),
-    "linear_regressor": 
-        Pipeline([
-            ('imputer', SimpleImputer(strategy='mean')),
-            ('regressor', LinearRegression()),
-        ])
+    "extra_tree_regressor": Pipeline(
+        [
+            ("imputer", SimpleImputer(strategy="mean")),
+            ("regressor", ExtraTreeRegressor(random_state=42)),
+        ]
+    ),
+    "linear_regressor": Pipeline(
+        [
+            ("imputer", SimpleImputer(strategy="mean")),
+            ("regressor", LinearRegression()),
+        ]
+    ),
 }

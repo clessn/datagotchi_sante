@@ -132,5 +132,6 @@ def crossval(X, y):
 
 
 # Load data
-X, y = load_features_target()
-crossval(X, y)
+if __name__ == "__main__":
+    X, y = load_features_target()
+    crossval(X, y)
