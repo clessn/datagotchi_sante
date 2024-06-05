@@ -88,8 +88,8 @@ class RandomValueRegressor(BaseEstimator, RegressorMixin):
 
 # Dictionnary of available models
 available_models_dict = {
-    "mean_regressor": MeanRegressor,
-    "random_regressor": RandomValueRegressor,
-    "linear_regressor": LinearRegression,
-    "extra_tree_regressor": ExtraTreeRegressor,
+    "mean_regressor": (MeanRegressor, {}),
+    "random_regressor": (RandomValueRegressor, {}),
+    "linear_regressor": (LinearRegression, {}),
+    "extra_tree_regressor": (ExtraTreeRegressor, {"random_state": 42}),
 }

@@ -1,12 +1,12 @@
-import pandas as pd
 import numpy as np
-
+import pandas as pd
 from config import Config as Config
 from constants import Constants as C
 from loaders import load_features_target
 from metrics import available_metrics_dict
 from models import available_models_dict
 from sklearn.model_selection import KFold
+
 
 # Filling missing values in X
 def fill_nan_with_value(X, values):
@@ -28,7 +28,9 @@ def crossval(X, y):
     """
 
     # Split in folds
-    kf = KFold(n_splits=Config.KFOLD, shuffle=True, random_state=Config.RANDOM_STATE_SPLITTING)
+    kf = KFold(
+        n_splits=Config.KFOLD, shuffle=True, random_state=Config.RANDOM_STATE_SPLITTING
+    )
 
     # Lists for predictions results
     fold_id_predict_list = []
@@ -65,12 +67,12 @@ def crossval(X, y):
         # Remove y_train missing
         y_train = y_train[~indices_nan_y_train]
         X_train = X_train[~indices_nan_y_train]
-        
+
         # Loop on models
-        for model_name, model_param in Config.MODEL_LIST:
+        for model_name in Config.MODEL_LIST:
 
             # Model class
-            model_class = available_models_dict[model_name]
+            model_class, model_param = available_models_dict[model_name]
 
             # Instanciate model
             model = model_class(**model_param)
@@ -94,10 +96,10 @@ def crossval(X, y):
             }
 
             # Loop on metric
-            for metric_name, metric_param in Config.METRIC_LIST:
+            for metric_name in Config.METRIC_LIST:
 
                 # Metric function
-                metric_function = available_metrics_dict[metric_name]
+                metric_function, metric_param = available_metrics_dict[metric_name]
 
                 # Parameters for metric
                 metric_param_extended = {**metric_param_y, **metric_param}

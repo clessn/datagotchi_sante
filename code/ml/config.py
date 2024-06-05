@@ -8,17 +8,19 @@ class Config:
 
     # List of models
     MODEL_LIST = [
-        ("mean_regressor", {}),
-        ("random_regressor", {}),
-        ("linear_regressor", {}),
-        ("extra_tree_regressor", {'random_state': 42}),
+        "mean_regressor",
+        "random_regressor",
+        "linear_regressor",
+        "extra_tree_regressor",
     ]
 
     # Target
     TARGET_NAME = C.TARGET_SCORE_TOT
 
     # List of metrics
-    METRIC_LIST = [("mse", {})]
+    METRIC_LIST = [
+        "mse",
+    ]
 
     # Number of non missing targets
     MIN_TRAIN_SIZE = 30
