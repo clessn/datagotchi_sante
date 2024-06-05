@@ -3,6 +3,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+from config import Config
 # Load the .env file
 load_dotenv()
 
@@ -11,18 +12,17 @@ class Constants:
     # Paths
     DATA_PATH = Path(os.getenv("DATA_PATH"))
     RAW_PATH = DATA_PATH / "raw"
-    ML_PATH = DATA_PATH / "ml"
+    ML_PATH = DATA_PATH / "ml" / Config.RUN_TYPE
     LOGGING_PATH = Path(os.getcwd()) / "code" / "ml"
 
     # Filenames
     RAW_FILENAME = "data_raw.sav"
     CODEBOOK_FILENAME = "frozen_codebook_may_5.csv"
     ATTRIBUTES_FILENAME = "attributes.csv"
-    ATTRIBUTES_SANDBOX_FILENAME = "attributes_sandbox.csv"
-    FEATURES_SANDBOX_FILENAME = "features_sandbox.csv"
-    TARGETS_SANDBOX_FILENAME = "targets_sandbox.csv"
-    PREDICTIONS_SANDBOX_FILENAME = "predictions_sandbox.csv"
-    METRICS_SANDBOX_FILENAME = "metrics_sandbox.csv"
+    FEATURES_FILENAME = "features.csv"
+    TARGETS_FILENAME = "targets.csv"
+    PREDICTIONS_FILENAME = "predictions.csv"
+    METRICS_FILENAME = "metrics.csv"
     LOGGING_CONFIG_FILENAME = "logging.conf"
 
     # Codebook fields

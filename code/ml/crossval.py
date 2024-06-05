@@ -133,8 +133,8 @@ def crossval(X, y):
 
     # To csv
     logger.debug("Writing metrics file")
-    predictions_df.to_csv(C.ML_PATH / C.PREDICTIONS_SANDBOX_FILENAME)
-    metrics_df.to_csv(C.ML_PATH / C.METRICS_SANDBOX_FILENAME)
+    predictions_df.to_csv(C.ML_PATH / C.PREDICTIONS_FILENAME)
+    metrics_df.to_csv(C.ML_PATH / C.METRICS_FILENAME)
     logger.info("Cross-validation performed with success !")
 
 
