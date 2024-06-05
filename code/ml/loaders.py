@@ -24,9 +24,9 @@ def load_features_target():
     X = pd.read_csv(
         C.ML_PATH / C.FEATURES_FILENAME, index_col=C.ATTRIBUTE_ID_COL
     ).values
-    y = pd.read_csv(
-        C.ML_PATH / C.TARGETS_FILENAME, index_col=C.ATTRIBUTE_ID_COL
-    )[eval(Config.TARGET_NAME)].values
+    y = pd.read_csv(C.ML_PATH / C.TARGETS_FILENAME, index_col=C.ATTRIBUTE_ID_COL)[
+        eval(Config.TARGET_NAME)
+    ].values
     # TO DO : assert ResponseId from X = ResponseId from y
     return X, y
 

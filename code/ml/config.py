@@ -1,7 +1,7 @@
 class Config:
 
     # Run type
-    RUN_TYPE = 'sandbox'  # sandbox or real
+    RUN_TYPE = "sandbox"  # sandbox or real
 
     # Number of folds for cross-validation
     KFOLD = 5
@@ -15,7 +15,7 @@ class Config:
     ]
 
     # Target
-    TARGET_NAME = 'C.TARGET_SCORE_TOT'
+    TARGET_NAME = "C.TARGET_SCORE_TOT"
 
     # List of metrics
     METRIC_LIST = [
