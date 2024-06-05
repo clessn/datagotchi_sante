@@ -57,13 +57,6 @@ def crossval(X, y):
         y_train = y[train_index].copy()
         y_test = y[test_index].copy()
 
-        # # Mean of values for X_train
-        # mu_X_train = np.nanmean(X_train, axis=0)
-
-        # # Replace missing values in X_test
-        # X_train = fill_nan_with_value(X_train, mu_X_train)
-        # X_test = fill_nan_with_value(X_test, mu_X_train)
-
         # Assert minimal number of targets
         indices_nan_y_train = np.isnan(y_train)
         assert sum(~indices_nan_y_train) >= Config.MIN_TRAIN_SIZE
