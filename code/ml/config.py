@@ -20,6 +20,7 @@ class Config:
     # List of metrics
     METRIC_LIST = [
         "mse",
+        "mae",
     ]
 
     # Number of non missing targets

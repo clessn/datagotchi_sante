@@ -1,6 +1,6 @@
 import numpy as np
 from config import Config
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_absolute_error, mean_squared_error
 
 import logging
 logger = logging.getLogger(__name__)
@@ -31,7 +31,19 @@ def get_mse(y_true, y_pred):
     return mse
 
 
+# MAE
+def get_mae(y_true, y_pred):
+
+    # Remove missing values
+    y_true_filtered, y_pred_filtered = remove_y_true_nan(y_true, y_pred)
+
+    # Metric
+    mse = mean_absolute_error(y_true_filtered, y_pred_filtered)
+    return mse
+
+
 # Dictionnary of available metrics
 available_metrics_dict = {
     "mse": (get_mse, {}),
+    "mae": (get_mae, {}),
 }
