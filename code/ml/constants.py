@@ -12,6 +12,7 @@ class Constants:
     DATA_PATH = Path(os.getenv("DATA_PATH"))
     RAW_PATH = DATA_PATH / "raw"
     ML_PATH = DATA_PATH / "ml"
+    LOGGING_PATH = Path(os.getcwd()) / "code" / "ml"
 
     # Filenames
     RAW_FILENAME = "data_raw.sav"
@@ -22,6 +23,7 @@ class Constants:
     TARGETS_SANDBOX_FILENAME = "targets_sandbox.csv"
     PREDICTIONS_SANDBOX_FILENAME = "predictions_sandbox.csv"
     METRICS_SANDBOX_FILENAME = "metrics_sandbox.csv"
+    LOGGING_CONFIG_FILENAME = "logging.conf"
 
     # Codebook fields
     CODEBOOK_NAME_COL = "raw_variable_name"

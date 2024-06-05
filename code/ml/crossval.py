@@ -1,3 +1,6 @@
+import logging
+import os
+
 import numpy as np
 import pandas as pd
 from config import Config as Config
@@ -6,6 +9,9 @@ from loaders import load_features_target
 from metrics import available_metrics_dict
 from models import available_models_dict
 from sklearn.model_selection import KFold
+from utils import configure_main_logger
+
+logger = logging.getLogger(__name__)
 
 
 # Filling missing values in X
@@ -28,6 +34,7 @@ def crossval(X, y):
     """
 
     # Split in folds
+    logger.info(f"Crossvalidation : split dataset in {Config.KFOLD} folds")
     kf = KFold(
         n_splits=Config.KFOLD, shuffle=True, random_state=Config.RANDOM_STATE_SPLITTING
     )
@@ -53,16 +60,12 @@ def crossval(X, y):
         y_train = y[train_index].copy()
         y_test = y[test_index].copy()
 
-        # # Mean of values for X_train
-        # mu_X_train = np.nanmean(X_train, axis=0)
-
-        # # Replace missing values in X_test
-        # X_train = fill_nan_with_value(X_train, mu_X_train)
-        # X_test = fill_nan_with_value(X_test, mu_X_train)
-
         # Assert minimal number of targets
         indices_nan_y_train = np.isnan(y_train)
         assert sum(~indices_nan_y_train) >= Config.MIN_TRAIN_SIZE
+        logger.info(
+            f"Fold {fold_index} : keeping {sum(~indices_nan_y_train)}/{len(indices_nan_y_train)} non-missing values"
+        )
 
         # Remove y_train missing
         y_train = y_train[~indices_nan_y_train]
@@ -76,6 +79,7 @@ def crossval(X, y):
 
             # Fit the model
             model.fit(X_train, y_train)
+            logger.debug(f"Fitting model {model_name} ...")
 
             # Predict
             y_predict = model.predict(X_test)
@@ -93,6 +97,7 @@ def crossval(X, y):
             }
 
             # Loop on metric
+            logger.debug(f"Computing metrics for {model_name}...")
             for metric_name in Config.METRIC_LIST:
 
                 # Metric function
@@ -127,11 +132,14 @@ def crossval(X, y):
     metrics_df = pd.DataFrame.from_dict(metrics_dict)
 
     # To csv
+    logger.debug("Writing metrics file")
     predictions_df.to_csv(C.ML_PATH / C.PREDICTIONS_SANDBOX_FILENAME)
     metrics_df.to_csv(C.ML_PATH / C.METRICS_SANDBOX_FILENAME)
+    logger.info("Cross-validation performed with success !")
 
 
-# Load data
+# Run crossval
 if __name__ == "__main__":
+    logger = configure_main_logger("crossval")
     X, y = load_features_target()
     crossval(X, y)
