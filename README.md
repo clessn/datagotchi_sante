@@ -49,13 +49,16 @@ To get started with the project, follow these steps:
 
 The repository is organized as follows:
 code
-├── cleaning
-│ └── (various cleaning functions)
-├── eda
-│ └── (exploratory data analysis scripts)
-└── ml
-└── (machine learning workflow from raw data to evaluated predictions)
 
+```markdown
+code/
+├── cleaning/
+│   └── (various cleaning functions)
+├── eda/
+│   └── (exploratory data analysis scripts)
+└── ml/
+    └── (machine learning workflow from raw data to evaluated predictions)
+    
 - **cleaning**: Contains scripts for data cleaning.
 - **eda**: Contains scripts for exploratory data analysis to explore and understand the data.
 - **ml**: Contains scripts for the machine learning workflow, including data processing, model training, and evaluation.
