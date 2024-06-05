@@ -3,7 +3,6 @@ import pandas as pd
 from constants import Constants as C
 from loaders import load_attributes, load_codebook
 
-
 # def create_attribute_sandbox(df_codebook, df_attributes):
 #     df_codebook_sandbox = df_codebook.iloc[0:41]
 #     available_variables = np.unique(df_codebook_sandbox[C.CODEBOOK_NAME_COL]).tolist()
@@ -33,8 +32,8 @@ def create_numerical_features(df_attributes):
 
 df_codebook = load_codebook()
 df_attributes = load_attributes()
-#create_attribute_sandbox(df_codebook, df_attributes)
-#df_attributes_sandbox = get_attributes_sandbox()
+# create_attribute_sandbox(df_codebook, df_attributes)
+# df_attributes_sandbox = get_attributes_sandbox()
 df_numerical_features = create_numerical_features(df_attributes)
 df_features = df_numerical_features  # aggregate here different type of features
 df_targets = df_attributes.loc[:, C.TARGET_COLS]

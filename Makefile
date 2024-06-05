@@ -13,3 +13,6 @@ create_features:
 
 run-crossval:
 	poetry run python code$(SEP)ml$(SEP)crossval.py
+
+launch-visuals:
+	poetry run streamlit run code$(SEP)ml$(SEP)visuals.py

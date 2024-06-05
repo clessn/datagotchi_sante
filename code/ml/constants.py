@@ -1,9 +1,9 @@
 import os
 from pathlib import Path
 
+from config import Config
 from dotenv import load_dotenv
 
-from config import Config
 # Load the .env file
 load_dotenv()
 
