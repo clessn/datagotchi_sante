@@ -31,6 +31,11 @@ def load_features_target():
     return X, y
 
 
+def load_results_metrics():
+    metrics_df = pd.read_csv(C.ML_PATH / C.METRICS_SANDBOX_FILENAME)
+    return metrics_df
+
+
 if __name__ == "__main__":
     df_str, df_num = explore_raw_data()
     df_codebook = load_codebook()
