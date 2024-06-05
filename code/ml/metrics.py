@@ -2,6 +2,8 @@ import numpy as np
 from config import Config
 from sklearn.metrics import mean_squared_error
 
+import logging
+logger = logging.getLogger(__name__)
 
 # Remove missing values from y vectors
 def remove_y_true_nan(y_true, y_pred):
@@ -25,6 +27,7 @@ def get_mse(y_true, y_pred):
 
     # Metric
     mse = mean_squared_error(y_true_filtered, y_pred_filtered)
+    logger.error('mse computed')
     return mse
 
 

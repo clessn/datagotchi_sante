@@ -6,7 +6,11 @@ from loaders import load_features_target
 from metrics import available_metrics_dict
 from models import available_models_dict
 from sklearn.model_selection import KFold
+import os
+import logging 
+from utils import configure_main_logger
 
+logger = logging.getLogger(__name__)
 
 # Filling missing values in X
 def fill_nan_with_value(X, values):
@@ -125,13 +129,15 @@ def crossval(X, y):
         "metric_value": metric_value_list,
     }
     metrics_df = pd.DataFrame.from_dict(metrics_dict)
+    logger.warning('This is a warningf')
 
     # To csv
     predictions_df.to_csv(C.ML_PATH / C.PREDICTIONS_SANDBOX_FILENAME)
     metrics_df.to_csv(C.ML_PATH / C.METRICS_SANDBOX_FILENAME)
 
 
-# Load data
+# Run crossval
 if __name__ == "__main__":
+    logger = configure_main_logger('crossval')
     X, y = load_features_target()
     crossval(X, y)
