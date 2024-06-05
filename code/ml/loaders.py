@@ -32,7 +32,7 @@ def load_features_target():
 
 
 def load_results_metrics():
-    metrics_df = pd.read_csv(C.ML_PATH / C.METRICS_SANDBOX_FILENAME)
+    metrics_df = pd.read_csv(C.ML_PATH / C.METRICS_FILENAME)
     return metrics_df
 
 
