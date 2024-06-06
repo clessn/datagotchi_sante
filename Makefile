@@ -8,8 +8,11 @@ clean-python:
 	poetry run isort .
 	poetry run black .
 
-create_features:
+create-features:
 	poetry run python code$(SEP)ml$(SEP)feature_engineering.py
+
+build-sandbox:
+	poetry run python code$(SEP)ml$(SEP)sandbox.py
 
 run-crossval:
 	poetry run python code$(SEP)ml$(SEP)crossval.py
