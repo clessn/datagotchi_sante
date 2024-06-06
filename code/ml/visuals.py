@@ -49,6 +49,13 @@ def plot_results_metric():
     ax.set_ylabel(f"Mean value on {metric_choice}")
     ax.set_title(f"Mean value on {metric_choice} for models")
 
+    # Adjust size
+    ax.tick_params(axis='x', labelsize=10)
+    # Ajust rotation
+    plt.xticks(rotation=45, ha='right')
+    # Adjust space
+    plt.tight_layout()
+
     # Plot results
     # st.line_chart(mean_selected_metric_df)
     st.pyplot(fig)
