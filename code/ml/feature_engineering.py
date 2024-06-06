@@ -1,7 +1,13 @@
+import logging
 import numpy as np
 import pandas as pd
+
 from constants import Constants as C
 from loaders import load_attributes, load_codebook
+from utils import configure_main_logger
+
+logger = logging.getLogger(__name__)
+
 
 # def create_attribute_sandbox(df_codebook, df_attributes):
 #     df_codebook_sandbox = df_codebook.iloc[0:41]
@@ -26,17 +32,29 @@ def create_numerical_features(df_attributes):
     numerical_variables = df_codebook.loc[
         df_codebook[C.CODEBOOK_TYPE_COL].isin(numerical_fields), C.CODEBOOK_NAME_COL
     ].values
-    print(numerical_variables)
+    logger.info(numerical_variables)
     return df_attributes.loc[:, numerical_variables]
 
+# Run feature_engineering
+if __name__ == "__main__":
+    logger = configure_main_logger("feature_engineering")
 
-df_codebook = load_codebook()
-df_attributes = load_attributes()
-# create_attribute_sandbox(df_codebook, df_attributes)
-# df_attributes_sandbox = get_attributes_sandbox()
-df_numerical_features = create_numerical_features(df_attributes)
-df_features = df_numerical_features  # aggregate here different type of features
-df_targets = df_attributes.loc[:, C.TARGET_COLS]
-df_features.to_csv(C.ML_PATH / C.FEATURES_FILENAME)
-df_targets.to_csv(C.ML_PATH / C.TARGETS_FILENAME)
-print("Features and Targets created with success !! :-)")
+    # Load codebook and attributes
+    df_codebook = load_codebook()
+    df_attributes = load_attributes()
+    # create_attribute_sandbox(df_codebook, df_attributes)
+    # df_attributes_sandbox = get_attributes_sandbox()
+
+    # Numerical features
+    df_numerical_features = create_numerical_features(df_attributes)
+
+    # Aggregate here different type of features
+    df_features = df_numerical_features  
+
+    # Targets
+    df_targets = df_attributes.loc[:, C.TARGET_COLS]
+
+    # Save features and targets to csv
+    df_features.to_csv(C.ML_PATH / C.FEATURES_FILENAME)
+    df_targets.to_csv(C.ML_PATH / C.TARGETS_FILENAME)
+    logger.info("Features and Targets created with success !! :-)")
