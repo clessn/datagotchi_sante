@@ -11,8 +11,12 @@ load_dotenv()
 class Constants:
     # Paths
     DATA_PATH = Path(os.getenv("DATA_PATH"))
-    RAW_PATH = DATA_PATH / "raw"
-    ML_PATH = DATA_PATH / "ml" / Config.RUN_TYPE
+    RAW_FOLDER_NAME = "raw"
+    ML_FOLDER_NAME = "ml"
+    SANDBOX_FOLDER_NAME = "sandbox"
+    REAL_FOLDER_NAME = "real"
+    RAW_PATH = DATA_PATH / RAW_FOLDER_NAME
+    ML_PATH = DATA_PATH / ML_FOLDER_NAME / eval(Config.RUN_TYPE)
     LOGGING_PATH = Path(os.getcwd()) / "code" / "ml"
 
     # Filenames
@@ -41,14 +45,10 @@ class Constants:
     TARGET_EMOTIONAL_HEALTH = "emotional_health"
     TARGET_POSITIVE_FUNCTIONING = "positive_functioning"
     TARGET_SCORE_TOT = "score_tot"
-    TARGET_FLOURISHING = "flourishing"
-    TARGET_LANGUISHING = "languishing"
-    TARGET_MODERATE = "moderate"
+    TARGET_HEALTH_INDICATOR = "health_indicator"
     TARGET_COLS = [
         TARGET_EMOTIONAL_HEALTH,
         TARGET_POSITIVE_FUNCTIONING,
         TARGET_SCORE_TOT,
-        TARGET_FLOURISHING,
-        TARGET_LANGUISHING,
-        TARGET_MODERATE,
+        TARGET_HEALTH_INDICATOR,
     ]
