@@ -8,21 +8,6 @@ from utils import configure_main_logger
 
 logger = logging.getLogger(__name__)
 
-
-# def create_attribute_sandbox(df_codebook, df_attributes):
-#     df_codebook_sandbox = df_codebook.iloc[0:41]
-#     available_variables = np.unique(df_codebook_sandbox[C.CODEBOOK_NAME_COL]).tolist()
-#     sandbox_variables = available_variables + C.TARGET_COLS
-#     df_attributes_sandbox = df_attributes.loc[:, sandbox_variables]
-#     df_attributes_sandbox.to_csv(C.ML_PATH / C.ATTRIBUTES_SANDBOX_FILENAME)
-
-
-# def get_attributes_sandbox():
-#     return pd.read_csv(
-#         C.ML_PATH / C.ATTRIBUTES_SANDBOX_FILENAME, index_col=C.ATTRIBUTE_ID_COL
-#     )
-
-
 def create_numerical_features(df_attributes):
     numerical_fields = [
         C.CODEBOOK_TYPE_INTEGER_LABEL,
@@ -32,8 +17,17 @@ def create_numerical_features(df_attributes):
     numerical_variables = df_codebook.loc[
         df_codebook[C.CODEBOOK_TYPE_COL].isin(numerical_fields), C.CODEBOOK_NAME_COL
     ].values
-    logger.info(numerical_variables)
-    return df_attributes.loc[:, numerical_variables]
+    numerical_variables_in_attributes = [variable for variable in numerical_variables if variable in df_attributes.columns]
+    return df_attributes.loc[:, numerical_variables_in_attributes]
+
+def keep_observable(df_codebook, df_attributes):
+    df_codebook_observable = df_codebook[(df_codebook['observability'] == 'observable') | (df_codebook['observability'] == 'pseudo-observable')].copy()
+    variables_observables = df_codebook_observable['raw_variable_name'].values
+    kept_variables = np.unique(variables_observables + C.TARGET_COLS + [C.ATTRIBUTE_ID_COL])
+    variables_observables_in_attributes = [variable for variable in kept_variables if variable in df_attributes.columns]
+    df_attributes_observable = df_attributes[variables_observables_in_attributes]
+    
+    return df_attributes_observable
 
 # Run feature_engineering
 if __name__ == "__main__":
@@ -42,17 +36,18 @@ if __name__ == "__main__":
     # Load codebook and attributes
     df_codebook = load_codebook()
     df_attributes = load_attributes()
-    # create_attribute_sandbox(df_codebook, df_attributes)
-    # df_attributes_sandbox = get_attributes_sandbox()
+
+    # Observable variables
+    df_attributes_observable = keep_observable(df_codebook, df_attributes)
 
     # Numerical features
-    df_numerical_features = create_numerical_features(df_attributes)
+    df_numerical_features = create_numerical_features(df_attributes_observable)
 
     # Aggregate here different type of features
     df_features = df_numerical_features  
 
     # Targets
-    df_targets = df_attributes.loc[:, C.TARGET_COLS]
+    df_targets = df_attributes_observable.loc[:, C.TARGET_COLS]
 
     # Save features and targets to csv
     df_features.to_csv(C.ML_PATH / C.FEATURES_FILENAME)
