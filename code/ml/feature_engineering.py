@@ -21,12 +21,10 @@ def create_numerical_features(df_attributes):
     return df_attributes.loc[:, numerical_variables_in_attributes]
 
 def keep_observable(df_codebook, df_attributes):
-    df_codebook_observable = df_codebook[(df_codebook['observability'] == 'observable') | (df_codebook['observability'] == 'pseudo-observable')].copy()
-    variables_observables = df_codebook_observable['raw_variable_name'].values
-    kept_variables = np.unique(variables_observables + C.TARGET_COLS + [C.ATTRIBUTE_ID_COL])
-    variables_observables_in_attributes = [variable for variable in kept_variables if variable in df_attributes.columns]
-    df_attributes_observable = df_attributes[variables_observables_in_attributes]
-    
+    df_codebook_observable = df_codebook[df_codebook[C.CODEBOOK_OBSERVABILITY_COL].isin(C.OBSERVABILITY_LEVEL)].copy()
+    observables_variables = df_codebook_observable[C.CODEBOOK_NAME_COL].values
+    observables_variables_in_attributes = [variable for variable in observables_variables if variable in df_attributes.columns]
+    df_attributes_observable = df_attributes[observables_variables_in_attributes]
     return df_attributes_observable
 
 # Run feature_engineering
@@ -37,17 +35,20 @@ if __name__ == "__main__":
     df_codebook = load_codebook()
     df_attributes = load_attributes()
 
+    # Targets
+    df_targets = df_attributes.loc[:, C.TARGET_COLS]
+
+    # Candidates attributes, removing targets
+    df_candidate = df_attributes.drop(columns=C.TARGET_COLS)
+
     # Observable variables
-    df_attributes_observable = keep_observable(df_codebook, df_attributes)
+    df_candidate_observable = keep_observable(df_codebook, df_candidate)
 
     # Numerical features
-    df_numerical_features = create_numerical_features(df_attributes_observable)
+    df_numerical_features = create_numerical_features(df_candidate_observable)
 
     # Aggregate here different type of features
     df_features = df_numerical_features  
-
-    # Targets
-    df_targets = df_attributes_observable.loc[:, C.TARGET_COLS]
 
     # Save features and targets to csv
     df_features.to_csv(C.ML_PATH / C.FEATURES_FILENAME)
