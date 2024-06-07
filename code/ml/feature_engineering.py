@@ -18,6 +18,7 @@ def create_numerical_features(df_attributes):
         df_codebook[C.CODEBOOK_TYPE_COL].isin(numerical_fields), C.CODEBOOK_NAME_COL
     ].values
     numerical_variables_in_attributes = [variable for variable in numerical_variables if variable in df_attributes.columns]
+    logger.info(f"{len(numerical_variables_in_attributes)} variables are numerical.")
     return df_attributes.loc[:, numerical_variables_in_attributes]
 
 def keep_observable(df_codebook, df_attributes):
@@ -25,6 +26,8 @@ def keep_observable(df_codebook, df_attributes):
     observables_variables = df_codebook_observable[C.CODEBOOK_NAME_COL].values
     observables_variables_in_attributes = [variable for variable in observables_variables if variable in df_attributes.columns]
     df_attributes_observable = df_attributes[observables_variables_in_attributes]
+    logger.info(df_attributes.columns)
+    logger.info(f"Before the observability step, {df_attributes.shape[1]} variables were available. After the observability step, {df_attributes_observable.shape[1]} variables are kept.")
     return df_attributes_observable
 
 # Run feature_engineering
