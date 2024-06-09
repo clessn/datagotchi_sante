@@ -8,32 +8,50 @@ from utils import configure_main_logger
 
 logger = logging.getLogger(__name__)
 
-
-def create_one_hot_features(df_codebook, df_attributes):
-
-    # Select one_hot_features
-    one_hot_fields = [C.CODEBOOK_TYPE_NOMINAL_SINGLE_LABEL]
-    one_hot_variables = df_codebook.loc[
-        df_codebook[C.CODEBOOK_TYPE_COL].isin(one_hot_fields), C.CODEBOOK_NAME_COL
+def features_in_codebook_and_attributes(fields,df_codebook, df_attributes):
+    codebook_fields_variables = df_codebook.loc[
+        df_codebook[C.CODEBOOK_TYPE_COL].isin(fields), C.CODEBOOK_NAME_COL
     ].values
-    one_hot_variables_in_attributes = [
-        variable for variable in one_hot_variables if variable in df_attributes.columns
+    codebook_fields_attributes_variables = [
+        variable for variable in codebook_fields_variables if variable in df_attributes.columns
     ]
-    logger.info(
-        f"{len(one_hot_variables_in_attributes)} variables have to be one-hot encoded."
-    )
-    logger.info(one_hot_variables_in_attributes)
+    return codebook_fields_attributes_variables
+
+
+def create_nominal_multiple_features(df_codebook, df_attributes):
+    
+    # Select nominal_multiple_features
+    nominal_multiple_fields = [
+        C.CODEBOOK_TYPE_NOMINAL_MULTIPLE_LABEL,
+    ]
+
+    nominal_multiple_variables_in_attributes = features_in_codebook_and_attributes(nominal_multiple_fields,df_codebook, df_attributes)
+    logger.info(f"{len(nominal_multiple_variables_in_attributes)} variables are nominal multiple.")
 
     # Keep only those columns
-    df_one_hot_features = df_attributes[one_hot_variables_in_attributes].copy()
+    df_nominal_multiple_features = df_attributes[nominal_multiple_variables_in_attributes].copy()
 
+    # Convert '1.0' into True
+    df_nominal_multiple_features = df_nominal_multiple_features.map(lambda x: True if x == 1.0 else x)
+    return df_nominal_multiple_features
+    
+
+def create_nominal_single_features(df_codebook, df_attributes):
+
+    # Select nominal_single_features
+    nominal_single_fields = [
+        C.CODEBOOK_TYPE_NOMINAL_SINGLE_LABEL,
+    ]
+    nominal_single_variables_in_attributes = features_in_codebook_and_attributes(nominal_single_fields,df_codebook, df_attributes)
+
+    # Keep only those columns
+    df_nominal_single_features = df_attributes[nominal_single_variables_in_attributes].copy()
+    nan_in_any_column_b = df_nominal_single_features.isna().any()
+    
     # Convert it into dummies (one-hot encoding)
-    df_one_hot_features = pd.get_dummies(df_one_hot_features)
-    logger.info(
-        f"{len(df_one_hot_features)} variables are created for one-hot encoding."
-    )
-
-    return df_one_hot_features
+    df_nominal_single_features = pd.get_dummies(df_nominal_single_features, columns=nominal_single_variables_in_attributes)
+    logger.info(f"{len(nominal_single_variables_in_attributes)} variables are nominal single and are converted into {len(df_nominal_single_features.columns)} variables one-hot encoded.")
+    return df_nominal_single_features
 
 
 def create_numerical_features(df_codebook, df_attributes):
@@ -42,14 +60,7 @@ def create_numerical_features(df_codebook, df_attributes):
         C.CODEBOOK_TYPE_FLOAT_LABEL,
         C.CODEBOOK_TYPE_ORDINAL_LABEL,
     ]
-    numerical_variables = df_codebook.loc[
-        df_codebook[C.CODEBOOK_TYPE_COL].isin(numerical_fields), C.CODEBOOK_NAME_COL
-    ].values
-    numerical_variables_in_attributes = [
-        variable
-        for variable in numerical_variables
-        if variable in df_attributes.columns
-    ]
+    numerical_variables_in_attributes = features_in_codebook_and_attributes(numerical_fields,df_codebook, df_attributes)
     logger.info(f"{len(numerical_variables_in_attributes)} variables are numerical.")
     return df_attributes.loc[:, numerical_variables_in_attributes]
 
@@ -93,11 +104,14 @@ if __name__ == "__main__":
         df_codebook, df_candidate_observable
     )
 
-    # Nominal single features
-    df_one_hot_features = create_one_hot_features(df_codebook, df_candidate_observable)
+    # Nominal single features, one-hot encoded
+    df_nominal_single_features = create_nominal_single_features(df_codebook, df_candidate_observable)
+
+    # Nominal multiple features
+    df_nominal_multiple_features = create_nominal_multiple_features(df_codebook, df_candidate_observable)
 
     # Aggregate here different type of features
-    df_features = pd.concat([df_numerical_features, df_one_hot_features], axis=1)
+    df_features = pd.concat([df_numerical_features, df_nominal_single_features, df_nominal_multiple_features], axis=1)
 
     # Save features and targets to csv
     df_features.to_csv(C.ML_PATH / C.FEATURES_FILENAME)
