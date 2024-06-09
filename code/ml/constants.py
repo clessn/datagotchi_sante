@@ -21,7 +21,7 @@ class Constants:
 
     # Filenames
     RAW_FILENAME = "data_raw.sav"
-    CODEBOOK_FILENAME = "frozen_codebook_may_5.csv"
+    CODEBOOK_FILENAME = "frozen_codebook_june_9.csv"
     ATTRIBUTES_FILENAME = "attributes.csv"
     FEATURES_FILENAME = "features.csv"
     TARGETS_FILENAME = "targets.csv"

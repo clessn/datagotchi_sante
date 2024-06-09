@@ -38,7 +38,6 @@ def keep_observable(df_codebook, df_attributes):
         if variable in df_attributes.columns
     ]
     df_attributes_observable = df_attributes[observables_variables_in_attributes]
-    logger.info(df_attributes.columns)
     logger.info(
         f"Before the observability step, {df_attributes.shape[1]} variables were available. After the observability step, {df_attributes_observable.shape[1]} variables are kept."
     )
