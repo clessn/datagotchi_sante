@@ -2,7 +2,7 @@ class Config:
 
     # 1. Predictions
     # 1.1. Run type
-    RUN_TYPE = "REAL_FOLDER_NAME"  # SANDBOX_FOLDER_NAME or REAL_FOLDER_NAME
+    RUN_TYPE = "SANDBOX_FOLDER_NAME"  # SANDBOX_FOLDER_NAME or REAL_FOLDER_NAME
 
     # 1.2. Evaluation
     KFOLD = 5
