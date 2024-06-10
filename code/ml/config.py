@@ -22,6 +22,14 @@ class Config:
         "extra_tree_regressor",
     ]
     TARGET_NAME = "C.TARGET_SCORE_TOT"
+    SCALER_CHOICE = {
+        "linear_regressor": "minmax",
+        "extra_tree_regressor": "std",
+    }
+    IMPUTER_CHOICE = {
+        "linear_regressor": "imputer_mean",
+        "extra_tree_regressor": "imputer_mean",
+    }
 
     # 2. Sandbox creation
     SANDBOX_N_ATTRIBUTES = 20
