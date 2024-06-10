@@ -97,15 +97,15 @@ available_models_dict = {
     Config.MODEL_RANDOM_REGRESSOR_NAME: RandomValueRegressor(),
     Config.MODEL_EXTRA_TREE_REGRESSOR_NAME: Pipeline(
         [
-            (Config.SCALER_CHOICE[Config.MODEL_EXTRA_TREE_REGRESSOR_NAME], available_scalers_dict[Config.SCALER_CHOICE[Config.MODEL_EXTRA_TREE_REGRESSOR_NAME]]),
-            (Config.IMPUTER_CHOICE[Config.MODEL_EXTRA_TREE_REGRESSOR_NAME], available_imputers_dict[Config.IMPUTER_CHOICE[Config.MODEL_EXTRA_TREE_REGRESSOR_NAME]]),
+            ("scaler", available_scalers_dict[Config.SCALER_CHOICE[Config.MODEL_EXTRA_TREE_REGRESSOR_NAME]]),
+            ("imputer", available_imputers_dict[Config.IMPUTER_CHOICE[Config.MODEL_EXTRA_TREE_REGRESSOR_NAME]]),
             ("regressor", ExtraTreeRegressor(random_state=42)),
         ]
     ),
     Config.MODEL_LINEAR_REGRESSOR_NAME: Pipeline(
         [
-            (Config.SCALER_CHOICE[Config.MODEL_LINEAR_REGRESSOR_NAME], available_scalers_dict[Config.SCALER_CHOICE[Config.MODEL_LINEAR_REGRESSOR_NAME]]),
-            (Config.IMPUTER_CHOICE[Config.MODEL_LINEAR_REGRESSOR_NAME], available_imputers_dict[Config.IMPUTER_CHOICE[Config.MODEL_LINEAR_REGRESSOR_NAME]]),
+            ("scaler", available_scalers_dict[Config.SCALER_CHOICE[Config.MODEL_LINEAR_REGRESSOR_NAME]]),
+            ("imputer", available_imputers_dict[Config.IMPUTER_CHOICE[Config.MODEL_LINEAR_REGRESSOR_NAME]]),
             ("regressor", LinearRegression()),
         ]
     ),
