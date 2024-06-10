@@ -1,6 +1,5 @@
-
 from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
+from sklearn.preprocessing import MinMaxScaler, RobustScaler, StandardScaler
 
 # Dictionnary of available scalers
 available_scalers_dict = {

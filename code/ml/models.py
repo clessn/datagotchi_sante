@@ -1,12 +1,10 @@
 import numpy as np
+from config import Config
+from preprocessing import available_imputers_dict, available_scalers_dict
 from sklearn.base import BaseEstimator, RegressorMixin
 from sklearn.linear_model import LinearRegression
 from sklearn.pipeline import Pipeline
 from sklearn.tree import ExtraTreeRegressor
-
-from config import Config
-from preprocessing import available_imputers_dict
-from preprocessing import available_scalers_dict
 
 
 class MeanRegressor(BaseEstimator, RegressorMixin):
@@ -97,15 +95,35 @@ available_models_dict = {
     Config.MODEL_RANDOM_REGRESSOR_NAME: RandomValueRegressor(),
     Config.MODEL_EXTRA_TREE_REGRESSOR_NAME: Pipeline(
         [
-            ("scaler", available_scalers_dict[Config.SCALER_CHOICE[Config.MODEL_EXTRA_TREE_REGRESSOR_NAME]]),
-            ("imputer", available_imputers_dict[Config.IMPUTER_CHOICE[Config.MODEL_EXTRA_TREE_REGRESSOR_NAME]]),
+            (
+                "scaler",
+                available_scalers_dict[
+                    Config.SCALER_CHOICE[Config.MODEL_EXTRA_TREE_REGRESSOR_NAME]
+                ],
+            ),
+            (
+                "imputer",
+                available_imputers_dict[
+                    Config.IMPUTER_CHOICE[Config.MODEL_EXTRA_TREE_REGRESSOR_NAME]
+                ],
+            ),
             ("regressor", ExtraTreeRegressor(random_state=42)),
         ]
     ),
     Config.MODEL_LINEAR_REGRESSOR_NAME: Pipeline(
         [
-            ("scaler", available_scalers_dict[Config.SCALER_CHOICE[Config.MODEL_LINEAR_REGRESSOR_NAME]]),
-            ("imputer", available_imputers_dict[Config.IMPUTER_CHOICE[Config.MODEL_LINEAR_REGRESSOR_NAME]]),
+            (
+                "scaler",
+                available_scalers_dict[
+                    Config.SCALER_CHOICE[Config.MODEL_LINEAR_REGRESSOR_NAME]
+                ],
+            ),
+            (
+                "imputer",
+                available_imputers_dict[
+                    Config.IMPUTER_CHOICE[Config.MODEL_LINEAR_REGRESSOR_NAME]
+                ],
+            ),
             ("regressor", LinearRegression()),
         ]
     ),
