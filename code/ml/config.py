@@ -15,13 +15,25 @@ class Config:
     RANDOM_STATE_SPLITTING = 42
 
     # 1.3. Modelling
+    MODEL_MEAN_REGRESSOR_NAME = "mean_regressor"
+    MODEL_RANDOM_REGRESSOR_NAME = "random_regressor"
+    MODEL_LINEAR_REGRESSOR_NAME = "linear_regressor"
+    MODEL_EXTRA_TREE_REGRESSOR_NAME = "extra_tree_regressor"
     MODEL_LIST = [
-        "mean_regressor",
-        "random_regressor",
-        "linear_regressor",
-        "extra_tree_regressor",
+        MODEL_MEAN_REGRESSOR_NAME,
+        MODEL_RANDOM_REGRESSOR_NAME,
+        MODEL_LINEAR_REGRESSOR_NAME,
+        MODEL_EXTRA_TREE_REGRESSOR_NAME,
     ]
     TARGET_NAME = "C.TARGET_SCORE_TOT"
+    SCALER_CHOICE = {
+        MODEL_LINEAR_REGRESSOR_NAME: "minmax",
+        MODEL_EXTRA_TREE_REGRESSOR_NAME: "std",
+    }
+    IMPUTER_CHOICE = {
+        MODEL_LINEAR_REGRESSOR_NAME: "imputer_mean",
+        MODEL_EXTRA_TREE_REGRESSOR_NAME: "imputer_mean",
+    }
 
     # 2. Sandbox creation
     SANDBOX_N_ATTRIBUTES = 20

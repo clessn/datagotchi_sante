@@ -1,6 +1,7 @@
 import numpy as np
+from config import Config
+from preprocessing import available_imputers_dict, available_scalers_dict
 from sklearn.base import BaseEstimator, RegressorMixin
-from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LinearRegression
 from sklearn.pipeline import Pipeline
 from sklearn.tree import ExtraTreeRegressor
@@ -90,17 +91,39 @@ class RandomValueRegressor(BaseEstimator, RegressorMixin):
 
 # Dictionnary of available models
 available_models_dict = {
-    "mean_regressor": MeanRegressor(),
-    "random_regressor": RandomValueRegressor(),
-    "extra_tree_regressor": Pipeline(
+    Config.MODEL_MEAN_REGRESSOR_NAME: MeanRegressor(),
+    Config.MODEL_RANDOM_REGRESSOR_NAME: RandomValueRegressor(),
+    Config.MODEL_EXTRA_TREE_REGRESSOR_NAME: Pipeline(
         [
-            ("imputer", SimpleImputer(strategy="mean")),
+            (
+                "scaler",
+                available_scalers_dict[
+                    Config.SCALER_CHOICE[Config.MODEL_EXTRA_TREE_REGRESSOR_NAME]
+                ],
+            ),
+            (
+                "imputer",
+                available_imputers_dict[
+                    Config.IMPUTER_CHOICE[Config.MODEL_EXTRA_TREE_REGRESSOR_NAME]
+                ],
+            ),
             ("regressor", ExtraTreeRegressor(random_state=42)),
         ]
     ),
-    "linear_regressor": Pipeline(
+    Config.MODEL_LINEAR_REGRESSOR_NAME: Pipeline(
         [
-            ("imputer", SimpleImputer(strategy="mean")),
+            (
+                "scaler",
+                available_scalers_dict[
+                    Config.SCALER_CHOICE[Config.MODEL_LINEAR_REGRESSOR_NAME]
+                ],
+            ),
+            (
+                "imputer",
+                available_imputers_dict[
+                    Config.IMPUTER_CHOICE[Config.MODEL_LINEAR_REGRESSOR_NAME]
+                ],
+            ),
             ("regressor", LinearRegression()),
         ]
     ),
