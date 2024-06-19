@@ -40,10 +40,8 @@ def create_nominal_multiple_features(df_codebook, df_attributes):
         nominal_multiple_variables_in_attributes
     ].copy()
 
-    # Convert '1.0' into True
-    df_nominal_multiple_features = df_nominal_multiple_features.map(
-        lambda x: True if x == 1.0 else x
-    )
+    # Convert '1.0' into 1 and Nan into 0
+    df_nominal_multiple_features = df_nominal_multiple_features.fillna(0).astype(int)
     return df_nominal_multiple_features
 
 
