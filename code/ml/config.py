@@ -1,10 +1,12 @@
 class Config:
 
-    # 1. Predictions
-    # 1.1. Run type
+    # 0. Versioning
     RUN_TYPE = "SANDBOX_FOLDER_NAME"  # SANDBOX_FOLDER_NAME or REAL_FOLDER_NAME
-
-    # 1.2. Evaluation
+    FEATURE_LIBRARY_VERSION = 'feature_library_v1'
+    EXPERIMENT_NAME = '1_initial_exploration'
+    
+    # 1. Predictions Pipeline
+    # 1.1. Evaluation
     KFOLD = 5
     METRIC_LIST = [
         "mse",
@@ -14,7 +16,7 @@ class Config:
     MIN_TEST_SIZE = 30
     RANDOM_STATE_SPLITTING = 42
 
-    # 1.3. Modelling
+    # 1.2. Modelling
     MODEL_MEAN_REGRESSOR_NAME = "mean_regressor"
     MODEL_RANDOM_REGRESSOR_NAME = "random_regressor"
     MODEL_LINEAR_REGRESSOR_NAME = "linear_regressor"
@@ -39,3 +41,6 @@ class Config:
     SANDBOX_N_ATTRIBUTES = 20
     SANDBOX_N_SAMPLE = 200
     SANDBOX_RANDOM_STATE = 42
+
+    # 3. Feature selection pipeline
+    FEATURE_SELECTION = "all"

@@ -10,7 +10,7 @@ def explore_raw_data():
 
 
 def load_codebook():
-    df = pd.read_csv(C.ML_PATH / C.CODEBOOK_FILENAME)
+    df = pd.read_csv(C.ML_ROOT_PATH / C.CODEBOOK_FILENAME)
     return df.loc[:, C.CODEBOOK_COLS].drop_duplicates()
 
 
@@ -18,6 +18,14 @@ def load_attributes():
     df = pd.read_csv(C.ML_PATH / C.ATTRIBUTES_FILENAME)
     df = df.set_index(C.ATTRIBUTE_ID_COL)
     return df
+
+
+def load_feature_library():
+    df_feature_library = pd.read_csv(
+        C.FEATURE_LIBRARY_VERSION_PATH / C.FEATURE_LIBRARY_FILENAME,
+        index_col=C.ATTRIBUTE_ID_COL,
+    )
+    return df_feature_library
 
 
 def load_features_target():

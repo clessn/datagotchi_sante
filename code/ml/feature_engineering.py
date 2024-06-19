@@ -5,6 +5,7 @@ import pandas as pd
 from constants import Constants as C
 from loaders import load_attributes, load_codebook
 from utils import configure_main_logger
+from tracking import write_feature_library
 
 logger = logging.getLogger(__name__)
 
@@ -146,6 +147,5 @@ if __name__ == "__main__":
     )
 
     # Save features and targets to csv
-    df_features.to_csv(C.ML_PATH / C.FEATURES_FILENAME)
-    df_targets.to_csv(C.ML_PATH / C.TARGETS_FILENAME)
+    write_feature_library(df_features, df_targets)
     logger.info("Features and Targets created with success !! :-)")

@@ -9,21 +9,32 @@ load_dotenv()
 
 
 class Constants:
-    # Paths
-    DATA_PATH = Path(os.getenv("DATA_PATH"))
+    # Folders
     RAW_FOLDER_NAME = "raw"
     ML_FOLDER_NAME = "ml"
     SANDBOX_FOLDER_NAME = "sandbox"
     REAL_FOLDER_NAME = "real"
+    EXPERIMENTS_FOLDER_NAME = "experiments"
+    FEATURE_LIBRARIES_FOLDER_NAME = "feature_libraries"
+    FEATURE_LIBRARY_VERSION_FOLDER_NAME = Config.FEATURE_LIBRARY_VERSION
+    FEATURE_SELECTION_FOLDER_NAME = "feature_selection"
+
+    # Paths
+    DATA_PATH = Path(os.getenv("DATA_PATH"))
     RAW_PATH = DATA_PATH / RAW_FOLDER_NAME
-    ML_PATH = DATA_PATH / ML_FOLDER_NAME / eval(Config.RUN_TYPE)
+    ML_ROOT_PATH = DATA_PATH / ML_FOLDER_NAME
+    ML_PATH = ML_ROOT_PATH / eval(Config.RUN_TYPE)
+    FEATURE_LIBRARIES_PATH = ML_PATH / FEATURE_LIBRARIES_FOLDER_NAME
+    FEATURE_LIBRARY_VERSION_PATH = FEATURE_LIBRARIES_PATH / FEATURE_LIBRARY_VERSION_FOLDER_NAME
+    FEATURE_SELECTION_PATH = ML_PATH / FEATURE_SELECTION_FOLDER_NAME / FEATURE_LIBRARY_VERSION_FOLDER_NAME
     LOGGING_PATH = Path(os.getcwd()) / "code" / "ml"
 
     # Filenames
     RAW_FILENAME = "data_raw.sav"
     CODEBOOK_FILENAME = "frozen_codebook_june_9.csv"
     ATTRIBUTES_FILENAME = "attributes.csv"
-    FEATURES_FILENAME = "features.csv"
+    FEATURE_LIBRARY_FILENAME = "feature_library.csv"
+    FEATURE_SELECTION_FILENAME = "feature_selection_{}.txt"
     TARGETS_FILENAME = "targets.csv"
     PREDICTIONS_FILENAME = "predictions.csv"
     METRICS_FILENAME = "metrics.csv"
