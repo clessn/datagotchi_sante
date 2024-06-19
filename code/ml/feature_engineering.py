@@ -40,10 +40,8 @@ def create_nominal_multiple_features(df_codebook, df_attributes):
         nominal_multiple_variables_in_attributes
     ].copy()
 
-    # Convert '1.0' into True
-    df_nominal_multiple_features = df_nominal_multiple_features.map(
-        lambda x: True if x == 1.0 else x
-    )
+    # Convert '1.0' into 1 and Nan into 0
+    df_nominal_multiple_features = df_nominal_multiple_features.fillna(0).astype(int)
     return df_nominal_multiple_features
 
 
@@ -61,11 +59,11 @@ def create_nominal_single_features(df_codebook, df_attributes):
     df_nominal_single_features = df_attributes[
         nominal_single_variables_in_attributes
     ].copy()
-    nan_in_any_column_b = df_nominal_single_features.isna().any()
 
     # Convert it into dummies (one-hot encoding)
+    # TODO: Take categories from codebook (num, not text), assert values are in categories, add the categories in getdummies
     df_nominal_single_features = pd.get_dummies(
-        df_nominal_single_features, columns=nominal_single_variables_in_attributes
+        df_nominal_single_features, columns=nominal_single_variables_in_attributes, dtype=int
     )
     logger.info(
         f"{len(nominal_single_variables_in_attributes)} variables are nominal single and are converted into {len(df_nominal_single_features.columns)} variables one-hot encoded."
