@@ -6,6 +6,7 @@ from constants import Constants as C
 logger = logging.getLogger(__name__)
 
 def write_feature_library(df_features, df_targets):
+    # TODO: use parquet instead
     df_features.to_csv(C.FEATURE_LIBRARIES_PATH / C.FEATURE_LIBRARY_FILENAME)
     df_targets.to_csv(C.FEATURE_LIBRARIES_PATH / C.TARGETS_FILENAME)
     logger.info('Feature library saved with targets')

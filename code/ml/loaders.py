@@ -27,27 +27,36 @@ def load_feature_library():
     )
     return df_feature_library
 
+def load_targets():
+    df_targets = pd.read_csv(
+        C.FEATURE_LIBRARY_VERSION_PATH / C.TARGETS_FILENAME,
+        index_col=C.ATTRIBUTE_ID_COL,
+    )
+    return df_targets
+
+def load_selected_features(method_name):
+    """
+    Reads a file containing selected features, one per line, and returns a list of these features.
+    
+    :param method_name: The name of the feature selection method to consider. 
+    :return: A list of selected features.
+    """
+    features = []
+    with open(C.FEATURE_SELECTION_PATH / C.FEATURE_SELECTION_FILENAME.format(method_name), 'r') as file:
+        features = [line.strip() for line in file]
+    return features
+
 
 def load_features_target():
-    X = pd.read_csv(
-        C.ML_PATH / C.FEATURES_FILENAME, index_col=C.ATTRIBUTE_ID_COL
-    ).values
-    y = pd.read_csv(C.ML_PATH / C.TARGETS_FILENAME, index_col=C.ATTRIBUTE_ID_COL)[
-        eval(Config.TARGET_NAME)
-    ].values
-    # TO DO : assert ResponseId from X = ResponseId from y
+    df_feature_library = load_feature_library()
+    df_targets = load_targets()
+    assert df_feature_library.index.equals(df_targets.index)
+    selected_features = load_selected_features(Config.FEATURE_SELECTION_METHOD_NAME)
+    X = df_feature_library[selected_features].values
+    y = df_targets[eval(Config.TARGET_NAME)].values
     return X, y
 
 
 def load_results_metrics():
     metrics_df = pd.read_csv(C.ML_PATH / C.METRICS_FILENAME)
     return metrics_df
-
-
-if __name__ == "__main__":
-    df_str, df_num = explore_raw_data()
-    df_codebook = load_codebook()
-    # print(df_str.info(verbose=True))
-    df_attributes = load_attributes()
-    print(df_attributes.info(verbose=True))
-    breakpoint()

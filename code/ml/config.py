@@ -1,7 +1,9 @@
 class Config:
 
     # 0. Versioning
-    RUN_TYPE = "SANDBOX_FOLDER_NAME"  # SANDBOX_FOLDER_NAME or REAL_FOLDER_NAME
+    #RUN_TYPE = "SANDBOX_FOLDER_NAME"  # SANDBOX_FOLDER_NAME or REAL_FOLDER_NAME
+    RUN_TYPE = "REAL_FOLDER_NAME"  # SANDBOX_FOLDER_NAME or REAL_FOLDER_NAME
+
     FEATURE_LIBRARY_VERSION = 'feature_library_v1'
     EXPERIMENT_NAME = '1_initial_exploration'
     
@@ -43,4 +45,4 @@ class Config:
     SANDBOX_RANDOM_STATE = 42
 
     # 3. Feature selection pipeline
-    FEATURE_SELECTION = "all"
+    FEATURE_SELECTION_METHOD_NAME = "all"

@@ -3,7 +3,6 @@ import pandas as pd
 from constants import Constants as C
 from utils import configure_main_logger
 from loaders import load_feature_library
-from pathlib import Path
 from config import Config
 from tracking import write_selected_features
 
@@ -23,8 +22,8 @@ available_feature_selection = {
 
 if __name__ == "__main__":
     logger = configure_main_logger("feature_selection")
-    selected_features = available_feature_selection[Config.FEATURE_SELECTION]()
-    write_selected_features(selected_features, Config.FEATURE_SELECTION)
+    selected_features = available_feature_selection[Config.FEATURE_SELECTION_METHOD_NAME]()
+    write_selected_features(selected_features, Config.FEATURE_SELECTION_METHOD_NAME)
     logger.info('Features selected with success')
 
 
