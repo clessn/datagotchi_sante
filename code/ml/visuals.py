@@ -14,6 +14,12 @@ def table_metrics_all():
     # Load metrics results
     metrics_df = load_results_metrics()
 
+    # Convert timestamp into datetime
+    metrics_df["timestamp"] = pd.to_datetime(metrics_df["timestamp"])
+    # Find the latest version of the experiment
+    latest_timestamp = metrics_df["timestamp"].max()
+    # Keep only last run of the experiment
+    metrics_df = metrics_df[metrics_df["timestamp"] == latest_timestamp].copy()
     # Show a table with all results
     st.write("Here is a table with all results")
     metrics_df
