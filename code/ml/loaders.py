@@ -10,7 +10,7 @@ def explore_raw_data():
 
 
 def load_codebook():
-    df = pd.read_csv(C.ML_ROOT_PATH / C.CODEBOOK_FILENAME)
+    df = pd.read_csv(C.CODEBOOK_PATH / C.CODEBOOK_FILENAME)
     return df.loc[:, C.CODEBOOK_COLS].drop_duplicates()
 
 
