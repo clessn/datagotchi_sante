@@ -91,37 +91,40 @@ class RandomValueRegressor(BaseEstimator, RegressorMixin):
 
 # Dictionnary of available models
 available_models_dict = {
-    Config.MODEL_MEAN_REGRESSOR_NAME: MeanRegressor(),
-    Config.MODEL_RANDOM_REGRESSOR_NAME: RandomValueRegressor(),
-    Config.MODEL_EXTRA_TREE_REGRESSOR_NAME: Pipeline(
+    "mean_regressor": MeanRegressor(),
+    "random_regressor": RandomValueRegressor(),
+    "extra_tree_regressor": Pipeline(
         [
             (
                 "scaler",
                 available_scalers_dict[
-                    Config.SCALER_CHOICE[Config.MODEL_EXTRA_TREE_REGRESSOR_NAME]
+                    Config.MODEL_LIST["extra_tree_regressor"]["scaler"]
                 ],
             ),
             (
                 "imputer",
                 available_imputers_dict[
-                    Config.IMPUTER_CHOICE[Config.MODEL_EXTRA_TREE_REGRESSOR_NAME]
+                    Config.MODEL_LIST["extra_tree_regressor"]["imputer"]
                 ],
             ),
-            ("regressor", ExtraTreeRegressor(random_state=42)),
+            (
+                "regressor",
+                ExtraTreeRegressor(
+                    **Config.MODEL_LIST["extra_tree_regressor"]["hyperparameters"]
+                ),
+            ),
         ]
     ),
-    Config.MODEL_LINEAR_REGRESSOR_NAME: Pipeline(
+    "linear_regressor": Pipeline(
         [
             (
                 "scaler",
-                available_scalers_dict[
-                    Config.SCALER_CHOICE[Config.MODEL_LINEAR_REGRESSOR_NAME]
-                ],
+                available_scalers_dict[Config.MODEL_LIST["linear_regressor"]["scaler"]],
             ),
             (
                 "imputer",
                 available_imputers_dict[
-                    Config.IMPUTER_CHOICE[Config.MODEL_LINEAR_REGRESSOR_NAME]
+                    Config.MODEL_LIST["linear_regressor"]["imputer"]
                 ],
             ),
             ("regressor", LinearRegression()),
