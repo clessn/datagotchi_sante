@@ -11,6 +11,9 @@ clean-python:
 create-features:
 	poetry run python code$(SEP)ml$(SEP)feature_engineering.py
 
+select-features:
+	poetry run python code$(SEP)ml$(SEP)feature_selection.py
+
 build-sandbox:
 	poetry run python code$(SEP)ml$(SEP)sandbox.py
 

@@ -3,12 +3,13 @@ import os
 
 import numpy as np
 import pandas as pd
-from config import Config as Config
+from config import Config
 from constants import Constants as C
 from loaders import load_features_target
 from metrics import available_metrics_dict
 from models import available_models_dict
 from sklearn.model_selection import KFold
+from tracking import track_results
 from utils import configure_main_logger
 
 logger = logging.getLogger(__name__)
@@ -133,8 +134,7 @@ def crossval(X, y):
 
     # To csv
     logger.debug("Writing metrics file")
-    predictions_df.to_csv(C.ML_PATH / C.PREDICTIONS_FILENAME)
-    metrics_df.to_csv(C.ML_PATH / C.METRICS_FILENAME)
+    track_results(metrics_df, predictions_df)
     logger.info("Cross-validation performed with success !")
 
 

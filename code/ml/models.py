@@ -107,16 +107,19 @@ available_models_dict = {
                     Config.MODEL_LIST["extra_tree_regressor"]["imputer"]
                 ],
             ),
-            ("regressor", ExtraTreeRegressor(**Config.MODEL_LIST["extra_tree_regressor"]["hyperparameters"])),
+            (
+                "regressor",
+                ExtraTreeRegressor(
+                    **Config.MODEL_LIST["extra_tree_regressor"]["hyperparameters"]
+                ),
+            ),
         ]
     ),
     "linear_regressor": Pipeline(
         [
             (
                 "scaler",
-                available_scalers_dict[
-                    Config.MODEL_LIST["linear_regressor"]["scaler"]
-                ],
+                available_scalers_dict[Config.MODEL_LIST["linear_regressor"]["scaler"]],
             ),
             (
                 "imputer",

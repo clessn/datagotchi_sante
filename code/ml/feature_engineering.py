@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 from constants import Constants as C
 from loaders import load_attributes, load_codebook
+from tracking import write_feature_library
 from utils import configure_main_logger
 
 logger = logging.getLogger(__name__)
@@ -63,7 +64,9 @@ def create_nominal_single_features(df_codebook, df_attributes):
     # Convert it into dummies (one-hot encoding)
     # TODO: Take categories from codebook (num, not text), assert values are in categories, add the categories in getdummies
     df_nominal_single_features = pd.get_dummies(
-        df_nominal_single_features, columns=nominal_single_variables_in_attributes, dtype=int
+        df_nominal_single_features,
+        columns=nominal_single_variables_in_attributes,
+        dtype=int,
     )
     logger.info(
         f"{len(nominal_single_variables_in_attributes)} variables are nominal single and are converted into {len(df_nominal_single_features.columns)} variables one-hot encoded."
@@ -144,6 +147,5 @@ if __name__ == "__main__":
     )
 
     # Save features and targets to csv
-    df_features.to_csv(C.ML_PATH / C.FEATURES_FILENAME)
-    df_targets.to_csv(C.ML_PATH / C.TARGETS_FILENAME)
+    write_feature_library(df_features, df_targets)
     logger.info("Features and Targets created with success !! :-)")

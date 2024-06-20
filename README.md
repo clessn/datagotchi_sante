@@ -40,7 +40,16 @@ To get started with the project, follow these steps:
     DATA_PATH='path/to/data'
     ```
 3. Edit the `config.py` file to suit your specific needs.
-4. Run the cross-validation:
+4. Run the ML pipeline : 
+- Step 1 : create features : 
+    ```sh
+    make create-features
+    ```
+- Step 2 : select features : 
+    ```sh
+    make select-features
+    ```
+- Step 3 : Run the cross-validation:
     ```sh
     make run-crossval
     ```
