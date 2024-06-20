@@ -4,8 +4,8 @@ import numpy as np
 import pandas as pd
 from constants import Constants as C
 from loaders import load_attributes, load_codebook
-from utils import configure_main_logger
 from tracking import write_feature_library
+from utils import configure_main_logger
 
 logger = logging.getLogger(__name__)
 

@@ -27,6 +27,7 @@ def load_feature_library():
     )
     return df_feature_library
 
+
 def load_targets():
     df_targets = pd.read_csv(
         C.FEATURE_LIBRARY_VERSION_PATH / C.TARGETS_FILENAME,
@@ -34,15 +35,18 @@ def load_targets():
     )
     return df_targets
 
+
 def load_selected_features(method_name):
     """
     Reads a file containing selected features, one per line, and returns a list of these features.
-    
-    :param method_name: The name of the feature selection method to consider. 
+
+    :param method_name: The name of the feature selection method to consider.
     :return: A list of selected features.
     """
     features = []
-    with open(C.FEATURE_SELECTION_PATH / C.FEATURE_SELECTION_FILENAME.format(method_name), 'r') as file:
+    with open(
+        C.FEATURE_SELECTION_PATH / C.FEATURE_SELECTION_FILENAME.format(method_name), "r"
+    ) as file:
         features = [line.strip() for line in file]
     return features
 
@@ -58,5 +62,5 @@ def load_features_target():
 
 
 def load_results_metrics():
-    metrics_df = pd.read_csv(C.ML_PATH / C.METRICS_FILENAME)
+    metrics_df = pd.read_csv(C.EXPERIMENTS_VERSION_PATH / C.METRICS_FILENAME)
     return metrics_df

@@ -1,12 +1,15 @@
+import inspect
+
+
 class Config:
 
     # 0. Versioning
-    #RUN_TYPE = "SANDBOX_FOLDER_NAME"  # SANDBOX_FOLDER_NAME or REAL_FOLDER_NAME
-    RUN_TYPE = "REAL_FOLDER_NAME"  # SANDBOX_FOLDER_NAME or REAL_FOLDER_NAME
+    RUN_TYPE = "SANDBOX_FOLDER_NAME"  # SANDBOX_FOLDER_NAME or REAL_FOLDER_NAME
+    # RUN_TYPE = "REAL_FOLDER_NAME"  # SANDBOX_FOLDER_NAME or REAL_FOLDER_NAME
 
-    FEATURE_LIBRARY_VERSION = 'feature_library_v1'
-    EXPERIMENT_NAME = '1_initial_exploration'
-    
+    FEATURE_LIBRARY_VERSION = "feature_library_v1"
+    EXPERIMENT_NAME = "1_initial_exploration"
+
     # 1. Predictions Pipeline
     # 1.1. Evaluation
     KFOLD = 5
@@ -46,3 +49,11 @@ class Config:
 
     # 3. Feature selection pipeline
     FEATURE_SELECTION_METHOD_NAME = "all"
+
+    @classmethod
+    def to_dict(cls):
+        return {
+            name: attr
+            for name, attr in cls.__dict__.items()
+            if not inspect.isroutine(attr) and not name.startswith("__")
+        }
