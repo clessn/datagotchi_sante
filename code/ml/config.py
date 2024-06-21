@@ -8,7 +8,7 @@ class Config:
     RUN_TYPE = "REAL_FOLDER_NAME"  # SANDBOX_FOLDER_NAME or REAL_FOLDER_NAME
     CODEBOOK_VERSION = "frozen_codebook_june_21.csv"
     FEATURE_LIBRARY_VERSION = "feature_library_v1"
-    EXPERIMENT_NAME = "1_initial_exploration"
+    EXPERIMENT_NAME = "2_feature_selection"
 
     # 1. Predictions Pipeline
     # 1.1. Evaluation
@@ -25,7 +25,7 @@ class Config:
     MODEL_LIST = {
         "mean_regressor": {},
         "random_regressor": {},
-        "linear_regressor": {"scaler": "minmax", "imputer": "imputer_mean"},
+        "linear_regressor": {"scaler": "std", "imputer": "imputer_mean"},
         "extra_tree_regressor": {
             "scaler": "std",
             "imputer": "imputer_mean",
@@ -40,7 +40,8 @@ class Config:
     SANDBOX_RANDOM_STATE = 42
 
     # 3. Feature selection pipeline
-    FEATURE_SELECTION_METHOD_NAME = "all"
+    FEATURE_SELECTION_METHOD_NAME = "variance"
+    FEATURE_SELECTION_VARIANCE_TRESHOLD = 0.15
 
     @classmethod
     def to_dict(cls):

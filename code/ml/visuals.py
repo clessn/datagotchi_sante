@@ -10,25 +10,27 @@ def welcome():
     st.write("Welcome on the visuals for Datagotchi Health")
 
 
-def table_metrics_all():
+def select_experiment():
+
     # Load metrics results
     metrics_df = load_results_metrics()
-
     # Convert timestamp into datetime
     metrics_df["timestamp"] = pd.to_datetime(metrics_df["timestamp"])
     # Find the latest version of the experiment
     latest_timestamp = metrics_df["timestamp"].max()
     # Keep only last run of the experiment
     metrics_df = metrics_df[metrics_df["timestamp"] == latest_timestamp].copy()
+    return metrics_df
+
+
+def table_metrics_all(metrics_df):
+    
     # Show a table with all results
     st.write("Here is a table with all results")
     metrics_df
 
 
-def plot_results_metric():
-
-    # Load metrics results
-    metrics_df = load_results_metrics()
+def plot_results_metric(metrics_df):
 
     # Select a metric
     metric_choice = st.selectbox(
@@ -68,5 +70,6 @@ def plot_results_metric():
 
 
 welcome()
-table_metrics_all()
-plot_results_metric()
+metrics_df = select_experiment()
+table_metrics_all(metrics_df)
+plot_results_metric(metrics_df)
