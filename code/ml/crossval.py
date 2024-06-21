@@ -22,7 +22,7 @@ def fill_nan_with_value(X, values):
     return X
 
 
-def crossval(X, y):
+def crossval(X, y, index):
     """Cross-validation (evaluation realized for each fold of each model)
 
     Attributes
@@ -45,6 +45,7 @@ def crossval(X, y):
     model_name_predict_list = []
     y_test_list = []
     y_predict_list = []
+    index_test_list = []
 
     # Lists for metrics results
     fold_id_metric_list = []
@@ -60,6 +61,7 @@ def crossval(X, y):
         X_test = X[test_index, :].copy()
         y_train = y[train_index].copy()
         y_test = y[test_index].copy()
+        index_test = index[test_index].copy()
 
         # Assert minimal number of targets
         indices_nan_y_train = np.isnan(y_train)
@@ -90,6 +92,7 @@ def crossval(X, y):
             model_name_predict_list += [model_name] * len(y_test)
             y_test_list += y_test.tolist()
             y_predict_list += y_predict.tolist()
+            index_test_list += index_test.tolist()
 
             # Parameters y for metrics
             metric_param_y = {
@@ -116,13 +119,14 @@ def crossval(X, y):
 
     # Dict for predictions results
     predictions_dict = {
+        C.ATTRIBUTE_ID_COL: index_test_list,
         "fold_id": fold_id_predict_list,
         "model_name": model_name_predict_list,
         "y_test": y_test_list,
         "y_predict": y_predict_list,
     }
     predictions_df = pd.DataFrame.from_dict(predictions_dict)
-
+    predictions_df = predictions_df.set_index(C.ATTRIBUTE_ID_COL)
     # Dict for metrics results
     metrics_dict = {
         "fold_id": fold_id_metric_list,
@@ -141,5 +145,5 @@ def crossval(X, y):
 # Run crossval
 if __name__ == "__main__":
     logger = configure_main_logger("crossval")
-    X, y = load_features_target()
-    crossval(X, y)
+    X, y, index = load_features_target()
+    crossval(X, y, index)
