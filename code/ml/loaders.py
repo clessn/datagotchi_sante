@@ -58,7 +58,8 @@ def load_features_target():
     selected_features = load_selected_features(Config.FEATURE_SELECTION_METHOD_NAME)
     X = df_feature_library[selected_features].values
     y = df_targets[eval(Config.TARGET_NAME)].values
-    return X, y
+    index = df_feature_library.index
+    return X, y, index
 
 
 def load_results_metrics():
