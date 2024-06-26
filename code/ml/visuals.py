@@ -17,8 +17,9 @@ def select_experiment():
 
     # Select the experiment
     experiments_list = [experiment for experiment in os.listdir(C.EXPERIMENTS_PATH)]
+    experiments_list_sorted = sorted(experiments_list, reverse=True)
     selected_experiment = st.selectbox(
-        "Choose the experiment you want to see", experiments_list
+        "Choose the experiment you want to see", experiments_list_sorted
     )
 
     # Load metrics results
