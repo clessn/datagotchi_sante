@@ -1,7 +1,9 @@
 import matplotlib.pyplot as plt
+import os
 import pandas as pd
 import streamlit as st
 from config import Config
+from constants import Constants as C
 from loaders import load_results_metrics
 
 
@@ -12,8 +14,12 @@ def welcome():
 
 def select_experiment():
 
+    # Select the experiment
+    experiments_list = [experiment for experiment in os.listdir(C.EXPERIMENTS_PATH)]
+    selected_experiment = st.selectbox('Choose the experiment you want to see', experiments_list)
+    
     # Load metrics results
-    metrics_df = load_results_metrics()
+    metrics_df = load_results_metrics(experiment_name=selected_experiment)
     # Convert timestamp into datetime
     metrics_df["timestamp"] = pd.to_datetime(metrics_df["timestamp"])
 

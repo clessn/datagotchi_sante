@@ -62,6 +62,7 @@ def load_features_target():
     return X, y, index
 
 
-def load_results_metrics():
-    metrics_df = pd.read_csv(C.EXPERIMENTS_VERSION_PATH / C.METRICS_FILENAME)
+def load_results_metrics(experiment_name=Config.EXPERIMENT_NAME):
+    experiments_version_path = C.EXPERIMENTS_PATH / experiment_name
+    metrics_df = pd.read_csv(experiments_version_path / C.METRICS_FILENAME)
     return metrics_df
