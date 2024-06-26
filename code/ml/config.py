@@ -40,8 +40,9 @@ class Config:
     SANDBOX_RANDOM_STATE = 42
 
     # 3. Feature selection pipeline
-    FEATURE_SELECTION_METHOD_NAME = "variance"
+    FEATURE_SELECTION_METHOD_NAME = "kbest"
     FEATURE_SELECTION_VARIANCE_TRESHOLD = 0.1
+    FEATURE_SELECTION_K_BEST = 20
 
     @classmethod
     def to_dict(cls):
