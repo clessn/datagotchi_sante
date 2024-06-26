@@ -17,13 +17,15 @@ def select_all_features():
     selected_features = df_feature_library.columns.tolist()
     return selected_features
 
+
 def select_above_variance_treshold_features():
     logger.info("Select features above a treshold for variance")
     df_feature_library = load_feature_library()
-    selector = VarianceThreshold(threshold=Config.FEATURE_SELECTION_VARIANCE_TRESHOLD) 
+    selector = VarianceThreshold(threshold=Config.FEATURE_SELECTION_VARIANCE_TRESHOLD)
     selector.fit(df_feature_library)
     selected_features = selector.get_feature_names_out()
     return selected_features
+
 
 available_feature_selection = {
     "all": select_all_features,
