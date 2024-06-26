@@ -25,7 +25,7 @@ class Config:
     MODEL_LIST = {
         "mean_regressor": {},
         "random_regressor": {},
-        "linear_regressor": {"scaler": "std", "imputer": "imputer_mean"},
+        "linear_regressor": {"scaler": "robust", "imputer": "imputer_mean"},
         "extra_tree_regressor": {
             "scaler": "std",
             "imputer": "imputer_mean",
@@ -41,7 +41,7 @@ class Config:
 
     # 3. Feature selection pipeline
     FEATURE_SELECTION_METHOD_NAME = "variance"
-    FEATURE_SELECTION_VARIANCE_TRESHOLD = 0.15
+    FEATURE_SELECTION_VARIANCE_TRESHOLD = 0.1
 
     @classmethod
     def to_dict(cls):
