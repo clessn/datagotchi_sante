@@ -43,23 +43,20 @@ def load_selected_features(method_name):
     :param method_name: The name of the feature selection method to consider.
     :return: A list of selected features.
     """
-    features = []
-    with open(
-        C.FEATURE_SELECTION_PATH / C.FEATURE_SELECTION_FILENAME.format(method_name), "r"
-    ) as file:
-        features = [line.strip() for line in file]
-    return features
+    df_selected = pd.read_csv(
+        C.FEATURE_SELECTION_PATH / C.FEATURE_SELECTION_FILENAME.format(method_name)
+    )
+    selected_features = df_selected.loc[
+        df_selected["feature_selected"] == 1, "feature_names"
+    ].tolist()
+    return selected_features
 
 
-def load_features_target():
+def load_df_X_y():
     df_feature_library = load_feature_library()
     df_targets = load_targets()
     assert df_feature_library.index.equals(df_targets.index)
-    selected_features = load_selected_features(Config.FEATURE_SELECTION_METHOD_NAME)
-    X = df_feature_library[selected_features].values
-    y = df_targets[eval(Config.TARGET_NAME)].values
-    index = df_feature_library.index
-    return X, y, index
+    return df_feature_library, df_targets[eval(Config.TARGET_NAME)]
 
 
 def load_results_metrics(experiment_name=Config.EXPERIMENT_NAME):

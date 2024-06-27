@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 from config import Config
 from constants import Constants as C
-from loaders import load_features_target
+from loaders import load_df_X_y, load_selected_features
 from metrics import available_metrics_dict
 from models import available_models_dict
 from sklearn.model_selection import KFold
@@ -145,5 +145,7 @@ def crossval(X, y, index):
 # Run crossval
 if __name__ == "__main__":
     logger = configure_main_logger("crossval")
-    X, y, index = load_features_target()
-    crossval(X, y, index)
+    df_X, df_y = load_df_X_y()
+    selected_features = load_selected_features(Config.FEATURE_SELECTION_METHOD_NAME)
+    df_X_selected = df_X.loc[:, selected_features]
+    crossval(df_X_selected.values, df_y.values, df_X_selected.index)

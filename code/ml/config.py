@@ -7,7 +7,7 @@ class Config:
     # RUN_TYPE = "SANDBOX_FOLDER_NAME"  # SANDBOX_FOLDER_NAME or REAL_FOLDER_NAME
     RUN_TYPE = "REAL_FOLDER_NAME"  # SANDBOX_FOLDER_NAME or REAL_FOLDER_NAME
     CODEBOOK_VERSION = "frozen_codebook_june_21.csv"
-    FEATURE_LIBRARY_VERSION = "feature_library_v1"
+    FEATURE_LIBRARY_VERSION = "feature_library_v2"
     EXPERIMENT_NAME = "2_feature_selection"
 
     # 1. Predictions Pipeline
@@ -40,7 +40,7 @@ class Config:
     SANDBOX_RANDOM_STATE = 42
 
     # 3. Feature selection pipeline
-    FEATURE_SELECTION_METHOD_NAME = "variance"
+    FEATURE_SELECTION_METHOD_NAME = "all"
     FEATURE_SELECTION_VARIANCE_TRESHOLD = 0.1
     FEATURE_SELECTION_K_BEST = 20
 

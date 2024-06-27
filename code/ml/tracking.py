@@ -103,13 +103,23 @@ def write_feature_library(df_features, df_targets):
     logger.info("Feature library saved with targets")
 
 
-def write_selected_features(selected_features, method_name):
+def write_selected_features(
+    feature_names, feature_scores, feature_selected, method_name
+):
 
-    with open(
-        C.FEATURE_SELECTION_PATH / C.FEATURE_SELECTION_FILENAME.format(method_name), "w"
-    ) as f:
-        for feature in selected_features:
-            f.write(feature + "\n")
+    # Create a dictionary with the data
+    data = {
+        "feature_names": feature_names,
+        "feature_scores": feature_scores,
+        "feature_selected": feature_selected,
+    }
+
+    # Create DataFrame
+    df = pd.DataFrame(data)
+    df.to_csv(
+        C.FEATURE_SELECTION_PATH / C.FEATURE_SELECTION_FILENAME.format(method_name),
+        index=False,
+    )
 
     logger.info("Selected features stored with sucess")
 
