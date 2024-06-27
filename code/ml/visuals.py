@@ -5,12 +5,12 @@ import pandas as pd
 import streamlit as st
 from config import Config
 from constants import Constants as C
-from loaders import load_results_metrics
+from loaders import load_results_metrics, load_config
 
 
 def welcome():
     # Welcome
-    st.write("Welcome on the visuals for Datagotchi Health")
+    st.title("Visuals for Datagotchi Health")
 
 
 def select_experiment():
@@ -18,7 +18,7 @@ def select_experiment():
     # Select the experiment
     experiments_list = [experiment for experiment in os.listdir(C.EXPERIMENTS_PATH)]
     experiments_list_sorted = sorted(experiments_list, reverse=True)
-    selected_experiment = st.selectbox(
+    selected_experiment = st.sidebar.selectbox(
         "Choose the experiment you want to see", experiments_list_sorted
     )
 
@@ -39,20 +39,20 @@ def select_experiment():
     )
 
     # Select the run
-    selected_run = st.selectbox(
+    selected_run = st.sidebar.selectbox(
         "Choose the run of the experiment you want to see", run_unique_df["run"]
     )
     timestamp_selected = run_unique_df[run_unique_df["run"] == selected_run][
         "timestamp"
     ].iloc[0]
-
-    # Find the latest version of the experiment
-    # timestamp_selected = metrics_df["timestamp"].max()
+    selected_run_name = run_unique_df[run_unique_df["run"] == selected_run][
+        "run_id"
+    ].iloc[0]
 
     # Keep only the run selected
     metrics_df = metrics_df[metrics_df["timestamp"] == timestamp_selected].copy()
 
-    return metrics_df
+    return metrics_df, selected_experiment, selected_run_name
 
 
 def table_metrics_all(metrics_df):
@@ -65,7 +65,7 @@ def table_metrics_all(metrics_df):
 def plot_results_metric(metrics_df):
 
     # Select a metric
-    metric_choice = st.selectbox(
+    metric_choice = st.sidebar.selectbox(
         "Which metric do you want to plot?", Config.METRIC_LIST
     )
 
@@ -76,32 +76,42 @@ def plot_results_metric(metrics_df):
     mean_selected_metric_df = (
         selected_metric_df.groupby("model_name")["metric_value"].mean().reset_index()
     )
-    mean_selected_metric_df
 
     # Create figure
-    fig, ax = plt.subplots()
-    ax.bar(
+    fig, ax = plt.subplots(figsize=(9, 6))
+    bars = ax.bar(
         mean_selected_metric_df["model_name"],
         mean_selected_metric_df["metric_value"],
         color="skyblue",
     )
-    ax.set_xlabel("Model name")
-    ax.set_ylabel(f"Mean value on {metric_choice}")
-    ax.set_title(f"Mean value on {metric_choice} for models")
+    ax.set_xlabel("Model name", fontsize=12)
+    ax.set_ylabel(f"Mean value on {metric_choice}", fontsize=12)
+    ax.set_title(f"Mean value on {metric_choice} for models", fontsize=16)
+
+    for bar, metric_value in zip(bars, mean_selected_metric_df["metric_value"]):
+        ax.text(bar.get_x() + bar.get_width() / 2.0, metric_value, f'{metric_value:.2f}', va='bottom', ha='center')
 
     # Adjust size
-    ax.tick_params(axis="x", labelsize=10)
+    ax.tick_params(axis="x", labelsize=12)
+    ax.tick_params(axis="y", labelsize=12)
     # Ajust rotation
     plt.xticks(rotation=45, ha="right")
     # Adjust space
     plt.tight_layout()
 
     # Plot results
-    # st.line_chart(mean_selected_metric_df)
     st.pyplot(fig)
+
+def show_config(selected_experiment, selected_run_name):
+    st.write("Configuration for this run of experiment")
+    selected_run_path = C.EXPERIMENTS_PATH / selected_experiment / C.EXPERIMENTS_ARTIFACTS_FOLDER_NAME / selected_run_name
+    config_df = load_config(selected_run_path)
+    config_df
+    
 
 
 welcome()
-metrics_df = select_experiment()
-table_metrics_all(metrics_df)
+metrics_df, selected_experiment, selected_run_name = select_experiment()
+#table_metrics_all(metrics_df)
 plot_results_metric(metrics_df)
+show_config(selected_experiment, selected_run_name)

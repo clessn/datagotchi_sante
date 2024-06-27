@@ -1,3 +1,4 @@
+import json
 import pandas as pd
 from config import Config
 from constants import Constants as C
@@ -63,3 +64,9 @@ def load_results_metrics(experiment_name=Config.EXPERIMENT_NAME):
     experiments_version_path = C.EXPERIMENTS_PATH / experiment_name
     metrics_df = pd.read_csv(experiments_version_path / C.METRICS_FILENAME)
     return metrics_df
+
+def load_config(config_path):
+    # Opening JSON file
+    config_file = open(config_path / C.ARTIFACTS_CONFIG_FILENAME)
+    config_df = json.load(config_file)
+    return config_df
