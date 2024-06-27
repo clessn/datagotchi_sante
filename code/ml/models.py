@@ -1,4 +1,5 @@
 import numpy as np
+import xgboost as xgb
 from config import Config
 from preprocessing import available_imputers_dict, available_scalers_dict
 from sklearn.base import BaseEstimator, RegressorMixin
@@ -128,6 +129,22 @@ available_models_dict = {
                 ],
             ),
             ("regressor", LinearRegression()),
+        ]
+    ),
+    "xgboost": Pipeline(
+        [
+            (
+                "scaler",
+                available_scalers_dict[Config.MODEL_LIST["xgboost"]["scaler"]],
+            ),
+            (
+                "imputer",
+                available_imputers_dict[Config.MODEL_LIST["xgboost"]["imputer"]],
+            ),
+            (
+                "regressor",
+                xgb.XGBRegressor(**Config.MODEL_LIST["xgboost"]["hyperparameters"]),
+            ),
         ]
     ),
 }

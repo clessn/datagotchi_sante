@@ -27,9 +27,14 @@ class Config:
         "random_regressor": {},
         "linear_regressor": {"scaler": "robust", "imputer": "imputer_mean"},
         "extra_tree_regressor": {
-            "scaler": "std",
+            "scaler": "robust",
             "imputer": "imputer_mean",
             "hyperparameters": {"random_state": 42},
+        },
+        "xgboost": {
+            "scaler": "robust",
+            "imputer": "imputer_mean",
+            "hyperparameters": {},
         },
     }
     TARGET_NAME = "C.TARGET_SCORE_TOT"
