@@ -56,7 +56,7 @@ class Constants:
     CODEBOOK_FILENAME = Config.CODEBOOK_VERSION
     ATTRIBUTES_FILENAME = "attributes.csv"
     FEATURE_LIBRARY_FILENAME = "feature_library.csv"
-    FEATURE_SELECTION_FILENAME = "feature_selection_{}.txt"
+    FEATURE_SELECTION_FILENAME = "feature_selection_{}.csv"
     TARGETS_FILENAME = "targets.csv"
     PREDICTIONS_FILENAME = "predictions.csv"
     METRICS_FILENAME = "metrics.csv"
