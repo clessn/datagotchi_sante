@@ -6,7 +6,6 @@ from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
-from config import Config
 from constants import Constants as C
 from loaders import load_results_metrics
 
@@ -95,17 +94,50 @@ nouns = [
     "Alligator",
 ]
 
+def flatten_dict_to_string(d, parent_key='', sep='_'):
+    items = []
+    for k, v in d.items():
+        new_key = f"{parent_key}{sep}{k}" if parent_key else k
+        if isinstance(v, dict):
+            items.extend(flatten_dict_to_string(v, new_key, sep=sep).items())
+        else:
+            items.append((new_key, v))
+    return dict(items)
 
-def write_feature_library(df_features, df_targets):
+def dict_to_string(d, sep='_'):
+    flat_dict = flatten_dict_to_string(d, sep=sep)
+    return sep.join(f"{k}{sep}{v}" for k, v in flat_dict.items())
+
+def create_label(method_name, config_dict, sep='_'):
+    config_string = dict_to_string(config_dict, sep=sep)
+    return f"{method_name}{sep}{config_string}"
+
+def write_feature_library(df_features, df_targets, path, feature_filename, targets_filename):
     # TODO: use parquet instead
-    df_features.to_csv(C.FEATURE_LIBRARIES_PATH / C.FEATURE_LIBRARY_FILENAME)
-    df_targets.to_csv(C.FEATURE_LIBRARIES_PATH / C.TARGETS_FILENAME)
+    # Create directory if missing
+    Path(path).mkdir(parents=True, exist_ok=True)
+
+    # Write features and targets
+    df_features.to_csv(path / feature_filename)
+    df_targets.to_csv(path / targets_filename)
     logger.info("Feature library saved with targets")
 
 
 def write_selected_features(
-    feature_names, feature_scores, feature_selected, method_name
+    feature_names,
+    feature_scores,
+    feature_selected, 
+    feature_selection_method, 
+    path,
+    filename,   
 ):
+
+    # Create directory if missing
+    Path(path).mkdir(parents=True, exist_ok=True)
+
+    # Create label from method dictionary
+    method_name, method_params = feature_selection_method
+    feature_selection_method_label = create_label(method_name, method_params)
 
     # Create a dictionary with the data
     data = {
@@ -116,10 +148,7 @@ def write_selected_features(
 
     # Create DataFrame
     df = pd.DataFrame(data)
-    df.to_csv(
-        C.FEATURE_SELECTION_PATH / C.FEATURE_SELECTION_FILENAME.format(method_name),
-        index=False,
-    )
+    df.to_csv(path / filename.format(feature_selection_method_label), index=False)
 
     logger.info("Selected features stored with sucess")
 
