@@ -45,7 +45,7 @@ def load_df_X_y(path, feature_library_filename, targets_filename, target_name):
     return df_feature_library, df_targets[target_name]
 
 
-def load_score_features(
+def load_scores_features(
     feature_selection_method,
     path,
     filename,
@@ -70,7 +70,7 @@ def load_selected_features(
     :param method_name: The name of the feature selection method to consider.
     :return: A list of selected features.
     """
-    df_scores = load_score_features(feature_selection_method, path, filename)
+    df_scores = load_scores_features(feature_selection_method, path, filename)
     selected_features = df_scores.loc[
         df_scores["feature_selected"] == 1, "feature_names"
     ].tolist()

@@ -3,7 +3,7 @@ import os
 import matplotlib.pyplot as plt
 import pandas as pd
 import streamlit as st
-from config import Config
+from configs.visuals import VisualsConfig as Config
 from constants import Constants as C
 from feature_selection import available_feature_selection
 from loaders import load_results_metrics, load_config, load_scores_features
@@ -14,20 +14,20 @@ def welcome():
     st.title("Visuals for Datagotchi Health")
 
 
-def select_experiment():
+def select_experiment(experiments_path):
 
     # Title of sidebar
     st.sidebar.title("Selection of the experiment")
 
     # Select the experiment
-    experiments_list = [experiment for experiment in os.listdir(C.EXPERIMENTS_PATH)]
+    experiments_list = [experiment for experiment in os.listdir(experiments_path)]
     experiments_list_sorted = sorted(experiments_list, reverse=True)
     selected_experiment = st.sidebar.selectbox(
         "Choose the experiment you want to see", experiments_list_sorted
     )
 
     # Load metrics results
-    metrics_df = load_results_metrics(experiment_name=selected_experiment)
+    metrics_df = load_results_metrics(experiments_path / selected_experiment, C.METRICS_FILENAME)
     # Convert timestamp into datetime
     metrics_df["timestamp"] = pd.to_datetime(metrics_df["timestamp"])
 
@@ -69,6 +69,7 @@ def table_metrics_all(metrics_df):
 def plot_results_metric(metrics_df):
 
     # Select a metric
+    # TODO : adapt this dynamically
     metric_choice = st.sidebar.selectbox(
         "Which metric do you want to plot?", Config.METRIC_LIST
     )
@@ -113,10 +114,10 @@ def plot_results_metric(metrics_df):
     st.pyplot(fig)
 
 
-def show_config(selected_experiment, selected_run_name):
+def show_config(experiments_path, selected_experiment, selected_run_name):
     st.write("Configuration for this run of experiment")
     selected_run_path = (
-        C.EXPERIMENTS_PATH
+        experiments_path
         / selected_experiment
         / C.EXPERIMENTS_ARTIFACTS_FOLDER_NAME
         / selected_run_name
@@ -129,13 +130,27 @@ def select_feature_selection_method():
     # Title of sidebar
     st.sidebar.title("Feature selection")
 
+    # Hardcode available feature selection methods
+    # TODO : adapt this dynamically
+    available_feature_selection = ["kbest20", "all"]
+    selection_methods_dict = {
+        "kbest20": ("kbest", {"k": 20}),
+        "all": ("all", {}),
+    }
+
     # Selection of the feature selection method
     selected_feature_selection_method = st.sidebar.selectbox(
         "Choose the feature selection method you want to see features' scores", available_feature_selection
     )
 
     # Loading features scores
-    df_features_scores = load_scores_features(selected_feature_selection_method)
+    ml_run_path = C.ML_PATH / eval(f"C.{Config.RUN_TYPE}")
+    frozen_library_folder_name = Config.FEATURE_LIBRARY_VERSION
+    df_features_scores = load_scores_features(
+        selection_methods_dict[selected_feature_selection_method],
+        ml_run_path / C.FEATURE_SELECTION_FOLDER_NAME / frozen_library_folder_name,
+        C.FEATURE_SELECTION_FILENAME,
+    )
 
     # Sort features by score
     df_features_scores_sorted = df_features_scores.sort_values(by='feature_scores', ascending=False)
@@ -190,15 +205,19 @@ def plot_feature_selection_scores(selected_feature_selection_method, df_features
 # Title and welcome message
 welcome()
 
+# Derive paths from configs
+ml_run_path = C.ML_PATH / eval(f"C.{Config.RUN_TYPE}")
+experiments_path = ml_run_path / C.EXPERIMENTS_FOLDER_NAME
+
 # Selection of the run and loading results of it
-metrics_df, selected_experiment, selected_run_name = select_experiment()
+metrics_df, selected_experiment, selected_run_name = select_experiment(experiments_path)
 
 # Visualize results of the run
 #table_metrics_all(metrics_df)
 plot_results_metric(metrics_df)
 
 # Show config for this run
-show_config(selected_experiment, selected_run_name)
+show_config(experiments_path, selected_experiment, selected_run_name)
 
 # Selection of feature selection method and loading scores of the features
 selected_feature_selection_method, df_features_scores_sorted = select_feature_selection_method()
