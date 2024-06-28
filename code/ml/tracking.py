@@ -8,6 +8,7 @@ from pathlib import Path
 import pandas as pd
 from constants import Constants as C
 from loaders import load_results_metrics
+from utils import create_label
 
 logger = logging.getLogger(__name__)
 
@@ -94,23 +95,6 @@ nouns = [
     "Alligator",
 ]
 
-def flatten_dict_to_string(d, parent_key='', sep='_'):
-    items = []
-    for k, v in d.items():
-        new_key = f"{parent_key}{sep}{k}" if parent_key else k
-        if isinstance(v, dict):
-            items.extend(flatten_dict_to_string(v, new_key, sep=sep).items())
-        else:
-            items.append((new_key, v))
-    return dict(items)
-
-def dict_to_string(d, sep='_'):
-    flat_dict = flatten_dict_to_string(d, sep=sep)
-    return sep.join(f"{k}{sep}{v}" for k, v in flat_dict.items())
-
-def create_label(method_name, config_dict, sep='_'):
-    config_string = dict_to_string(config_dict, sep=sep)
-    return f"{method_name}{sep}{config_string}"
 
 def write_feature_library(df_features, df_targets, path, feature_filename, targets_filename):
     # TODO: use parquet instead
@@ -153,7 +137,22 @@ def write_selected_features(
     logger.info("Selected features stored with sucess")
 
 
-def track_results(metrics_df, predictions_df):
+def track_results(
+    metrics_df,
+    predictions_df,
+    Config,
+    metrics_path,
+    artifacts_path,
+    metrics_filename,
+    artifacts_config_filename,
+    artifacts_predictions_filename,
+):
+
+    logger.debug("Writing metrics file....")
+
+    # Create directory if missing
+    Path(metrics_path).mkdir(parents=True, exist_ok=True)
+    Path(artifacts_path).mkdir(parents=True, exist_ok=True)
 
     # create a run_id and timestamp
     adjective = random.choice(adjectives)
@@ -168,24 +167,24 @@ def track_results(metrics_df, predictions_df):
     )
     metrics_df.insert(0, C.METRICS_RUN_ID_FIELD, [run_id] * metrics_df.shape[0])
 
-    if os.path.isfile(C.EXPERIMENTS_VERSION_PATH / C.METRICS_FILENAME):
-        metrics_df_old = load_results_metrics()
+    if os.path.isfile(metrics_path / metrics_filename):
+        metrics_df_old = load_results_metrics(metrics_path, metrics_filename)
         metrics_df = pd.concat((metrics_df_old, metrics_df), ignore_index=True)
         logger.info("Updating metrics dashboard...")
-    metrics_df.to_csv(C.EXPERIMENTS_VERSION_PATH / C.METRICS_FILENAME, index=False)
+    metrics_df.to_csv(metrics_path / metrics_filename, index=False)
     logger.info("Metrics file saved")
 
     # write artifacts
-    artifacts_run_id_path = C.EXPERIMENTS_VERSION_ARTIFACTS_PATH / run_id
+    artifacts_run_id_path = artifacts_path / run_id
     assert not os.path.isdir(artifacts_run_id_path)
     Path(artifacts_run_id_path).mkdir(parents=True, exist_ok=True)
 
     # - write config
     config_dict = Config.to_dict()
-    with open(artifacts_run_id_path / C.ARTIFACTS_CONFIG_FILENAME, "w") as json_file:
+    with open(artifacts_run_id_path / artifacts_config_filename, "w") as json_file:
         json.dump(config_dict, json_file, indent=4)
     logger.info("Config artifacts saved")
 
     # - write predictions
-    predictions_df.to_csv(artifacts_run_id_path / C.ARTIFACTS_PREDICTIONS_FILENAME)
+    predictions_df.to_csv(artifacts_run_id_path / artifacts_predictions_filename)
     logger.info("Predictions saved")

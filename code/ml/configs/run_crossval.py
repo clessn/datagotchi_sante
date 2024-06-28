@@ -1,30 +1,6 @@
 import inspect
 
 
-class CreateFeatureConfig:
-    # Versioning
-    RUN_TYPE = "REAL_FOLDER_NAME"  # SANDBOX_FOLDER_NAME or REAL_FOLDER_NAME
-    CODEBOOK_VERSION = "frozen_codebook_june_21.csv"
-
-
-class FeatureScoreConfig:
-    # Versioning
-    RUN_TYPE = "REAL_FOLDER_NAME"  # SANDBOX_FOLDER_NAME or REAL_FOLDER_NAME
-    FEATURE_LIBRARY_VERSION = "feature_library_v2"
-
-    # Feature Selection Grid
-    FEATURE_SELECTION_METHOD_NAMES = [
-        {
-            "all": {},
-            "kbest": {"k": [20]},
-            "variance": {"threshold": [0.1]},
-        }
-    ]
-    
-    # Target choice
-    TARGET_NAME = "C.TARGET_SCORE_TOT"
-
-
 class CrossvalConfig:
 
     # 0. Versioning
@@ -35,9 +11,7 @@ class CrossvalConfig:
 
     # 1. Modeling
     # 1.1. Feature Selection
-    FEATURE_SELECTION_METHOD_NAMES = ["all"]
-    FEATURE_SELECTION_VARIANCE_TRESHOLD = 0.1
-    FEATURE_SELECTION_K_BEST = 20
+    FEATURE_SELECTION_METHOD = ("kbest", {"k": 20})
 
     # 1. Predictions Pipeline
     # 1.1. Evaluation
@@ -67,9 +41,6 @@ class CrossvalConfig:
         },
     }
     TARGET_NAME = "C.TARGET_SCORE_TOT"
-
-
-    # 3. Feature selection pipeline
 
 
     # Display config as a dictionary

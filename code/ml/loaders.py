@@ -1,6 +1,7 @@
 import json
 import pandas as pd
 from constants import Constants as C
+from utils import create_label
 
 
 def explore_raw_data(path, filename):
@@ -43,26 +44,30 @@ def load_df_X_y(path, feature_library_filename, targets_filename, target_name):
     return df_feature_library, df_targets[target_name]
 
 
-def load_selected_features(method_name):
+def load_selected_features(
+    feature_selection_method, 
+    path,
+    filename,
+):
     """
     Reads a file containing selected features, one per line, and returns a list of these features.
 
     :param method_name: The name of the feature selection method to consider.
     :return: A list of selected features.
     """
-    df_selected = pd.read_csv(
-        C.FEATURE_SELECTION_PATH / C.FEATURE_SELECTION_FILENAME.format(method_name)
-    )
+    # Create label from method dictionary
+    method_name, method_params = feature_selection_method
+    feature_selection_method_label = create_label(method_name, method_params)
+
+    df_selected = pd.read_csv(path / filename.format(feature_selection_method_label))
     selected_features = df_selected.loc[
         df_selected["feature_selected"] == 1, "feature_names"
     ].tolist()
     return selected_features
 
 
-
-def load_results_metrics(experiment_name):
-    experiments_version_path = C.EXPERIMENTS_PATH / experiment_name
-    metrics_df = pd.read_csv(experiments_version_path / C.METRICS_FILENAME)
+def load_results_metrics(path, filename):
+    metrics_df = pd.read_csv(path / filename)
     return metrics_df
 
 def load_config(config_path):

@@ -1,6 +1,6 @@
 import numpy as np
 import xgboost as xgb
-from config import Config
+from configs.run_crossval import CrossvalConfig as Config
 from preprocessing import available_imputers_dict, available_scalers_dict
 from sklearn.base import BaseEstimator, RegressorMixin
 from sklearn.linear_model import LinearRegression
