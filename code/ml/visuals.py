@@ -7,7 +7,7 @@ import streamlit as st
 from config import Config
 from constants import Constants as C
 from feature_selection import available_feature_selection
-from loaders import load_results_metrics, load_config, load_scores_features
+from loaders import load_config, load_results_metrics, load_scores_features
 
 
 def welcome():
@@ -81,24 +81,37 @@ def plot_results_metric(metrics_df):
     mean_selected_metric_df = (
         selected_metric_df.groupby("model_name")["metric_value"].mean().reset_index()
     )
-    
+
     # Create plot using plotly
-    fig = px.bar(mean_selected_metric_df, x='model_name', y='metric_value', 
-                 title=f"Mean value on {metric_choice} for models",
-                 labels={'model_name': 'Model name', 'metric_value': f"Mean value on {metric_choice}"})
+    fig = px.bar(
+        mean_selected_metric_df,
+        x="model_name",
+        y="metric_value",
+        title=f"Mean value on {metric_choice} for models",
+        labels={
+            "model_name": "Model name",
+            "metric_value": f"Mean value on {metric_choice}",
+        },
+    )
 
     # Rotate x-axis labels
     fig.update_layout(xaxis_tickangle=-45)
 
     # Plot results
     st.plotly_chart(fig)
-    
+
 
 def show_config(selected_experiment, selected_run_name):
     st.write("Configuration for this run of experiment")
-    selected_run_path = C.EXPERIMENTS_PATH / selected_experiment / C.EXPERIMENTS_ARTIFACTS_FOLDER_NAME / selected_run_name
+    selected_run_path = (
+        C.EXPERIMENTS_PATH
+        / selected_experiment
+        / C.EXPERIMENTS_ARTIFACTS_FOLDER_NAME
+        / selected_run_name
+    )
     config_df = load_config(selected_run_path)
     config_df
+
 
 def select_feature_selection_method():
 
@@ -107,40 +120,51 @@ def select_feature_selection_method():
 
     # Selection of the feature selection method
     selected_feature_selection_method = st.sidebar.selectbox(
-        "Choose the feature selection method you want to see features' scores", available_feature_selection
+        "Choose the feature selection method you want to see features' scores",
+        available_feature_selection,
     )
 
     # Loading features scores
     df_features_scores = load_scores_features(selected_feature_selection_method)
 
     # Sort features by score
-    df_features_scores_sorted = df_features_scores.sort_values(by='feature_scores', ascending=False)
+    df_features_scores_sorted = df_features_scores.sort_values(
+        by="feature_scores", ascending=False
+    )
 
     return selected_feature_selection_method, df_features_scores_sorted
 
 
-def plot_feature_selection_scores(selected_feature_selection_method, df_features_scores_sorted):
-    
+def plot_feature_selection_scores(
+    selected_feature_selection_method, df_features_scores_sorted
+):
+
     # Selection of the number of feature to show
     number_features = st.sidebar.slider(
         "Select the number of features you want to see",
         min_value=1,
         max_value=200,
-        value=20  # Default value
+        value=20,  # Default value
     )
 
     # Keep only the first lines
     df_features_scores_sorted_top = df_features_scores_sorted.head(number_features)
 
     # Map feature_selected values to labels for legend
-    df_features_scores_sorted_top['selected_label'] = df_features_scores_sorted_top['feature_selected'].apply(lambda x: 'selected' if x == 1 else 'not selected')
+    df_features_scores_sorted_top["selected_label"] = df_features_scores_sorted_top[
+        "feature_selected"
+    ].apply(lambda x: "selected" if x == 1 else "not selected")
 
     # Create plot using plotly
-    fig = px.bar(df_features_scores_sorted_top, x='feature_names', y='feature_scores',
-                 color='selected_label',
-                 color_discrete_map={'selected': 'green', 'not selected': 'red'},
-                 labels={'feature_names': 'Feature name', 'feature_scores': 'Feature score'},
-                 title=f"Feature importance for the feature selection {selected_feature_selection_method}")
+    fig = px.bar(
+        df_features_scores_sorted_top,
+        x="feature_names",
+        y="feature_scores",
+        color="selected_label",
+        color_discrete_map={"selected": "green", "not selected": "red"},
+        labels={"feature_names": "Feature name", "feature_scores": "Feature score"},
+        title=f"Feature importance for the feature selection {selected_feature_selection_method}",
+    )
 
     # Rotate x-axis labels
     fig.update_layout(xaxis_tickangle=-90)
@@ -148,7 +172,6 @@ def plot_feature_selection_scores(selected_feature_selection_method, df_features
     # Plot results
     st.plotly_chart(fig)
 
-    
 
 ############### Preloading (useless for the moment) ###############
 
@@ -161,14 +184,18 @@ welcome()
 metrics_df, selected_experiment, selected_run_name = select_experiment()
 
 # Visualize results of the run
-#table_metrics_all(metrics_df)
+# table_metrics_all(metrics_df)
 plot_results_metric(metrics_df)
 
 # Show config for this run
 show_config(selected_experiment, selected_run_name)
 
 # Selection of feature selection method and loading scores of the features
-selected_feature_selection_method, df_features_scores_sorted = select_feature_selection_method()
+selected_feature_selection_method, df_features_scores_sorted = (
+    select_feature_selection_method()
+)
 
 # Visualize feature selection scores
-plot_feature_selection_scores(selected_feature_selection_method, df_features_scores_sorted)
+plot_feature_selection_scores(
+    selected_feature_selection_method, df_features_scores_sorted
+)
