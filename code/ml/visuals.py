@@ -132,8 +132,7 @@ def select_feature_selection_method():
 
 
 def plot_feature_selection_scores(selected_feature_selection_method, df_features_scores_sorted):
-    df_features_scores_sorted
-
+    
     # Selection of the number of feature to show
     number_features = st.sidebar.slider(
         "Select the number of features you want to see",
@@ -145,12 +144,15 @@ def plot_feature_selection_scores(selected_feature_selection_method, df_features
     # Keep only the first lines
     df_features_scores_sorted_top = df_features_scores_sorted.head(number_features)
 
+    # Colors for the plot bars
+    colors = ['green' if selected == 1 else 'red' for selected in df_features_scores_sorted_top["feature_selected"]]
+
     # Create figure
     fig, ax = plt.subplots(figsize=(9, 6))
     bars = ax.bar(
         df_features_scores_sorted_top["feature_names"],
         df_features_scores_sorted_top["feature_scores"],
-        color="skyblue",
+        color=colors,
     )
     ax.set_xlabel("Feature name", fontsize=12)
     ax.set_ylabel("Feature score", fontsize=12)
@@ -163,9 +165,10 @@ def plot_feature_selection_scores(selected_feature_selection_method, df_features
     plt.xticks(rotation=90, ha="right")
     # Adjust space
     plt.tight_layout()
-
+    
     # Plot results
-    st.pyplot(fig)
+    st.pyplot(fig)    
+
 
 
 ############### Preloading (useless for the moment) ###############
