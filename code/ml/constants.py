@@ -1,7 +1,6 @@
 import os
 from pathlib import Path
 
-from config import Config
 from dotenv import load_dotenv
 
 # Load the .env file
@@ -16,44 +15,19 @@ class Constants:
     REAL_FOLDER_NAME = "real"
     CODEBOOK_FOLDER_NAME = "codebooks"
     FEATURE_LIBRARIES_FOLDER_NAME = "feature_libraries"
-    FEATURE_LIBRARY_VERSION_FOLDER_NAME = Config.FEATURE_LIBRARY_VERSION
     FEATURE_SELECTION_FOLDER_NAME = "feature_selection"
     EXPERIMENTS_FOLDER_NAME = "experiments"
-    EXPERIMENTS_FOLDER_VERSION_NAME = Config.EXPERIMENT_NAME
     EXPERIMENTS_ARTIFACTS_FOLDER_NAME = "artifacts"
 
     # Paths
     LOGGING_PATH = Path(os.getcwd()) / "code" / "ml"
     DATA_PATH = Path(os.getenv("DATA_PATH"))
     RAW_PATH = DATA_PATH / RAW_FOLDER_NAME
-    ML_ROOT_PATH = DATA_PATH / ML_FOLDER_NAME
-    CODEBOOK_PATH = ML_ROOT_PATH / CODEBOOK_FOLDER_NAME
-    ML_PATH = ML_ROOT_PATH / eval(Config.RUN_TYPE)
-    FEATURE_LIBRARIES_PATH = ML_PATH / FEATURE_LIBRARIES_FOLDER_NAME
-    FEATURE_LIBRARY_VERSION_PATH = (
-        FEATURE_LIBRARIES_PATH / FEATURE_LIBRARY_VERSION_FOLDER_NAME
-    )
-    FEATURE_SELECTION_PATH = (
-        ML_PATH / FEATURE_SELECTION_FOLDER_NAME / FEATURE_LIBRARY_VERSION_FOLDER_NAME
-    )
-    EXPERIMENTS_PATH = ML_PATH / EXPERIMENTS_FOLDER_NAME
-    EXPERIMENTS_VERSION_PATH = EXPERIMENTS_PATH / EXPERIMENTS_FOLDER_VERSION_NAME
-    EXPERIMENTS_VERSION_ARTIFACTS_PATH = (
-        EXPERIMENTS_VERSION_PATH / EXPERIMENTS_ARTIFACTS_FOLDER_NAME
-    )
-
-    # Create missing directories if any
-    Path(ML_ROOT_PATH).mkdir(parents=True, exist_ok=True)
-    Path(FEATURE_LIBRARIES_PATH).mkdir(parents=True, exist_ok=True)
-    Path(FEATURE_LIBRARY_VERSION_PATH).mkdir(parents=True, exist_ok=True)
-    Path(FEATURE_SELECTION_PATH).mkdir(parents=True, exist_ok=True)
-    Path(EXPERIMENTS_PATH).mkdir(parents=True, exist_ok=True)
-    Path(EXPERIMENTS_VERSION_PATH).mkdir(parents=True, exist_ok=True)
-    Path(EXPERIMENTS_VERSION_ARTIFACTS_PATH).mkdir(parents=True, exist_ok=True)
+    ML_PATH = DATA_PATH / ML_FOLDER_NAME
+    CODEBOOK_PATH = ML_PATH / CODEBOOK_FOLDER_NAME
 
     # Filenames
     RAW_FILENAME = "data_raw.sav"
-    CODEBOOK_FILENAME = Config.CODEBOOK_VERSION
     ATTRIBUTES_FILENAME = "attributes.csv"
     FEATURE_LIBRARY_FILENAME = "feature_library.csv"
     FEATURE_SELECTION_FILENAME = "feature_selection_{}.csv"

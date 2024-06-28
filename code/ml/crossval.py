@@ -3,7 +3,7 @@ import os
 
 import numpy as np
 import pandas as pd
-from config import Config
+from configs.run_crossval import CrossvalConfig as Config
 from constants import Constants as C
 from loaders import load_df_X_y, load_selected_features
 from metrics import available_metrics_dict
@@ -135,17 +135,41 @@ def crossval(X, y, index):
         "metric_value": metric_value_list,
     }
     metrics_df = pd.DataFrame.from_dict(metrics_dict)
-
-    # To csv
-    logger.debug("Writing metrics file")
-    track_results(metrics_df, predictions_df)
     logger.info("Cross-validation performed with success !")
+
+    return metrics_df, predictions_df
 
 
 # Run crossval
 if __name__ == "__main__":
     logger = configure_main_logger("crossval")
-    df_X, df_y = load_df_X_y()
-    selected_features = load_selected_features(Config.FEATURE_SELECTION_METHOD_NAME)
+    ml_run_path = C.ML_PATH / eval(f"C.{Config.RUN_TYPE}")
+    frozen_library_folder_name = Config.FEATURE_LIBRARY_VERSION
+    df_X, df_y = load_df_X_y(
+        ml_run_path / C.FEATURE_LIBRARIES_FOLDER_NAME / frozen_library_folder_name,
+        C.FEATURE_LIBRARY_FILENAME,
+        C.TARGETS_FILENAME,
+        eval(Config.TARGET_NAME),
+    )
+    selected_features = load_selected_features(
+        Config.FEATURE_SELECTION_METHOD,
+        ml_run_path / C.FEATURE_SELECTION_FOLDER_NAME / frozen_library_folder_name,
+        C.FEATURE_SELECTION_FILENAME,
+    )
     df_X_selected = df_X.loc[:, selected_features]
-    crossval(df_X_selected.values, df_y.values, df_X_selected.index)
+    metrics_df, predictions_df = crossval(
+        df_X_selected.values, df_y.values, df_X_selected.index
+    )
+    track_results(
+        metrics_df,
+        predictions_df,
+        Config,
+        ml_run_path / C.EXPERIMENTS_FOLDER_NAME / Config.EXPERIMENT_NAME,
+        ml_run_path
+        / C.EXPERIMENTS_FOLDER_NAME
+        / Config.EXPERIMENT_NAME
+        / C.EXPERIMENTS_ARTIFACTS_FOLDER_NAME,
+        C.METRICS_FILENAME,
+        C.ARTIFACTS_CONFIG_FILENAME,
+        C.ARTIFACTS_PREDICTIONS_FILENAME,
+    )
