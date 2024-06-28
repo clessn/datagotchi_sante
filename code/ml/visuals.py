@@ -5,7 +5,7 @@ import pandas as pd
 import streamlit as st
 from config import Config
 from constants import Constants as C
-from loaders import load_results_metrics, load_config
+from loaders import load_config, load_results_metrics
 
 
 def welcome():
@@ -89,7 +89,13 @@ def plot_results_metric(metrics_df):
     ax.set_title(f"Mean value on {metric_choice} for models", fontsize=16)
 
     for bar, metric_value in zip(bars, mean_selected_metric_df["metric_value"]):
-        ax.text(bar.get_x() + bar.get_width() / 2.0, metric_value, f'{metric_value:.2f}', va='bottom', ha='center')
+        ax.text(
+            bar.get_x() + bar.get_width() / 2.0,
+            metric_value,
+            f"{metric_value:.2f}",
+            va="bottom",
+            ha="center",
+        )
 
     # Adjust size
     ax.tick_params(axis="x", labelsize=12)
@@ -102,16 +108,21 @@ def plot_results_metric(metrics_df):
     # Plot results
     st.pyplot(fig)
 
+
 def show_config(selected_experiment, selected_run_name):
     st.write("Configuration for this run of experiment")
-    selected_run_path = C.EXPERIMENTS_PATH / selected_experiment / C.EXPERIMENTS_ARTIFACTS_FOLDER_NAME / selected_run_name
+    selected_run_path = (
+        C.EXPERIMENTS_PATH
+        / selected_experiment
+        / C.EXPERIMENTS_ARTIFACTS_FOLDER_NAME
+        / selected_run_name
+    )
     config_df = load_config(selected_run_path)
     config_df
-    
 
 
 welcome()
 metrics_df, selected_experiment, selected_run_name = select_experiment()
-#table_metrics_all(metrics_df)
+# table_metrics_all(metrics_df)
 plot_results_metric(metrics_df)
 show_config(selected_experiment, selected_run_name)

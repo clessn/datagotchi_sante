@@ -1,4 +1,5 @@
 import json
+
 import pandas as pd
 from constants import Constants as C
 from utils import create_label
@@ -45,7 +46,7 @@ def load_df_X_y(path, feature_library_filename, targets_filename, target_name):
 
 
 def load_selected_features(
-    feature_selection_method, 
+    feature_selection_method,
     path,
     filename,
 ):
@@ -69,6 +70,7 @@ def load_selected_features(
 def load_results_metrics(path, filename):
     metrics_df = pd.read_csv(path / filename)
     return metrics_df
+
 
 def load_config(config_path):
     # Opening JSON file

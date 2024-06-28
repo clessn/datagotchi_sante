@@ -157,13 +157,18 @@ if __name__ == "__main__":
         C.FEATURE_SELECTION_FILENAME,
     )
     df_X_selected = df_X.loc[:, selected_features]
-    metrics_df, predictions_df = crossval(df_X_selected.values, df_y.values, df_X_selected.index)
+    metrics_df, predictions_df = crossval(
+        df_X_selected.values, df_y.values, df_X_selected.index
+    )
     track_results(
         metrics_df,
         predictions_df,
         Config,
         ml_run_path / C.EXPERIMENTS_FOLDER_NAME / Config.EXPERIMENT_NAME,
-        ml_run_path / C.EXPERIMENTS_FOLDER_NAME / Config.EXPERIMENT_NAME / C.EXPERIMENTS_ARTIFACTS_FOLDER_NAME,
+        ml_run_path
+        / C.EXPERIMENTS_FOLDER_NAME
+        / Config.EXPERIMENT_NAME
+        / C.EXPERIMENTS_ARTIFACTS_FOLDER_NAME,
         C.METRICS_FILENAME,
         C.ARTIFACTS_CONFIG_FILENAME,
         C.ARTIFACTS_PREDICTIONS_FILENAME,

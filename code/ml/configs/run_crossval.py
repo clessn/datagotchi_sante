@@ -42,7 +42,6 @@ class CrossvalConfig:
     }
     TARGET_NAME = "C.TARGET_SCORE_TOT"
 
-
     # Display config as a dictionary
     @classmethod
     def to_dict(cls):
@@ -51,6 +50,7 @@ class CrossvalConfig:
             for name, attr in cls.__dict__.items()
             if not inspect.isroutine(attr) and not name.startswith("__")
         }
+
 
 class CreateSandboxConfig:
     SANDBOX_N_ATTRIBUTES = 20

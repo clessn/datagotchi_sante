@@ -2,8 +2,8 @@ import logging
 
 import numpy as np
 import pandas as pd
-from constants import Constants as C
 from configs.create_feature import CreateFeatureConfig as Config
+from constants import Constants as C
 from loaders import load_attributes, load_codebook
 from tracking import write_feature_library
 from utils import configure_main_logger

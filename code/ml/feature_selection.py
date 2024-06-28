@@ -21,15 +21,11 @@ def select_all_features(df_X, df_y):
 
 
 def select_above_variance_treshold_features(df_X, df_y, threshold):
-    logger.info(
-        f"Select features above a treshold of {threshold} for variance"
-    )
+    logger.info(f"Select features above a treshold of {threshold} for variance")
     selector = VarianceThreshold(threshold)
     selector.fit(df_X)
     feature_variances = selector.variances_
-    feature_selected = (
-        feature_variances >= threshold
-    ).astype(int)
+    feature_selected = (feature_variances >= threshold).astype(int)
 
     # Normalize scores
     feature_scores = (
@@ -82,7 +78,9 @@ if __name__ == "__main__":
     )
     method_name, method_params = Config.FEATURE_SELECTION_METHOD
     feature_selection_method = available_feature_selection[method_name]
-    feature_scores, feature_selected = feature_selection_method(df_X, df_y, **method_params)
+    feature_scores, feature_selected = feature_selection_method(
+        df_X, df_y, **method_params
+    )
     write_selected_features(
         df_X.columns.tolist(),
         feature_scores,

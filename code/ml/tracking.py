@@ -96,7 +96,9 @@ nouns = [
 ]
 
 
-def write_feature_library(df_features, df_targets, path, feature_filename, targets_filename):
+def write_feature_library(
+    df_features, df_targets, path, feature_filename, targets_filename
+):
     # TODO: use parquet instead
     # Create directory if missing
     Path(path).mkdir(parents=True, exist_ok=True)
@@ -110,10 +112,10 @@ def write_feature_library(df_features, df_targets, path, feature_filename, targe
 def write_selected_features(
     feature_names,
     feature_scores,
-    feature_selected, 
-    feature_selection_method, 
+    feature_selected,
+    feature_selection_method,
     path,
-    filename,   
+    filename,
 ):
 
     # Create directory if missing
