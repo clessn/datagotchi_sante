@@ -45,6 +45,20 @@ def load_df_X_y(path, feature_library_filename, targets_filename, target_name):
     return df_feature_library, df_targets[target_name]
 
 
+def load_score_features(
+    feature_selection_method,
+    path,
+    filename,
+):
+    # Create label from method dictionary
+    method_name, method_params = feature_selection_method
+    feature_selection_method_label = create_label(method_name, method_params)
+
+    # Load score features
+    df_scores = pd.read_csv(path / filename.format(feature_selection_method_label))
+    return df_scores
+
+
 def load_selected_features(
     feature_selection_method,
     path,
@@ -56,13 +70,9 @@ def load_selected_features(
     :param method_name: The name of the feature selection method to consider.
     :return: A list of selected features.
     """
-    # Create label from method dictionary
-    method_name, method_params = feature_selection_method
-    feature_selection_method_label = create_label(method_name, method_params)
-
-    df_selected = pd.read_csv(path / filename.format(feature_selection_method_label))
-    selected_features = df_selected.loc[
-        df_selected["feature_selected"] == 1, "feature_names"
+    df_scores = load_score_features(feature_selection_method, path, filename)
+    selected_features = df_scores.loc[
+        df_scores["feature_selected"] == 1, "feature_names"
     ].tolist()
     return selected_features
 
