@@ -2,6 +2,7 @@ import logging
 
 import numpy as np
 import pandas as pd
+from configs.create_feature import CreateFeatureConfig as Config
 from constants import Constants as C
 from loaders import load_attributes, load_codebook
 from tracking import write_feature_library
@@ -107,10 +108,11 @@ def keep_observable(df_codebook, df_attributes):
 # Run feature_engineering
 if __name__ == "__main__":
     logger = configure_main_logger("feature_engineering")
+    ml_run_path = C.ML_PATH / eval(f"C.{Config.RUN_TYPE}")
 
     # Load codebook and attributes
-    df_codebook = load_codebook()
-    df_attributes = load_attributes()
+    df_codebook = load_codebook(C.CODEBOOK_PATH, Config.CODEBOOK_VERSION)
+    df_attributes = load_attributes(ml_run_path, C.ATTRIBUTES_FILENAME)
 
     # Targets
     df_targets = df_attributes.loc[:, C.TARGET_COLS]
@@ -147,5 +149,11 @@ if __name__ == "__main__":
     )
 
     # Save features and targets to csv
-    write_feature_library(df_features, df_targets)
+    write_feature_library(
+        df_features,
+        df_targets,
+        ml_run_path / C.FEATURE_LIBRARIES_FOLDER_NAME,
+        C.FEATURE_LIBRARY_FILENAME,
+        C.TARGETS_FILENAME,
+    )
     logger.info("Features and Targets created with success !! :-)")

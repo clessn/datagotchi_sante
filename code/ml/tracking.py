@@ -6,9 +6,9 @@ from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
-from config import Config
 from constants import Constants as C
 from loaders import load_results_metrics
+from utils import create_label
 
 logger = logging.getLogger(__name__)
 
@@ -96,16 +96,34 @@ nouns = [
 ]
 
 
-def write_feature_library(df_features, df_targets):
+def write_feature_library(
+    df_features, df_targets, path, feature_filename, targets_filename
+):
     # TODO: use parquet instead
-    df_features.to_csv(C.FEATURE_LIBRARIES_PATH / C.FEATURE_LIBRARY_FILENAME)
-    df_targets.to_csv(C.FEATURE_LIBRARIES_PATH / C.TARGETS_FILENAME)
+    # Create directory if missing
+    Path(path).mkdir(parents=True, exist_ok=True)
+
+    # Write features and targets
+    df_features.to_csv(path / feature_filename)
+    df_targets.to_csv(path / targets_filename)
     logger.info("Feature library saved with targets")
 
 
 def write_selected_features(
-    feature_names, feature_scores, feature_selected, method_name
+    feature_names,
+    feature_scores,
+    feature_selected,
+    feature_selection_method,
+    path,
+    filename,
 ):
+
+    # Create directory if missing
+    Path(path).mkdir(parents=True, exist_ok=True)
+
+    # Create label from method dictionary
+    method_name, method_params = feature_selection_method
+    feature_selection_method_label = create_label(method_name, method_params)
 
     # Create a dictionary with the data
     data = {
@@ -116,15 +134,27 @@ def write_selected_features(
 
     # Create DataFrame
     df = pd.DataFrame(data)
-    df.to_csv(
-        C.FEATURE_SELECTION_PATH / C.FEATURE_SELECTION_FILENAME.format(method_name),
-        index=False,
-    )
+    df.to_csv(path / filename.format(feature_selection_method_label), index=False)
 
     logger.info("Selected features stored with sucess")
 
 
-def track_results(metrics_df, predictions_df):
+def track_results(
+    metrics_df,
+    predictions_df,
+    Config,
+    metrics_path,
+    artifacts_path,
+    metrics_filename,
+    artifacts_config_filename,
+    artifacts_predictions_filename,
+):
+
+    logger.debug("Writing metrics file....")
+
+    # Create directory if missing
+    Path(metrics_path).mkdir(parents=True, exist_ok=True)
+    Path(artifacts_path).mkdir(parents=True, exist_ok=True)
 
     # create a run_id and timestamp
     adjective = random.choice(adjectives)
@@ -139,24 +169,24 @@ def track_results(metrics_df, predictions_df):
     )
     metrics_df.insert(0, C.METRICS_RUN_ID_FIELD, [run_id] * metrics_df.shape[0])
 
-    if os.path.isfile(C.EXPERIMENTS_VERSION_PATH / C.METRICS_FILENAME):
-        metrics_df_old = load_results_metrics()
+    if os.path.isfile(metrics_path / metrics_filename):
+        metrics_df_old = load_results_metrics(metrics_path, metrics_filename)
         metrics_df = pd.concat((metrics_df_old, metrics_df), ignore_index=True)
         logger.info("Updating metrics dashboard...")
-    metrics_df.to_csv(C.EXPERIMENTS_VERSION_PATH / C.METRICS_FILENAME, index=False)
+    metrics_df.to_csv(metrics_path / metrics_filename, index=False)
     logger.info("Metrics file saved")
 
     # write artifacts
-    artifacts_run_id_path = C.EXPERIMENTS_VERSION_ARTIFACTS_PATH / run_id
+    artifacts_run_id_path = artifacts_path / run_id
     assert not os.path.isdir(artifacts_run_id_path)
     Path(artifacts_run_id_path).mkdir(parents=True, exist_ok=True)
 
     # - write config
     config_dict = Config.to_dict()
-    with open(artifacts_run_id_path / C.ARTIFACTS_CONFIG_FILENAME, "w") as json_file:
+    with open(artifacts_run_id_path / artifacts_config_filename, "w") as json_file:
         json.dump(config_dict, json_file, indent=4)
     logger.info("Config artifacts saved")
 
     # - write predictions
-    predictions_df.to_csv(artifacts_run_id_path / C.ARTIFACTS_PREDICTIONS_FILENAME)
+    predictions_df.to_csv(artifacts_run_id_path / artifacts_predictions_filename)
     logger.info("Predictions saved")

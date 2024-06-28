@@ -2,7 +2,7 @@ import logging
 
 import numpy as np
 import pandas as pd
-from config import Config
+from configs.score_feature import ScoreFeatureConfig as Config
 from constants import Constants as C
 from loaders import load_df_X_y
 from sklearn.feature_selection import SelectKBest, VarianceThreshold, f_regression
@@ -20,16 +20,12 @@ def select_all_features(df_X, df_y):
     return feature_selected, feature_scores
 
 
-def select_above_variance_treshold_features(df_X, df_y):
-    logger.info(
-        f"Select features above a treshold of {Config.FEATURE_SELECTION_VARIANCE_TRESHOLD} for variance"
-    )
-    selector = VarianceThreshold(threshold=Config.FEATURE_SELECTION_VARIANCE_TRESHOLD)
+def select_above_variance_treshold_features(df_X, df_y, threshold):
+    logger.info(f"Select features above a treshold of {threshold} for variance")
+    selector = VarianceThreshold(threshold)
     selector.fit(df_X)
     feature_variances = selector.variances_
-    feature_selected = (
-        feature_variances >= Config.FEATURE_SELECTION_VARIANCE_TRESHOLD
-    ).astype(int)
+    feature_selected = (feature_variances >= threshold).astype(int)
 
     # Normalize scores
     feature_scores = (
@@ -39,9 +35,8 @@ def select_above_variance_treshold_features(df_X, df_y):
     return feature_scores, feature_selected
 
 
-def select_k_best_features(df_X, df_y):
-    k = Config.FEATURE_SELECTION_K_BEST
-    logger.info(f"Select {Config.FEATURE_SELECTION_K_BEST} best features")
+def select_k_best_features(df_X, df_y, k):
+    logger.info(f"Select {k} best features")
     selector = SelectKBest(score_func=f_regression, k=k)
 
     # Handle missing values
@@ -73,15 +68,25 @@ available_feature_selection = {
 
 if __name__ == "__main__":
     logger = configure_main_logger("feature_selection")
-    df_X, df_y = load_df_X_y()
-    feature_selection_method = available_feature_selection[
-        Config.FEATURE_SELECTION_METHOD_NAME
-    ]
-    feature_scores, feature_selected = feature_selection_method(df_X, df_y)
+    ml_run_path = C.ML_PATH / eval(f"C.{Config.RUN_TYPE}")
+    frozen_library_folder_name = Config.FEATURE_LIBRARY_VERSION
+    df_X, df_y = load_df_X_y(
+        ml_run_path / C.FEATURE_LIBRARIES_FOLDER_NAME / frozen_library_folder_name,
+        C.FEATURE_LIBRARY_FILENAME,
+        C.TARGETS_FILENAME,
+        eval(Config.TARGET_NAME),
+    )
+    method_name, method_params = Config.FEATURE_SELECTION_METHOD
+    feature_selection_method = available_feature_selection[method_name]
+    feature_scores, feature_selected = feature_selection_method(
+        df_X, df_y, **method_params
+    )
     write_selected_features(
         df_X.columns.tolist(),
         feature_scores,
         feature_selected,
-        Config.FEATURE_SELECTION_METHOD_NAME,
+        Config.FEATURE_SELECTION_METHOD,
+        ml_run_path / C.FEATURE_SELECTION_FOLDER_NAME / frozen_library_folder_name,
+        C.FEATURE_SELECTION_FILENAME,
     )
     logger.info("Features selected with success")

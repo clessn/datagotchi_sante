@@ -1,82 +1,84 @@
 import json
 
 import pandas as pd
-from config import Config
 from constants import Constants as C
+from utils import create_label
 
 
-def explore_raw_data():
-    df_str = pd.read_spss(C.RAW_PATH / C.RAW_FILENAME, convert_categoricals=True)
-    df_num = pd.read_spss(C.RAW_PATH / C.RAW_FILENAME, convert_categoricals=False)
+def explore_raw_data(path, filename):
+    df_str = pd.read_spss(path / filename, convert_categoricals=True)
+    df_num = pd.read_spss(path / filename, convert_categoricals=False)
     return df_str, df_num
 
 
-def load_codebook():
-    df = pd.read_csv(C.CODEBOOK_PATH / C.CODEBOOK_FILENAME)
+def load_codebook(path, filename):
+    df = pd.read_csv(path / filename)
     return df.loc[:, C.CODEBOOK_COLS].drop_duplicates()
 
 
-def load_attributes():
-    df = pd.read_csv(C.ML_PATH / C.ATTRIBUTES_FILENAME)
+def load_attributes(path, filename):
+    df = pd.read_csv(path / filename)
     df = df.set_index(C.ATTRIBUTE_ID_COL)
     return df
 
 
-def load_feature_library():
+def load_feature_library(path, filename):
     df_feature_library = pd.read_csv(
-        C.FEATURE_LIBRARY_VERSION_PATH / C.FEATURE_LIBRARY_FILENAME,
+        path / filename,
         index_col=C.ATTRIBUTE_ID_COL,
     )
     return df_feature_library
 
 
-def load_targets():
+def load_targets(path, filename):
     df_targets = pd.read_csv(
-        C.FEATURE_LIBRARY_VERSION_PATH / C.TARGETS_FILENAME,
+        path / filename,
         index_col=C.ATTRIBUTE_ID_COL,
     )
     return df_targets
 
 
-def load_selected_features(method_name):
+def load_df_X_y(path, feature_library_filename, targets_filename, target_name):
+    df_feature_library = load_feature_library(path, feature_library_filename)
+    df_targets = load_targets(path, targets_filename)
+    assert df_feature_library.index.equals(df_targets.index)
+    return df_feature_library, df_targets[target_name]
+
+
+def load_scores_features(
+    feature_selection_method,
+    path,
+    filename,
+):
+    # Create label from method dictionary
+    method_name, method_params = feature_selection_method
+    feature_selection_method_label = create_label(method_name, method_params)
+
+    # Load score features
+    df_scores = pd.read_csv(path / filename.format(feature_selection_method_label))
+    return df_scores
+
+
+def load_selected_features(
+    feature_selection_method,
+    path,
+    filename,
+):
     """
     Reads a file containing selected features, one per line, and returns a list of these features.
 
     :param method_name: The name of the feature selection method to consider.
     :return: A list of selected features.
     """
-    df_selected = pd.read_csv(
-        C.FEATURE_SELECTION_PATH / C.FEATURE_SELECTION_FILENAME.format(method_name)
-    )
-    selected_features = df_selected.loc[
-        df_selected["feature_selected"] == 1, "feature_names"
+    df_scores = load_scores_features(feature_selection_method, path, filename)
+    selected_features = df_scores.loc[
+        df_scores["feature_selected"] == 1, "feature_names"
     ].tolist()
     return selected_features
 
 
-def load_scores_features(method_name):
-    """
-    Reads a file containing selected features, one per line, and returns a dataframe with the name of the feature, the score of this feature and a boolean indicating if this feature is selected
-
-    :param method_name: The name of the feature selection method to consider.
-    :return: A dataframe with the name of the feature, the score of this feature and a boolean indicating if this feature is selected
-    """
-    df_selected = pd.read_csv(
-        C.FEATURE_SELECTION_PATH / C.FEATURE_SELECTION_FILENAME.format(method_name)
-    )
-    return df_selected
-
-
-def load_df_X_y():
-    df_feature_library = load_feature_library()
-    df_targets = load_targets()
-    assert df_feature_library.index.equals(df_targets.index)
-    return df_feature_library, df_targets[eval(Config.TARGET_NAME)]
-
-
-def load_results_metrics(experiment_name=Config.EXPERIMENT_NAME):
-    experiments_version_path = C.EXPERIMENTS_PATH / experiment_name
-    metrics_df = pd.read_csv(experiments_version_path / C.METRICS_FILENAME)
+def load_results_metrics(path, filename):
+    metrics_df = pd.read_csv(path / filename)
     return metrics_df
 
 
