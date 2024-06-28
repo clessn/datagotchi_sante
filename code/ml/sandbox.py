@@ -2,7 +2,7 @@ import logging
 
 import numpy as np
 import pandas as pd
-from config import Config
+from configs.create_sandbox import SandboxConfig as Config
 from constants import Constants as C
 from utils import configure_main_logger
 

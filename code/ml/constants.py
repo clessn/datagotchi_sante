@@ -17,7 +17,6 @@ class Constants:
     FEATURE_LIBRARIES_FOLDER_NAME = "feature_libraries"
     FEATURE_SELECTION_FOLDER_NAME = "feature_selection"
     EXPERIMENTS_FOLDER_NAME = "experiments"
-    # EXPERIMENTS_FOLDER_VERSION_NAME = Config.EXPERIMENT_NAME
     EXPERIMENTS_ARTIFACTS_FOLDER_NAME = "artifacts"
 
     # Paths
@@ -26,17 +25,6 @@ class Constants:
     RAW_PATH = DATA_PATH / RAW_FOLDER_NAME
     ML_PATH = DATA_PATH / ML_FOLDER_NAME
     CODEBOOK_PATH = ML_PATH / CODEBOOK_FOLDER_NAME
-
-    # EXPERIMENTS_PATH = ML_PATH / EXPERIMENTS_FOLDER_NAME
-    # EXPERIMENTS_VERSION_PATH = EXPERIMENTS_PATH / EXPERIMENTS_FOLDER_VERSION_NAME
-    # EXPERIMENTS_VERSION_ARTIFACTS_PATH = (
-    #    EXPERIMENTS_VERSION_PATH / EXPERIMENTS_ARTIFACTS_FOLDER_NAME
-    # )
-
-    # Create missing directories if any
-    # Path(EXPERIMENTS_PATH).mkdir(parents=True, exist_ok=True)
-    # Path(EXPERIMENTS_VERSION_PATH).mkdir(parents=True, exist_ok=True)
-    # Path(EXPERIMENTS_VERSION_ARTIFACTS_PATH).mkdir(parents=True, exist_ok=True)
 
     # Filenames
     RAW_FILENAME = "data_raw.sav"

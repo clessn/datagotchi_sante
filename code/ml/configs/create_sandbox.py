@@ -1,4 +1,4 @@
-class CreateSandboxConfig:
+class SandboxConfig:
     SANDBOX_N_ATTRIBUTES = 20
     SANDBOX_N_SAMPLE = 200
     SANDBOX_RANDOM_STATE = 42
