@@ -2,11 +2,12 @@ import os
 
 import matplotlib.pyplot as plt
 import pandas as pd
+import plotly.express as px
 import streamlit as st
 from configs.visuals import VisualsConfig as Config
 from constants import Constants as C
 from feature_selection import available_feature_selection
-from loaders import load_results_metrics, load_config, load_scores_features
+from loaders import load_config, load_results_metrics, load_scores_features
 
 
 def welcome():
@@ -82,36 +83,24 @@ def plot_results_metric(metrics_df):
         selected_metric_df.groupby("model_name")["metric_value"].mean().reset_index()
     )
 
-    # Create figure
-    fig, ax = plt.subplots(figsize=(9, 6))
-    bars = ax.bar(
-        mean_selected_metric_df["model_name"],
-        mean_selected_metric_df["metric_value"],
-        color="skyblue",
+    # Create plot using plotly
+    fig = px.bar(
+        mean_selected_metric_df,
+        x="model_name",
+        y="metric_value",
+        title=f"Mean value on {metric_choice} for models",
+        labels={
+            "model_name": "Model name",
+            "metric_value": f"Mean value on {metric_choice}",
+        },
     )
-    ax.set_xlabel("Model name", fontsize=12)
-    ax.set_ylabel(f"Mean value on {metric_choice}", fontsize=12)
-    ax.set_title(f"Mean value on {metric_choice} for models", fontsize=16)
 
-    for bar, metric_value in zip(bars, mean_selected_metric_df["metric_value"]):
-        ax.text(
-            bar.get_x() + bar.get_width() / 2.0,
-            metric_value,
-            f"{metric_value:.2f}",
-            va="bottom",
-            ha="center",
-        )
-
-    # Adjust size
-    ax.tick_params(axis="x", labelsize=12)
-    ax.tick_params(axis="y", labelsize=12)
-    # Ajust rotation
-    plt.xticks(rotation=45, ha="right")
-    # Adjust space
-    plt.tight_layout()
+    # Rotate x-axis labels
+    fig.update_layout(xaxis_tickangle=-45)
 
     # Plot results
-    st.pyplot(fig)
+    st.plotly_chart(fig)
+
 
 
 def show_config(experiments_path, selected_experiment, selected_run_name):
@@ -124,6 +113,7 @@ def show_config(experiments_path, selected_experiment, selected_run_name):
     )
     config_df = load_config(selected_run_path)
     config_df
+
 
 def select_feature_selection_method():
 
@@ -140,7 +130,8 @@ def select_feature_selection_method():
 
     # Selection of the feature selection method
     selected_feature_selection_method = st.sidebar.selectbox(
-        "Choose the feature selection method you want to see features' scores", available_feature_selection
+        "Choose the feature selection method you want to see features' scores",
+        available_feature_selection,
     )
 
     # Loading features scores
@@ -153,49 +144,49 @@ def select_feature_selection_method():
     )
 
     # Sort features by score
-    df_features_scores_sorted = df_features_scores.sort_values(by='feature_scores', ascending=False)
+    df_features_scores_sorted = df_features_scores.sort_values(
+        by="feature_scores", ascending=False
+    )
 
     return selected_feature_selection_method, df_features_scores_sorted
 
 
-def plot_feature_selection_scores(selected_feature_selection_method, df_features_scores_sorted):
-    
+def plot_feature_selection_scores(
+    selected_feature_selection_method, df_features_scores_sorted
+):
+
     # Selection of the number of feature to show
     number_features = st.sidebar.slider(
         "Select the number of features you want to see",
         min_value=1,
         max_value=200,
-        value=20  # Default value
+        value=20,  # Default value
     )
 
     # Keep only the first lines
     df_features_scores_sorted_top = df_features_scores_sorted.head(number_features)
 
-    # Colors for the plot bars
-    colors = ['green' if selected == 1 else 'red' for selected in df_features_scores_sorted_top["feature_selected"]]
+    # Map feature_selected values to labels for legend
+    df_features_scores_sorted_top["selected_label"] = df_features_scores_sorted_top[
+        "feature_selected"
+    ].apply(lambda x: "selected" if x == 1 else "not selected")
 
-    # Create figure
-    fig, ax = plt.subplots(figsize=(9, 6))
-    bars = ax.bar(
-        df_features_scores_sorted_top["feature_names"],
-        df_features_scores_sorted_top["feature_scores"],
-        color=colors,
+    # Create plot using plotly
+    fig = px.bar(
+        df_features_scores_sorted_top,
+        x="feature_names",
+        y="feature_scores",
+        color="selected_label",
+        color_discrete_map={"selected": "green", "not selected": "red"},
+        labels={"feature_names": "Feature name", "feature_scores": "Feature score"},
+        title=f"Feature importance for the feature selection {selected_feature_selection_method}",
     )
-    ax.set_xlabel("Feature name", fontsize=12)
-    ax.set_ylabel("Feature score", fontsize=12)
-    ax.set_title(f"Feature importance for the feature selection {selected_feature_selection_method}", fontsize=16)
 
-    # Adjust size
-    ax.tick_params(axis="x", labelsize=12)
-    ax.tick_params(axis="y", labelsize=12)
-    # Ajust rotation
-    plt.xticks(rotation=90, ha="right")
-    # Adjust space
-    plt.tight_layout()
-    
+    # Rotate x-axis labels
+    fig.update_layout(xaxis_tickangle=-90)
+
     # Plot results
-    st.pyplot(fig)    
-
+    st.plotly_chart(fig)
 
 
 ############### Preloading (useless for the moment) ###############
@@ -213,14 +204,19 @@ experiments_path = ml_run_path / C.EXPERIMENTS_FOLDER_NAME
 metrics_df, selected_experiment, selected_run_name = select_experiment(experiments_path)
 
 # Visualize results of the run
-#table_metrics_all(metrics_df)
+# table_metrics_all(metrics_df)
 plot_results_metric(metrics_df)
+
+# Selection of feature selection method and loading scores of the features
+selected_feature_selection_method, df_features_scores_sorted = (
+    select_feature_selection_method()
+)
+
+# Visualize feature selection scores
+plot_feature_selection_scores(
+    selected_feature_selection_method, df_features_scores_sorted
+)
 
 # Show config for this run
 show_config(experiments_path, selected_experiment, selected_run_name)
 
-# Selection of feature selection method and loading scores of the features
-selected_feature_selection_method, df_features_scores_sorted = select_feature_selection_method()
-
-# Visualize feature selection scores
-plot_feature_selection_scores(selected_feature_selection_method, df_features_scores_sorted)
