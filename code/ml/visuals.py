@@ -16,6 +16,9 @@ def welcome():
 
 def select_experiment():
 
+    # Title of sidebar
+    st.sidebar.title("Selection of the experiment")
+
     # Select the experiment
     experiments_list = [experiment for experiment in os.listdir(C.EXPERIMENTS_PATH)]
     experiments_list_sorted = sorted(experiments_list, reverse=True)
@@ -110,12 +113,60 @@ def show_config(selected_experiment, selected_run_name):
     config_df
 
 def select_feature_selection_method():
+
+    # Title of sidebar
+    st.sidebar.title("Feature selection")
+
+    # Selection of the feature selection method
     selected_feature_selection_method = st.sidebar.selectbox(
         "Choose the feature selection method you want to see features' scores", available_feature_selection
     )
+
+    # Loading features scores
     df_features_scores = load_scores_features(selected_feature_selection_method)
+
+    # Sort features by score
     df_features_scores_sorted = df_features_scores.sort_values(by='feature_scores', ascending=False)
-    return df_features_scores_sorted
+
+    return selected_feature_selection_method, df_features_scores_sorted
+
+
+def plot_feature_selection_scores(selected_feature_selection_method, df_features_scores_sorted):
+    df_features_scores_sorted
+
+    # Selection of the number of feature to show
+    number_features = st.sidebar.slider(
+        "Select the number of features you want to see",
+        min_value=1,
+        max_value=200,
+        value=20  # Default value
+    )
+
+    # Keep only the first lines
+    df_features_scores_sorted_top = df_features_scores_sorted.head(number_features)
+
+    # Create figure
+    fig, ax = plt.subplots(figsize=(9, 6))
+    bars = ax.bar(
+        df_features_scores_sorted_top["feature_names"],
+        df_features_scores_sorted_top["feature_scores"],
+        color="skyblue",
+    )
+    ax.set_xlabel("Feature name", fontsize=12)
+    ax.set_ylabel("Feature score", fontsize=12)
+    ax.set_title(f"Feature importance for the feature selection {selected_feature_selection_method}", fontsize=16)
+
+    # Adjust size
+    ax.tick_params(axis="x", labelsize=12)
+    ax.tick_params(axis="y", labelsize=12)
+    # Ajust rotation
+    plt.xticks(rotation=90, ha="right")
+    # Adjust space
+    plt.tight_layout()
+
+    # Plot results
+    st.pyplot(fig)
+
 
 ############### Preloading (useless for the moment) ###############
 
@@ -135,4 +186,7 @@ plot_results_metric(metrics_df)
 show_config(selected_experiment, selected_run_name)
 
 # Selection of feature selection method and loading scores of the features
-df_features_scores_sorted = select_feature_selection_method()
+selected_feature_selection_method, df_features_scores_sorted = select_feature_selection_method()
+
+# Visualize feature selection scores
+plot_feature_selection_scores(selected_feature_selection_method, df_features_scores_sorted)
