@@ -53,6 +53,19 @@ def load_selected_features(method_name):
     return selected_features
 
 
+def load_scores_features(method_name):
+    """
+    Reads a file containing selected features, one per line, and returns a dataframe with the name of the feature, the score of this feature and a boolean indicating if this feature is selected
+
+    :param method_name: The name of the feature selection method to consider.
+    :return: A dataframe with the name of the feature, the score of this feature and a boolean indicating if this feature is selected
+    """
+    df_selected = pd.read_csv(
+        C.FEATURE_SELECTION_PATH / C.FEATURE_SELECTION_FILENAME.format(method_name)
+    )
+    return df_selected
+
+
 def load_df_X_y():
     df_feature_library = load_feature_library()
     df_targets = load_targets()

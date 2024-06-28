@@ -5,7 +5,8 @@ import pandas as pd
 import streamlit as st
 from config import Config
 from constants import Constants as C
-from loaders import load_results_metrics, load_config
+from feature_selection import available_feature_selection
+from loaders import load_results_metrics, load_config, load_scores_features
 
 
 def welcome():
@@ -107,11 +108,31 @@ def show_config(selected_experiment, selected_run_name):
     selected_run_path = C.EXPERIMENTS_PATH / selected_experiment / C.EXPERIMENTS_ARTIFACTS_FOLDER_NAME / selected_run_name
     config_df = load_config(selected_run_path)
     config_df
-    
 
+def select_feature_selection_method():
+    selected_feature_selection_method = st.sidebar.selectbox(
+        "Choose the feature selection method you want to see features' scores", available_feature_selection
+    )
+    df_features_scores = load_scores_features(selected_feature_selection_method)
+    df_features_scores_sorted = df_features_scores.sort_values(by='feature_scores', ascending=False)
+    return df_features_scores_sorted
 
+############### Preloading (useless for the moment) ###############
+
+############### Streamlit launch ###############
+
+# Title and welcome message
 welcome()
+
+# Selection of the run and loading results of it
 metrics_df, selected_experiment, selected_run_name = select_experiment()
+
+# Visualize results of the run
 #table_metrics_all(metrics_df)
 plot_results_metric(metrics_df)
+
+# Show config for this run
 show_config(selected_experiment, selected_run_name)
+
+# Selection of feature selection method and loading scores of the features
+df_features_scores_sorted = select_feature_selection_method()
