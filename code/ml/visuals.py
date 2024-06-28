@@ -207,9 +207,6 @@ metrics_df, selected_experiment, selected_run_name = select_experiment(experimen
 # table_metrics_all(metrics_df)
 plot_results_metric(metrics_df)
 
-# Show config for this run
-show_config(experiments_path, selected_experiment, selected_run_name)
-
 # Selection of feature selection method and loading scores of the features
 selected_feature_selection_method, df_features_scores_sorted = (
     select_feature_selection_method()
@@ -219,3 +216,7 @@ selected_feature_selection_method, df_features_scores_sorted = (
 plot_feature_selection_scores(
     selected_feature_selection_method, df_features_scores_sorted
 )
+
+# Show config for this run
+show_config(experiments_path, selected_experiment, selected_run_name)
+
