@@ -81,30 +81,16 @@ def plot_results_metric(metrics_df):
         selected_metric_df.groupby("model_name")["metric_value"].mean().reset_index()
     )
 
-    # Create figure
-    fig, ax = plt.subplots(figsize=(9, 6))
-    bars = ax.bar(
-        mean_selected_metric_df["model_name"],
-        mean_selected_metric_df["metric_value"],
-        color="skyblue",
-    )
-    ax.set_xlabel("Model name", fontsize=12)
-    ax.set_ylabel(f"Mean value on {metric_choice}", fontsize=12)
-    ax.set_title(f"Mean value on {metric_choice} for models", fontsize=16)
-
-    for bar, metric_value in zip(bars, mean_selected_metric_df["metric_value"]):
-        ax.text(bar.get_x() + bar.get_width() / 2.0, metric_value, f'{metric_value:.2f}', va='bottom', ha='center')
-
-    # Adjust size
-    ax.tick_params(axis="x", labelsize=12)
-    ax.tick_params(axis="y", labelsize=12)
-    # Ajust rotation
-    plt.xticks(rotation=45, ha="right")
-    # Adjust space
-    plt.tight_layout()
+    # Title plot
+    st.write(f"Mean value on {metric_choice} for models")
 
     # Plot results
-    st.pyplot(fig)
+    st.bar_chart(
+        mean_selected_metric_df.set_index("model_name"),
+        #x = "model_name",
+        #y = f"Mean value on {metric_choice}"
+        )
+    
 
 def show_config(selected_experiment, selected_run_name):
     st.write("Configuration for this run of experiment")
