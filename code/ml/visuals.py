@@ -82,15 +82,15 @@ def plot_results_metric(metrics_df):
         selected_metric_df.groupby("model_name")["metric_value"].mean().reset_index()
     )
     
-    # Plot using Plotly
+    # Create plot using plotly
     fig = px.bar(mean_selected_metric_df, x='model_name', y='metric_value', 
                  title=f"Mean value on {metric_choice} for models",
                  labels={'model_name': 'Model name', 'metric_value': f"Mean value on {metric_choice}"})
 
-    # Customize layout if needed
+    # Rotate x-axis labels
     fig.update_layout(xaxis_tickangle=-45)
 
-    # Plot results using st.plotly_chart
+    # Plot results
     st.plotly_chart(fig)
     
 
@@ -132,37 +132,23 @@ def plot_feature_selection_scores(selected_feature_selection_method, df_features
     # Keep only the first lines
     df_features_scores_sorted_top = df_features_scores_sorted.head(number_features)
 
-    df_features_scores_sorted_top
+    # Map feature_selected values to labels for legend
+    df_features_scores_sorted_top['selected_label'] = df_features_scores_sorted_top['feature_selected'].apply(lambda x: 'selected' if x == 1 else 'not selected')
 
-    # Colors for the plot bars
-    colors = ['green' if selected == 1 else 'red' for selected in df_features_scores_sorted_top["feature_selected"]]
+    # Create plot using plotly
+    fig = px.bar(df_features_scores_sorted_top, x='feature_names', y='feature_scores',
+                 color='selected_label',
+                 color_discrete_map={'selected': 'green', 'not selected': 'red'},
+                 labels={'feature_names': 'Feature name', 'feature_scores': 'Feature score'},
+                 title=f"Feature importance for the feature selection {selected_feature_selection_method}")
+
+    # Rotate x-axis labels
+    fig.update_layout(xaxis_tickangle=-90)
 
     # Plot results
-    st.bar_chart(df_features_scores_sorted_top.set_index("feature_names")["feature_scores"])
+    st.plotly_chart(fig)
 
-    # Create figure
-    fig, ax = plt.subplots(figsize=(9, 6))
-    bars = ax.bar(
-        df_features_scores_sorted_top["feature_names"],
-        df_features_scores_sorted_top["feature_scores"],
-        color=colors,
-    )
-    ax.set_xlabel("Feature name", fontsize=12)
-    ax.set_ylabel("Feature score", fontsize=12)
-    ax.set_title(f"Feature importance for the feature selection {selected_feature_selection_method}", fontsize=16)
-
-    # Adjust size
-    ax.tick_params(axis="x", labelsize=12)
-    ax.tick_params(axis="y", labelsize=12)
-    # Ajust rotation
-    plt.xticks(rotation=90, ha="right")
-    # Adjust space
-    plt.tight_layout()
     
-    # Plot results
-    st.pyplot(fig)    
-
-
 
 ############### Preloading (useless for the moment) ###############
 
