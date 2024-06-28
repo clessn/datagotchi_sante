@@ -2,6 +2,7 @@ import os
 
 import matplotlib.pyplot as plt
 import pandas as pd
+import plotly.express as px
 import streamlit as st
 from config import Config
 from constants import Constants as C
@@ -80,16 +81,17 @@ def plot_results_metric(metrics_df):
     mean_selected_metric_df = (
         selected_metric_df.groupby("model_name")["metric_value"].mean().reset_index()
     )
+    
+    # Plot using Plotly
+    fig = px.bar(mean_selected_metric_df, x='model_name', y='metric_value', 
+                 title=f"Mean value on {metric_choice} for models",
+                 labels={'model_name': 'Model name', 'metric_value': f"Mean value on {metric_choice}"})
 
-    # Title plot
-    st.write(f"Mean value on {metric_choice} for models")
+    # Customize layout if needed
+    fig.update_layout(xaxis_tickangle=-45)
 
-    # Plot results
-    st.bar_chart(
-        mean_selected_metric_df.set_index("model_name"),
-        #x = "model_name",
-        #y = f"Mean value on {metric_choice}"
-        )
+    # Plot results using st.plotly_chart
+    st.plotly_chart(fig)
     
 
 def show_config(selected_experiment, selected_run_name):
@@ -130,8 +132,13 @@ def plot_feature_selection_scores(selected_feature_selection_method, df_features
     # Keep only the first lines
     df_features_scores_sorted_top = df_features_scores_sorted.head(number_features)
 
+    df_features_scores_sorted_top
+
     # Colors for the plot bars
     colors = ['green' if selected == 1 else 'red' for selected in df_features_scores_sorted_top["feature_selected"]]
+
+    # Plot results
+    st.bar_chart(df_features_scores_sorted_top.set_index("feature_names")["feature_scores"])
 
     # Create figure
     fig, ax = plt.subplots(figsize=(9, 6))
