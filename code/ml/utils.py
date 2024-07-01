@@ -29,4 +29,5 @@ def dict_to_string(d, sep="_"):
 
 def create_label(method_name, config_dict, sep="_"):
     config_string = dict_to_string(config_dict, sep=sep)
+    config_string = config_string.replace(".","p")
     return f"{method_name}{sep}{config_string}"

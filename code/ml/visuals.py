@@ -137,7 +137,7 @@ def select_feature_selection_method(feature_selection_path):
         method_name = feature_selection_method_parts[0]
         param_dict = {}        
         if len(feature_selection_method_parts)>2:
-            param_dict = {feature_selection_method_parts[i]: int(feature_selection_method_parts[i+1]) for i in range(1, len(feature_selection_method_parts), 2)}
+            param_dict = {feature_selection_method_parts[i]: feature_selection_method_parts[i+1] for i in range(1, len(feature_selection_method_parts), 2)}
         selection_methods_dict[feature_selection_method] = (method_name,param_dict)
     
     # List with feature selection methods
