@@ -71,12 +71,11 @@ def table_metrics_all(metrics_df):
 def plot_results_metric(metrics_df):
 
     # Select a metric
-    # TODO : adapt this dynamically
 
     # List with available metrics for this run
     metric_list = np.unique(metrics_df["metric_name"])
-    metric_list
-
+    
+    # Select the metric
     metric_choice = st.sidebar.selectbox(
         "Which metric do you want to plot?", metric_list
     )
@@ -121,34 +120,58 @@ def show_config(experiments_path, selected_experiment, selected_run_name):
     config_df
 
 
-def select_feature_selection_method():
+def select_feature_selection_method(feature_selection_path):
 
     # Title of sidebar
     st.sidebar.title("Feature selection")
 
-    # Hardcode available feature selection methods
-    # TODO : adapt this dynamically
-    available_feature_selection = ["kbest20", "all"]
-    selection_methods_dict = {
-        "kbest20": ("kbest", {"k": 20}),
-        "all": ("all", {}),
-    }
-
+    # Available feature selection methods
+    prefix = C.FEATURE_SELECTION_FILENAME.split("{}")[0]
+    suffix = C.FEATURE_SELECTION_FILENAME.split("{}")[1]
+    available_feature_selection = [feature_selection_method.replace(prefix, "").replace(suffix, "") for feature_selection_method in os.listdir(feature_selection_path)]
+    
+    # Put it in a dictionnary
+    selection_methods_dict = {}
+    for feature_selection_method in available_feature_selection:
+        feature_selection_method_parts = feature_selection_method.split("_")
+        method_name = feature_selection_method_parts[0]
+        param_dict = {}        
+        if len(feature_selection_method_parts)>2:
+            param_dict = {feature_selection_method_parts[i]: int(feature_selection_method_parts[i+1]) for i in range(1, len(feature_selection_method_parts), 2)}
+        selection_methods_dict[feature_selection_method] = (method_name,param_dict)
+    
+    # List with feature selection methods
+    unique_methods_list = list({method[0] for method in selection_methods_dict.values()})
+    
     # Selection of the feature selection method
     selected_feature_selection_method = st.sidebar.selectbox(
         "Choose the feature selection method you want to see features' scores",
-        available_feature_selection,
+        unique_methods_list,
     )
+
+    # Available parameters for this feature selection method
+    feature_selection_parameters = {}
+    for feature_selection_method in selection_methods_dict:
+        feature_selection_method_name, feature_selection_method_param = selection_methods_dict[feature_selection_method]
+        if feature_selection_method_name == selected_feature_selection_method and len(feature_selection_method_param)>0:
+            feature_selection_parameters[feature_selection_method] = feature_selection_method_param
+    
+    # Selection the parameters for the feature selection
+    selected_feature_selection_method_parameters = {}
+    if len(feature_selection_parameters)>0:
+        selected_feature_selection_method_parameters_name = st.sidebar.selectbox(
+            "Choose the feature selection method you want to see features' scores",
+            feature_selection_parameters,
+        )
+        selected_feature_selection_method_parameters = feature_selection_parameters[selected_feature_selection_method_parameters_name]
 
     # Loading features scores
-    ml_run_path = C.ML_PATH / eval(f"C.{Config.RUN_TYPE}")
-    frozen_library_folder_name = Config.FEATURE_LIBRARY_VERSION
     df_features_scores = load_scores_features(
-        selection_methods_dict[selected_feature_selection_method],
-        ml_run_path / C.FEATURE_SELECTION_FOLDER_NAME / frozen_library_folder_name,
+        (selected_feature_selection_method,selected_feature_selection_method_parameters),
+        feature_selection_path,
         C.FEATURE_SELECTION_FILENAME,
     )
-
+    
     # Sort features by score
     df_features_scores_sorted = df_features_scores.sort_values(
         by="feature_scores", ascending=False
@@ -200,6 +223,8 @@ def plot_feature_selection_scores(
 # Derive paths from configs
 ml_run_path = C.ML_PATH / eval(f"C.{Config.RUN_TYPE}")
 experiments_path = ml_run_path / C.EXPERIMENTS_FOLDER_NAME
+frozen_library_folder_name = Config.FEATURE_LIBRARY_VERSION
+feature_selection_path = ml_run_path / C.FEATURE_SELECTION_FOLDER_NAME / frozen_library_folder_name
 
 
 ############### Streamlit launch ###############
@@ -210,13 +235,13 @@ welcome()
 # Selection of the run and loading results of it
 metrics_df, selected_experiment, selected_run_name = select_experiment(experiments_path)
 
-# Visualize results of the run
+# Select a metric and visualize results of the run
 # table_metrics_all(metrics_df)
 plot_results_metric(metrics_df)
 
 # Selection of feature selection method and loading scores of the features
 selected_feature_selection_method, df_features_scores_sorted = (
-    select_feature_selection_method()
+    select_feature_selection_method(feature_selection_path)
 )
 
 # Visualize feature selection scores
