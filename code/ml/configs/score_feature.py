@@ -11,7 +11,7 @@ class ScoreFeatureConfig:
     #         "variance": {"threshold": [0.1]},
     #     }
     # ]
-    FEATURE_SELECTION_METHOD = ("kbest", {"k": 20})
+    FEATURE_SELECTION_METHOD = ("kbest", {"k": 30})
 
     # Target choice
     TARGET_NAME = "C.TARGET_SCORE_TOT"
