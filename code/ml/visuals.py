@@ -1,6 +1,7 @@
 import os
 
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 import plotly.express as px
 import streamlit as st
@@ -47,7 +48,7 @@ def select_experiment(experiments_path):
     selected_run = st.sidebar.selectbox(
         "Choose the run of the experiment you want to see", run_unique_df["run"]
     )
-    timestamp_selected = run_unique_df[run_unique_df["run"] == selected_run][
+    selected_timestamp = run_unique_df[run_unique_df["run"] == selected_run][
         "timestamp"
     ].iloc[0]
     selected_run_name = run_unique_df[run_unique_df["run"] == selected_run][
@@ -55,7 +56,7 @@ def select_experiment(experiments_path):
     ].iloc[0]
 
     # Keep only the run selected
-    metrics_df = metrics_df[metrics_df["timestamp"] == timestamp_selected].copy()
+    metrics_df = metrics_df[metrics_df["timestamp"] == selected_timestamp].copy()
 
     return metrics_df, selected_experiment, selected_run_name
 
@@ -71,8 +72,13 @@ def plot_results_metric(metrics_df):
 
     # Select a metric
     # TODO : adapt this dynamically
+
+    # List with available metrics for this run
+    metric_list = np.unique(metrics_df["metric_name"])
+    metric_list
+
     metric_choice = st.sidebar.selectbox(
-        "Which metric do you want to plot?", Config.METRIC_LIST
+        "Which metric do you want to plot?", metric_list
     )
 
     # Keep only results for this metric
@@ -191,14 +197,15 @@ def plot_feature_selection_scores(
 
 ############### Preloading (useless for the moment) ###############
 
+# Derive paths from configs
+ml_run_path = C.ML_PATH / eval(f"C.{Config.RUN_TYPE}")
+experiments_path = ml_run_path / C.EXPERIMENTS_FOLDER_NAME
+
+
 ############### Streamlit launch ###############
 
 # Title and welcome message
 welcome()
-
-# Derive paths from configs
-ml_run_path = C.ML_PATH / eval(f"C.{Config.RUN_TYPE}")
-experiments_path = ml_run_path / C.EXPERIMENTS_FOLDER_NAME
 
 # Selection of the run and loading results of it
 metrics_df, selected_experiment, selected_run_name = select_experiment(experiments_path)
