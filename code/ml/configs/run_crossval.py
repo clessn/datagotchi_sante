@@ -1,5 +1,14 @@
 import inspect
 
+from sklearn.impute import KNNImputer, SimpleImputer
+from sklearn.preprocessing import MinMaxScaler, RobustScaler, StandardScaler
+
+
+def serialize_obj(obj):
+    if hasattr(obj, "__dict__"):
+        return {"class": obj.__class__.__name__, "params": obj.__dict__}
+    return str(obj)
+
 
 class CrossvalConfig:
 
@@ -7,46 +16,50 @@ class CrossvalConfig:
     RUN_TYPE = "REAL_FOLDER_NAME"  # SANDBOX_FOLDER_NAME or REAL_FOLDER_NAME
     CODEBOOK_VERSION = "frozen_codebook_june_21.csv"
     FEATURE_LIBRARY_VERSION = "feature_library_v2"
-    EXPERIMENT_NAME = "2_feature_selection"
+    EXPERIMENT_NAME = "3_hp_tune"
 
     # 1. Modeling
     # 1.1. Feature Selection
     FEATURE_SELECTION_METHOD = ("kbest", {"k": 20})
 
-    # 1. Predictions Pipeline
-    # 1.1. Evaluation
-    KFOLD = 5
+    # 1.2 Evaluation
+    # a) Metrics
     METRIC_LIST = [
         "mse",
         "mae",
     ]
+
+    # b) Splitting
+    KFOLD = 5
     MIN_TRAIN_SIZE = 30
     MIN_TEST_SIZE = 30
     RANDOM_STATE_SPLITTING = 42
 
+    # 1.3 Hyperparameter optimization
+    KFOLD_HP = 3
+
     # 1.2. Modelling
-    MODEL_LIST = {
-        "mean_regressor": {},
-        "random_regressor": {},
-        "linear_regressor": {"scaler": "robust", "imputer": "imputer_mean"},
-        "extra_tree_regressor": {
-            "scaler": "robust",
-            "imputer": "imputer_mean",
-            "hyperparameters": {"random_state": 42},
+    MODEL_LIST = [
+        {
+            "model_name": "mean_regressor",
+            "param_grid": {},
         },
-        "xgboost": {
-            "scaler": "robust",
-            "imputer": "imputer_mean",
-            "hyperparameters": {},
+        {
+            "model_name": "ridge_regressor",
+            "param_grid": {
+                "imputer": [SimpleImputer(strategy="mean"), KNNImputer()],
+                "scaler": [StandardScaler(), MinMaxScaler(), RobustScaler()],
+                "regressor__alpha": [0.5, 1.0, 1.5, 1.8, 2.0, 3.0],
+            },
         },
-    }
+    ]
     TARGET_NAME = "C.TARGET_SCORE_TOT"
 
     # Display config as a dictionary
     @classmethod
     def to_dict(cls):
         return {
-            name: attr
+            name: serialize_obj(attr)
             for name, attr in cls.__dict__.items()
             if not inspect.isroutine(attr) and not name.startswith("__")
         }

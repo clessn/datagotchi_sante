@@ -3,9 +3,9 @@ import xgboost as xgb
 from configs.run_crossval import CrossvalConfig as Config
 from preprocessing import available_imputers_dict, available_scalers_dict
 from sklearn.base import BaseEstimator, RegressorMixin
-from sklearn.linear_model import LinearRegression
-from sklearn.pipeline import Pipeline
+from sklearn.linear_model import Ridge
 from sklearn.tree import ExtraTreeRegressor
+from xgboost import XGBRegressor
 
 
 class MeanRegressor(BaseEstimator, RegressorMixin):
@@ -92,59 +92,8 @@ class RandomValueRegressor(BaseEstimator, RegressorMixin):
 
 # Dictionnary of available models
 available_models_dict = {
-    "mean_regressor": MeanRegressor(),
-    "random_regressor": RandomValueRegressor(),
-    "extra_tree_regressor": Pipeline(
-        [
-            (
-                "scaler",
-                available_scalers_dict[
-                    Config.MODEL_LIST["extra_tree_regressor"]["scaler"]
-                ],
-            ),
-            (
-                "imputer",
-                available_imputers_dict[
-                    Config.MODEL_LIST["extra_tree_regressor"]["imputer"]
-                ],
-            ),
-            (
-                "regressor",
-                ExtraTreeRegressor(
-                    **Config.MODEL_LIST["extra_tree_regressor"]["hyperparameters"]
-                ),
-            ),
-        ]
-    ),
-    "linear_regressor": Pipeline(
-        [
-            (
-                "scaler",
-                available_scalers_dict[Config.MODEL_LIST["linear_regressor"]["scaler"]],
-            ),
-            (
-                "imputer",
-                available_imputers_dict[
-                    Config.MODEL_LIST["linear_regressor"]["imputer"]
-                ],
-            ),
-            ("regressor", LinearRegression()),
-        ]
-    ),
-    "xgboost": Pipeline(
-        [
-            (
-                "scaler",
-                available_scalers_dict[Config.MODEL_LIST["xgboost"]["scaler"]],
-            ),
-            (
-                "imputer",
-                available_imputers_dict[Config.MODEL_LIST["xgboost"]["imputer"]],
-            ),
-            (
-                "regressor",
-                xgb.XGBRegressor(**Config.MODEL_LIST["xgboost"]["hyperparameters"]),
-            ),
-        ]
-    ),
+    "mean_regressor": MeanRegressor,
+    "random_regressor": RandomValueRegressor,
+    "xgboost_regressor": XGBRegressor,
+    "ridge_regressor": Ridge,
 }
