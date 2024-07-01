@@ -20,7 +20,8 @@ class CrossvalConfig:
 
     # 1. Modeling
     # 1.1. Feature Selection
-    FEATURE_SELECTION_METHOD = ("kbest", {"k": 20})
+    #FEATURE_SELECTION_METHOD = ("kbest", {"k": 20})
+    FEATURE_SELECTION_METHOD = ("variance", {})
 
     # 1.2 Evaluation
     # a) Metrics
@@ -45,11 +46,24 @@ class CrossvalConfig:
             "param_grid": {},
         },
         {
+            "model_name": "random_regressor",
+            "param_grid": {},
+        },
+        {
+            "model_name": "xgboost_regressor",
+            "param_grid": {
+                "imputer": [SimpleImputer(strategy="mean"), KNNImputer()],
+                "scaler": [StandardScaler(), MinMaxScaler()],
+                "regressor__max_depth": [3, 6, 9],
+                "regressor__subsample": [0.5, 0.8],
+            },
+        },
+        {
             "model_name": "ridge_regressor",
             "param_grid": {
                 "imputer": [SimpleImputer(strategy="mean"), KNNImputer()],
-                "scaler": [StandardScaler(), MinMaxScaler(), RobustScaler()],
-                "regressor__alpha": [0.5, 1.0, 1.5, 1.8, 2.0, 3.0],
+                "scaler": [StandardScaler(), MinMaxScaler()],
+                "regressor__alpha": [1.0, 2.0, 3.0, 4.0],
             },
         },
     ]
