@@ -96,6 +96,14 @@ nouns = [
 ]
 
 
+class CustomEncoder(json.JSONEncoder):
+    def default(self, obj):
+        # If the object has a __dict__ attribute, use it for serialization
+        if hasattr(obj, "__dict__"):
+            return str(obj)
+        return obj
+
+
 def write_feature_library(
     df_features, df_targets, path, feature_filename, targets_filename
 ):
@@ -142,11 +150,13 @@ def write_selected_features(
 def track_results(
     metrics_df,
     predictions_df,
+    best_hyperparameters,
     Config,
     metrics_path,
     artifacts_path,
     metrics_filename,
     artifacts_config_filename,
+    artifacts_hyperparameter_filename,
     artifacts_predictions_filename,
 ):
 
@@ -186,6 +196,13 @@ def track_results(
     with open(artifacts_run_id_path / artifacts_config_filename, "w") as json_file:
         json.dump(config_dict, json_file, indent=4)
     logger.info("Config artifacts saved")
+
+    # - write hyperparameters
+    with open(
+        artifacts_run_id_path / artifacts_hyperparameter_filename, "w"
+    ) as json_file:
+        json.dump(best_hyperparameters, json_file, indent=4, cls=CustomEncoder)
+    logger.info("Best hyperparameters artifacts saved")
 
     # - write predictions
     predictions_df.to_csv(artifacts_run_id_path / artifacts_predictions_filename)

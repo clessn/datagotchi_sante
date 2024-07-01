@@ -37,6 +37,7 @@ class Constants:
     LOGGING_CONFIG_FILENAME = "logging.conf"
     DASHBOARD_FILENAME = "dashboard.csv"
     ARTIFACTS_CONFIG_FILENAME = "config.json"
+    ARTIFACTS_HP_FILENAME = "best_hyperparameters.json"
     ARTIFACTS_PREDICTIONS_FILENAME = "predictions.csv"
 
     # Codebook fields

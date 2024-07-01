@@ -8,7 +8,10 @@ from constants import Constants as C
 from loaders import load_df_X_y, load_selected_features
 from metrics import available_metrics_dict
 from models import available_models_dict
-from sklearn.model_selection import KFold
+from sklearn.impute import KNNImputer
+from sklearn.model_selection import GridSearchCV, KFold
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import RobustScaler
 from tracking import track_results
 from utils import configure_main_logger
 
@@ -22,7 +25,18 @@ def fill_nan_with_value(X, values):
     return X
 
 
-def crossval(X, y, index):
+def preallocate_pipeline(model_name, param_grid):
+    pipeline_steps = []
+    if "imputer" in param_grid:
+        pipeline_steps.append(("imputer", None))
+    if "scaler" in param_grid:
+        pipeline_steps.append(("scaler", None))
+    pipeline_steps.append(("regressor", available_models_dict[model_name]()))
+
+    return Pipeline(pipeline_steps)
+
+
+def crossval(X, y, index, model_list):
     """Cross-validation (evaluation realized for each fold of each model)
 
     Attributes
@@ -53,8 +67,14 @@ def crossval(X, y, index):
     metric_name_list = []
     metric_value_list = []
 
+    # List of hyperpameter choices
+    best_hyperparameters = {}
+
     # Loop on folds
     for fold_index, (train_index, test_index) in enumerate(kf.split(X)):
+
+        # Prepare dictionary of hyperparameters
+        best_hyperparameters[fold_index] = {}
 
         # Variables X,y train and test
         X_train = X[train_index, :].copy()
@@ -75,19 +95,33 @@ def crossval(X, y, index):
         X_train = X_train[~indices_nan_y_train]
 
         # Loop on models
-        for model_name in Config.MODEL_LIST:
+        for model in model_list:
 
-            # Model class
-            model = available_models_dict[model_name]
+            # Prepare a pipeline
+            model_name = model["model_name"]
+            param_grid = model["param_grid"]
+            logger.info(f"- Training for: {model_name}")
+            pipeline = preallocate_pipeline(model_name, param_grid)
 
-            # Fit the model
-            model.fit(X_train, y_train)
-            logger.debug(f"Fitting model {model_name} ...")
+            # Perform HP optimization
+            grid_search = GridSearchCV(pipeline, param_grid, cv=Config.KFOLD_HP)
+            logger.debug(
+                f"- Performing hyperparameter optimization with {Config.KFOLD_HP} splits"
+            )
+            grid_search.fit(X_train, y_train)
+            best_hyperparameters[fold_index][model_name] = grid_search.best_params_
+
+            # Fit the best model
+            logger.debug(
+                f"- Fitting with: {grid_search.best_params_}",
+            )
+            best_model = grid_search.best_estimator_
+            best_model.fit(X_train, y_train)
 
             # Predict
-            y_predict = model.predict(X_test)
+            y_predict = best_model.predict(X_test)
 
-            # Add prediction to lists
+            # For logging : Add prediction to lists
             fold_id_predict_list += [fold_index] * len(y_test)
             model_name_predict_list += [model_name] * len(y_test)
             y_test_list += y_test.tolist()
@@ -137,7 +171,7 @@ def crossval(X, y, index):
     metrics_df = pd.DataFrame.from_dict(metrics_dict)
     logger.info("Cross-validation performed with success !")
 
-    return metrics_df, predictions_df
+    return metrics_df, predictions_df, best_hyperparameters
 
 
 # Run crossval
@@ -156,13 +190,18 @@ if __name__ == "__main__":
         ml_run_path / C.FEATURE_SELECTION_FOLDER_NAME / frozen_library_folder_name,
         C.FEATURE_SELECTION_FILENAME,
     )
+    model_list = Config.MODEL_LIST
     df_X_selected = df_X.loc[:, selected_features]
-    metrics_df, predictions_df = crossval(
-        df_X_selected.values, df_y.values, df_X_selected.index
+    metrics_df, predictions_df, best_hyperparameters = crossval(
+        df_X_selected.values,
+        df_y.values,
+        df_X_selected.index,
+        model_list,
     )
     track_results(
         metrics_df,
         predictions_df,
+        best_hyperparameters,
         Config,
         ml_run_path / C.EXPERIMENTS_FOLDER_NAME / Config.EXPERIMENT_NAME,
         ml_run_path
@@ -171,5 +210,6 @@ if __name__ == "__main__":
         / C.EXPERIMENTS_ARTIFACTS_FOLDER_NAME,
         C.METRICS_FILENAME,
         C.ARTIFACTS_CONFIG_FILENAME,
+        C.ARTIFACTS_HP_FILENAME,
         C.ARTIFACTS_PREDICTIONS_FILENAME,
     )
