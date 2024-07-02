@@ -21,7 +21,7 @@ class CrossvalConfig:
     # 1. Modeling
     # 1.1. Feature Selection
     # FEATURE_SELECTION_METHOD = ("kbest", {"k": 20})
-    FEATURE_SELECTION_METHOD = ("variance", {})
+    FEATURE_SELECTION_METHOD = ("xgboost", {})
 
     # 1.2 Evaluation
     # a) Metrics
