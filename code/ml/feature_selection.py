@@ -5,14 +5,38 @@ import pandas as pd
 from configs.score_feature import ScoreFeatureConfig as Config
 from constants import Constants as C
 from loaders import load_df_X_y
-from sklearn.feature_selection import SelectKBest, VarianceThreshold, f_regression
+from sklearn.feature_selection import (
+    SelectFromModel,
+    SelectKBest,
+    VarianceThreshold,
+    f_regression,
+)
 from sklearn.preprocessing import MinMaxScaler
 from tracking import write_selected_features
 from utils import configure_main_logger
+from xgboost import XGBRegressor
 
 logger = logging.getLogger(__name__)
 
 
+# Score normalization
+def score_normalization(feature_importances):
+    feature_scores = (
+        MinMaxScaler().fit_transform(feature_importances.reshape(-1, 1)).flatten()
+    )
+    return feature_scores
+
+
+# Handle missing values
+def missing_values(df_X, df_y):
+    non_missing_indices = df_y.notna()
+    df_y = df_y.loc[non_missing_indices]
+    df_X = df_X.loc[non_missing_indices, :]
+    df_X = df_X.fillna(df_X.mean())
+    return df_X, df_y
+
+
+# Feature selection selecting all features
 def select_all_features(df_X, df_y):
     feature_names = df_X.columns
     feature_scores = [1.0] * len(feature_names)
@@ -20,6 +44,7 @@ def select_all_features(df_X, df_y):
     return feature_selected, feature_scores
 
 
+# Feature selection based on variance
 def select_above_variance_treshold_features(df_X, df_y, threshold):
     logger.info(f"Select features above a treshold of {threshold} for variance")
     selector = VarianceThreshold(threshold)
@@ -28,22 +53,21 @@ def select_above_variance_treshold_features(df_X, df_y, threshold):
     feature_selected = (feature_variances >= threshold).astype(int)
 
     # Normalize scores
-    feature_scores = (
-        MinMaxScaler().fit_transform(feature_variances.reshape(-1, 1)).flatten()
-    )
+    feature_scores = score_normalization(feature_variances)
 
     return feature_scores, feature_selected
 
 
+# Feature selection based on k best features
 def select_k_best_features(df_X, df_y, k):
+
     logger.info(f"Select {k} best features")
+
+    # Selector
     selector = SelectKBest(score_func=f_regression, k=k)
 
     # Handle missing values
-    non_missing_indices = df_y.notna()
-    df_y = df_y.loc[non_missing_indices]
-    df_X = df_X.loc[non_missing_indices, :]
-    df_X = df_X.fillna(df_X.mean())
+    df_X, df_y = missing_values(df_X, df_y)
 
     # Fit
     selector.fit_transform(df_X, df_y)
@@ -53,9 +77,33 @@ def select_k_best_features(df_X, df_y, k):
     feature_selected = (feature_scores >= threshold).astype(int)
 
     # Normalize scores
-    feature_scores = (
-        MinMaxScaler().fit_transform(feature_scores.reshape(-1, 1)).flatten()
-    )
+    feature_scores = score_normalization(feature_scores)
+
+    return feature_scores, feature_selected
+
+
+# Feature selection based on xgboost
+def select_xgboost_features(df_X, df_y):
+    logger.info(f"Select features based on xgboost")
+
+    # Handle missing values
+    df_X, df_y = missing_values(df_X, df_y)
+
+    # Model xgboost
+    model = XGBRegressor()
+    model.fit(df_X, df_y)
+
+    # Selector
+    selector = SelectFromModel(model, threshold="mean")
+
+    # Importance for features
+    feature_importances = model.feature_importances_
+
+    # Normalize scores
+    feature_scores = score_normalization(feature_importances)
+
+    # Selected features
+    feature_selected = selector.get_support()
 
     return feature_scores, feature_selected
 
@@ -64,6 +112,7 @@ available_feature_selection = {
     "all": select_all_features,
     "variance": select_above_variance_treshold_features,
     "kbest": select_k_best_features,
+    "xgboost": select_xgboost_features,
 }
 
 if __name__ == "__main__":
