@@ -1,4 +1,5 @@
 import os
+
 import numpy as np
 import pandas as pd
 import plotly.express as px
@@ -8,10 +9,10 @@ from constants import Constants as C
 from loaders import load_config, load_results_metrics
 from visuals import menu
 
-
 ###################### Functions  ########################
 
-### Select an experiment  
+
+### Select an experiment
 def select_experiment(experiments_path):
 
     # Title of sidebar
@@ -25,7 +26,9 @@ def select_experiment(experiments_path):
     )
 
     # Load metrics results
-    metrics_df = load_results_metrics(experiments_path / selected_experiment, C.METRICS_FILENAME)
+    metrics_df = load_results_metrics(
+        experiments_path / selected_experiment, C.METRICS_FILENAME
+    )
     # Convert timestamp into datetime
     metrics_df["timestamp"] = pd.to_datetime(metrics_df["timestamp"])
 
@@ -70,7 +73,7 @@ def plot_results_metric(metrics_df):
 
     # List with available metrics for this run
     metric_list = np.unique(metrics_df["metric_name"])
-    
+
     # Select the metric
     metric_choice = st.sidebar.selectbox(
         "Which metric do you want to plot?", metric_list

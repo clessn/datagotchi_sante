@@ -5,18 +5,19 @@ import pandas as pd
 from configs.score_feature import ScoreFeatureConfig as Config
 from constants import Constants as C
 from loaders import load_df_X_y
-
-from sklearn.feature_selection import VarianceThreshold
-from sklearn.feature_selection import SelectKBest, f_regression
-from sklearn.feature_selection import SelectFromModel
-
+from sklearn.feature_selection import (
+    SelectFromModel,
+    SelectKBest,
+    VarianceThreshold,
+    f_regression,
+)
 from sklearn.preprocessing import MinMaxScaler
-from xgboost import XGBRegressor
-
 from tracking import write_selected_features
 from utils import configure_main_logger
+from xgboost import XGBRegressor
 
 logger = logging.getLogger(__name__)
+
 
 # Score normalization
 def score_normalization(feature_importances):
@@ -24,6 +25,7 @@ def score_normalization(feature_importances):
         MinMaxScaler().fit_transform(feature_importances.reshape(-1, 1)).flatten()
     )
     return feature_scores
+
 
 # Handle missing values
 def missing_values(df_X, df_y):
@@ -104,7 +106,6 @@ def select_xgboost_features(df_X, df_y):
     feature_selected = selector.get_support()
 
     return feature_scores, feature_selected
-
 
 
 available_feature_selection = {
