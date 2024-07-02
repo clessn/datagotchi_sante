@@ -6,7 +6,7 @@ import plotly.express as px
 import streamlit as st
 from configs.visuals import VisualsConfig as Config
 from constants import Constants as C
-from loaders import load_config, load_results_metrics
+from loaders import load_config, load_hp, load_results_metrics
 from visuals import menu
 
 ###################### Functions  ########################
@@ -108,7 +108,7 @@ def plot_results_metric(metrics_df):
 
 ### Show configuration of this run
 def show_config(experiments_path, selected_experiment, selected_run_name):
-    st.write("Configuration for this run of experiment")
+    st.header("Configuration for this run of experiment")
     selected_run_path = (
         experiments_path
         / selected_experiment
@@ -116,7 +116,27 @@ def show_config(experiments_path, selected_experiment, selected_run_name):
         / selected_run_name
     )
     config_df = load_config(selected_run_path)
-    config_df
+    hp_df = load_hp(selected_run_path)
+    
+    # Write configuration we want to see
+    st.write("**Feature library version**: ",config_df["FEATURE_LIBRARY_VERSION"])
+    st.write("**Feature selection method**: ",config_df["FEATURE_SELECTION_METHOD"])
+    st.write("**Best hyperparameters**: ")
+
+    # Select fold
+    folds_list = [i for i in range(len(hp_df))]
+    selected_fold = st.selectbox(
+        "Which fold do you want to see the configuration?", folds_list
+    )
+    
+    # Select model
+    model_list = hp_df[str(selected_fold)].keys()
+    selected_model = st.selectbox(
+        "Which model do you want to see the configuration?", model_list
+    )
+    
+    # Show config for this fold and model
+    hp_df[str(selected_fold)][selected_model]
 
 
 ###################### Preloading  ########################
