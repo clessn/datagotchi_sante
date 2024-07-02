@@ -82,8 +82,14 @@ def load_results_metrics(path, filename):
     return metrics_df
 
 
-def load_config(config_path):
+def load_config(run_path):
     # Opening JSON file
-    config_file = open(config_path / C.ARTIFACTS_CONFIG_FILENAME)
+    config_file = open(run_path / C.ARTIFACTS_CONFIG_FILENAME)
     config_df = json.load(config_file)
     return config_df
+
+def load_hp(run_path):
+    # Opening JSON file
+    hp_file = open(run_path / C.ARTIFACTS_HP_FILENAME)
+    hp_df = json.load(hp_file)
+    return hp_df
