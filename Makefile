@@ -21,4 +21,4 @@ run-crossval:
 	poetry run python code$(SEP)ml$(SEP)crossval.py
 
 launch-visuals:
-	poetry run streamlit run code$(SEP)ml$(SEP)visuals.py
+	poetry run streamlit run --client.showSidebarNavigation=False code$(SEP)ml$(SEP)visuals.py
