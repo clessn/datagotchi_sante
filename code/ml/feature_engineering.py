@@ -68,6 +68,7 @@ def create_nominal_single_features(df_codebook, df_attributes):
         df_nominal_single_features,
         columns=nominal_single_variables_in_attributes,
         dtype=int,
+        drop_first=True
     )
     logger.info(
         f"{len(nominal_single_variables_in_attributes)} variables are nominal single and are converted into {len(df_nominal_single_features.columns)} variables one-hot encoded."
