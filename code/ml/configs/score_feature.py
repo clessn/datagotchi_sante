@@ -9,9 +9,10 @@ class ScoreFeatureConfig:
     #         "all": {},
     #         "kbest": {"k": [20]},
     #         "variance": {"threshold": [0.1]},
+    #         "xgboost": {},
     #     }
     # ]
-    FEATURE_SELECTION_METHOD = ("variance", {"threshold": 0.1})
+    FEATURE_SELECTION_METHOD = ("xgboost", {})
 
     # Target choice
     TARGET_NAME = "C.TARGET_SCORE_TOT"
