@@ -77,8 +77,8 @@ def create_nominal_single_features(df_codebook, df_attributes):
         nan_column = f"{column}_nan"
         if nan_column in df_nominal_single_features.columns:
             # Write Nan in columns concerned
-            df_nominal_single_features.loc[df_nominal_single_features[nan_column] == 1, df_nominal_single_features.columns.str.startswith(column)] = None
-            # Supprimer la colonne _nan
+            df_nominal_single_features.loc[df_nominal_single_features[nan_column] == 1, df_nominal_single_features.columns.str.startswith(column)] = np.nan
+            # Remove columns _nan
             df_nominal_single_features.drop(columns=[nan_column], inplace=True)
 
     logger.info(
