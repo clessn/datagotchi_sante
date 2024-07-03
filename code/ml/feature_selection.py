@@ -83,7 +83,7 @@ def select_k_best_features(df_X, df_y, k):
 
 
 # Feature selection based on xgboost
-def select_xgboost_features(df_X, df_y):
+def select_xgboost_features(df_X, df_y, k):
     logger.info(f"Select features based on xgboost")
 
     # Handle missing values
@@ -94,7 +94,7 @@ def select_xgboost_features(df_X, df_y):
     model.fit(df_X, df_y)
 
     # Selector
-    selector = SelectFromModel(model, threshold="mean")
+    selector = SelectFromModel(model, threshold="mean", max_features=k)
 
     # Importance for features
     feature_importances = model.feature_importances_
