@@ -43,6 +43,7 @@ def create_nominal_multiple_features(df_codebook, df_attributes):
     ].copy()
 
     # Convert '1.0' into 1 and Nan into 0
+    # TODO: Keep Nan when no answer to the question
     df_nominal_multiple_features = df_nominal_multiple_features.fillna(0).astype(int)
     return df_nominal_multiple_features
 
