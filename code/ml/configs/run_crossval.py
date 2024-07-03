@@ -15,13 +15,13 @@ class CrossvalConfig:
     # 0. Versioning
     RUN_TYPE = "REAL_FOLDER_NAME"  # SANDBOX_FOLDER_NAME or REAL_FOLDER_NAME
     CODEBOOK_VERSION = "frozen_codebook_june_21.csv"
-    FEATURE_LIBRARY_VERSION = "feature_library_v3"
-    EXPERIMENT_NAME = "3_hp_tune"
+    FEATURE_LIBRARY_VERSION = "feature_library_v4"
+    EXPERIMENT_NAME = "4_feature_engineering"
 
     # 1. Modeling
     # 1.1. Feature Selection
-    FEATURE_SELECTION_METHOD = ("kbest", {"k": 20})
-    #FEATURE_SELECTION_METHOD = ("xgboost", {})
+    #FEATURE_SELECTION_METHOD = ("kbest", {"k": 20})
+    FEATURE_SELECTION_METHOD = ("xgboost", {})
 
     # 1.2 Evaluation
     # a) Metrics
