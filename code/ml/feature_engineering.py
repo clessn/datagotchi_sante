@@ -43,6 +43,7 @@ def create_nominal_multiple_features(df_codebook, df_attributes):
     ].copy()
 
     # Convert '1.0' into 1 and Nan into 0
+    # TODO: Keep Nan when no answer to the question
     df_nominal_multiple_features = df_nominal_multiple_features.fillna(0).astype(int)
     return df_nominal_multiple_features
 
@@ -68,8 +69,19 @@ def create_nominal_single_features(df_codebook, df_attributes):
         df_nominal_single_features,
         columns=nominal_single_variables_in_attributes,
         dtype=int,
-        drop_first=True
+        drop_first=True,
+        dummy_na=True
     )
+
+    # Convert into Nan if Nan initially and remove Nan columns added with get_dummies
+    for column in nominal_single_variables_in_attributes:
+        nan_column = f"{column}_nan"
+        if nan_column in df_nominal_single_features.columns:
+            # Write Nan in columns concerned
+            df_nominal_single_features.loc[df_nominal_single_features[nan_column] == 1, df_nominal_single_features.columns.str.startswith(column)] = np.nan
+            # Remove columns _nan
+            df_nominal_single_features.drop(columns=[nan_column], inplace=True)
+
     logger.info(
         f"{len(nominal_single_variables_in_attributes)} variables are nominal single and are converted into {len(df_nominal_single_features.columns)} variables one-hot encoded."
     )
@@ -157,4 +169,7 @@ if __name__ == "__main__":
         C.FEATURE_LIBRARY_FILENAME,
         C.TARGETS_FILENAME,
     )
+
+
+
     logger.info("Features and Targets created with success !! :-)")
