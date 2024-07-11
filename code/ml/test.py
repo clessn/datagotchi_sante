@@ -26,4 +26,9 @@ def_reduced = df[[
 def_reduced = def_reduced.fillna(def_reduced.mean())
 transformer = FactorAnalysis(n_components=1)
 X_transformed = transformer.fit_transform(def_reduced)
+
+df_categories = df[[
+    'health_indicator'
+]]
+category_counts = df_categories['health_indicator'].value_counts()
 breakpoint()
