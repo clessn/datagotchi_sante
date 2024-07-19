@@ -1,5 +1,6 @@
 import os
 import numpy as np
+import pandas as pd
 import plotly.express as px
 import streamlit as st
 from configs.visuals import VisualsConfig as Config
@@ -37,7 +38,7 @@ def select_metric(metrics_df):
     # Keep only results for this metric
     selected_metric_df = metrics_df[metrics_df["metric_name"] == metric_choice].copy()
 
-    return selected_metric_df
+    return selected_metric_df, metric_choice
 
 
 ### Select model
@@ -102,8 +103,32 @@ def k_values(mean_selected_metrics_df, experiments_path, selected_experiment):
 
                 # Create dictionnary with metric value and k value for the feature selection method
                 metrics_feature_selection_k[run_name] = {"k":k_value, "metric_value":metric_value}
-        
-    return metrics_feature_selection_k
+
+    # Convert dictionnary into dataframe
+    metrics_feature_selection_k_df = pd.DataFrame.from_dict(metrics_feature_selection_k, orient='index')
+    return metrics_feature_selection_k_df
+
+### Create a plot where the x-axis is k values and y-axis is metric values
+def plot_metrcis_k(metrics_feature_selection_k_df, metric_choice):
+    
+    # Sort by k
+    metrics_feature_selection_k_df_sorted = metrics_feature_selection_k_df.sort_values(by='k')
+
+    # Create the plot
+    fig = px.line(
+        metrics_feature_selection_k_df_sorted,
+        x='k',
+        y='metric_value',
+        title=f"Metric value on {metric_choice} corresponding to the number of features selected",
+        labels={
+            "k": "Number of features selected",
+            "metric_value": f"Mean value on {metric_choice}",
+        },
+    )
+
+    # Plot results
+    st.plotly_chart(fig)
+
 
 ###################### Preloading  ########################
 
@@ -128,7 +153,7 @@ metrics_df = load_results_metrics(
 )
 
 # Select metric and keep results on it
-selected_metric_df = select_metric(metrics_df)
+selected_metric_df, metric_choice = select_metric(metrics_df)
 
 # Select model and keep results on it
 selected_model_df = select_model(selected_metric_df)
@@ -136,6 +161,8 @@ selected_model_df = select_model(selected_metric_df)
 # Compute mean on folds
 mean_selected_metrics_df = compute_mean_folds(selected_model_df)
 
-# Dictionnary with metric value and k value for the feature selection method
-metrics_feature_selection_k = k_values(mean_selected_metrics_df, experiments_path, selected_experiment)
-metrics_feature_selection_k
+# Dataframe with metric value and k value for the feature selection method
+metrics_feature_selection_k_df = k_values(mean_selected_metrics_df, experiments_path, selected_experiment)
+
+# Plot results
+plot_metrcis_k(metrics_feature_selection_k_df, metric_choice)
