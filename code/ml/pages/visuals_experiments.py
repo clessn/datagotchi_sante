@@ -121,6 +121,7 @@ def show_config(experiments_path, selected_experiment, selected_run_name):
     # Write configuration we want to see
     st.write("**Feature library version**: ",config_df["FEATURE_LIBRARY_VERSION"])
     st.write("**Feature selection method**: ",config_df["FEATURE_SELECTION_METHOD"])
+    st.write("**Target variable**: ",config_df["TARGET_NAME"])
     st.write("**Best hyperparameters**: ")
 
     # Select fold
