@@ -13,7 +13,7 @@ from visuals import menu
 
 
 ### Select an experiment
-def select_experiment(experiments_path):
+def select_experiment_run(experiments_path):
 
     # Title of sidebar
     st.sidebar.title("Selection of the experiment")
@@ -155,7 +155,7 @@ menu()
 st.title("Experiments")
 
 # Selection of the run and loading results of it
-metrics_df, selected_experiment, selected_run_name = select_experiment(experiments_path)
+metrics_df, selected_experiment, selected_run_name = select_experiment_run(experiments_path)
 
 # Select a metric and visualize results of the run
 # table_metrics_all(metrics_df)
