@@ -6,3 +6,4 @@ class VisualsConfig:
         "mse",
         "mae",
     ]
+    FEATURE_SELECTION_METHOD_NAME = "xgboost"
