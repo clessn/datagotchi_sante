@@ -129,6 +129,8 @@ def plot_metrcis_k(metrics_feature_selection_k_df, metric_choice):
     # Plot results
     st.plotly_chart(fig)
 
+    return metrics_feature_selection_k_df_sorted
+
 
 ###################### Preloading  ########################
 
@@ -165,4 +167,7 @@ mean_selected_metrics_df = compute_mean_folds(selected_model_df)
 metrics_feature_selection_k_df = k_values(mean_selected_metrics_df, experiments_path, selected_experiment)
 
 # Plot results
-plot_metrcis_k(metrics_feature_selection_k_df, metric_choice)
+metrics_feature_selection_k_df_sorted = plot_metrcis_k(metrics_feature_selection_k_df, metric_choice)
+
+# Visualize results on a table
+metrics_feature_selection_k_df_sorted
