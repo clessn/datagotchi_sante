@@ -4,7 +4,7 @@ class ScoreFeatureConfig:
     FEATURE_LIBRARY_VERSION = "feature_library_v4"
 
     # Feature Selection Grid
-    FEATURE_SELECTION_METHOD = ("xgboost", {"k": 4})
+    FEATURE_SELECTION_METHOD = ("xgboost", {"k": 20})
 
     # Target choice
     TARGET_NAME = "C.TARGET_SCORE_TOT"
