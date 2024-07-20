@@ -67,7 +67,8 @@ class CrossvalConfig:
             },
         },
     ]
-    TARGET_NAME = "C.TARGET_SCORE_TOT"
+    TARGET_NAME = "C.TARGET_EMOTIONAL_HEALTH" # TARGET_SCORE_TOT, TARGET_POSITIVE_FUNCTIONING, TARGET_EMOTIONAL_HEALTH
+    TARGET_BORNE_SUP = 15 # 70 for score_tot, 55 for positive_functioning, 15 for emotional_health
 
     # Display config as a dictionary
     @classmethod
