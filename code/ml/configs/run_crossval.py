@@ -16,7 +16,7 @@ class CrossvalConfig:
     RUN_TYPE = "REAL_FOLDER_NAME"  # SANDBOX_FOLDER_NAME or REAL_FOLDER_NAME
     CODEBOOK_VERSION = "frozen_codebook_june_21.csv"
     FEATURE_LIBRARY_VERSION = "feature_library_v4"
-    EXPERIMENT_NAME = "5_split_score"
+    EXPERIMENT_NAME = "6_k_features_selection_score_scaled"
 
     # 1. Modeling
     # 1.1. Feature Selection
@@ -67,8 +67,8 @@ class CrossvalConfig:
             },
         },
     ]
-    TARGET_NAME = "C.TARGET_EMOTIONAL_HEALTH" # TARGET_SCORE_TOT, TARGET_POSITIVE_FUNCTIONING, TARGET_EMOTIONAL_HEALTH
-    TARGET_BORNE_SUP = 15 # 70 for score_tot, 55 for positive_functioning, 15 for emotional_health
+    TARGET_NAME = "C.TARGET_SCORE_TOT" # TARGET_SCORE_TOT, TARGET_POSITIVE_FUNCTIONING, TARGET_EMOTIONAL_HEALTH
+    TARGET_BORNE_SUP = 70 # 70 for score_tot, 55 for positive_functioning, 15 for emotional_health
 
     # Display config as a dictionary
     @classmethod
