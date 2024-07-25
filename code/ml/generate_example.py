@@ -2,14 +2,17 @@ import logging
 
 from configs.deploy import DeployConfig as Config
 from constants import Constants as C
-from loaders import load_attributes
-from loaders import load_codebook
-from loaders import load_feature_lookup_table
-from loaders import load_selected_features
+from loaders import (
+    load_attributes,
+    load_codebook,
+    load_feature_lookup_table,
+    load_selected_features,
+)
 from tracking import write_example
 from utils import configure_main_logger
 
 logger = logging.getLogger(__name__)
+
 
 # Create questionnaire
 def create_questionnaire(
@@ -17,19 +20,31 @@ def create_questionnaire(
     selected_features,
     df_codebook,
 ):
-    questions = df_feature_lookup.loc[
-        df_feature_lookup[C.LOOKUP_FEATURE_NAME_COL].isin(selected_features),
-        C.CODEBOOK_NAME_COL
-    ].unique().tolist()
+    questions = (
+        df_feature_lookup.loc[
+            df_feature_lookup[C.LOOKUP_FEATURE_NAME_COL].isin(selected_features),
+            C.CODEBOOK_NAME_COL,
+        ]
+        .unique()
+        .tolist()
+    )
 
     df_questionnaire = df_codebook.loc[
         df_codebook[C.CODEBOOK_NAME_COL].isin(questions),
-        [C.CODEBOOK_ID_COL, C.CODEBOOK_NAME_COL, C.CODEBOOK_QUESTION_COL, C.CODEBOOK_CHOICE_COL]
+        [
+            C.CODEBOOK_ID_COL,
+            C.CODEBOOK_NAME_COL,
+            C.CODEBOOK_QUESTION_COL,
+            C.CODEBOOK_CHOICE_COL,
+        ],
     ]
     return df_questionnaire
 
+
 def create_example(df_attributes, raw_variable_names):
-    df_users = df_attributes.sample(n=Config.N_USERS, random_state=42)[raw_variable_names]
+    df_users = df_attributes.sample(n=Config.N_USERS, random_state=42)[
+        raw_variable_names
+    ]
     return df_users
 
 
@@ -45,7 +60,7 @@ if __name__ == "__main__":
     # Load feature lookup-table
     df_feature_lookup = load_feature_lookup_table(
         ml_run_path / C.FEATURE_LIBRARIES_FOLDER_NAME / frozen_library_folder_name,
-        C.FEATURE_LOOKUP_FILENAME
+        C.FEATURE_LOOKUP_FILENAME,
     )
 
     # Load selected feature
@@ -63,9 +78,11 @@ if __name__ == "__main__":
     )
 
     # Create example
-    df_attributes =  load_attributes(ml_run_path, C.ATTRIBUTES_FILENAME)
-    df_example = create_example(df_attributes, df_questionnaire[C.CODEBOOK_NAME_COL].tolist())
-    
+    df_attributes = load_attributes(ml_run_path, C.ATTRIBUTES_FILENAME)
+    df_example = create_example(
+        df_attributes, df_questionnaire[C.CODEBOOK_NAME_COL].tolist()
+    )
+
     write_example(
         df_questionnaire,
         df_example,

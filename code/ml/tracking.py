@@ -105,7 +105,13 @@ class CustomEncoder(json.JSONEncoder):
 
 
 def write_feature_library(
-    df_features, df_targets, df_feature_lookup, path, feature_filename, targets_filename, feature_lookup_filename,
+    df_features,
+    df_targets,
+    df_feature_lookup,
+    path,
+    feature_filename,
+    targets_filename,
+    feature_lookup_filename,
 ):
     # TODO: use parquet instead
     # Create directory if missing
@@ -211,11 +217,7 @@ def track_results(
 
 
 def write_example(
-    df_questionnaire,
-    df_example,
-    deploy_path,
-    questionnaire_filename,
-    example_filename
+    df_questionnaire, df_example, deploy_path, questionnaire_filename, example_filename
 ):
     # Create directory if missing
     Path(deploy_path).mkdir(parents=True, exist_ok=True)

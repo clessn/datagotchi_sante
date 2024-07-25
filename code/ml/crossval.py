@@ -35,9 +35,11 @@ def preallocate_pipeline(model_name, param_grid):
 
     return Pipeline(pipeline_steps)
 
+
 def scaling_y(y):
     y_transformed = y / Config.TARGET_BORNE_SUP * 100
     return y_transformed
+
 
 def crossval(X, y, index, model_list):
     """Cross-validation (evaluation realized for each fold of each model)

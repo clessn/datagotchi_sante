@@ -48,18 +48,19 @@ class Constants:
     CODEBOOK_ID_COL = "id"
     CODEBOOK_NAME_COL = "raw_variable_name"
     CODEBOOK_TYPE_COL = "raw_variable_type"
-    CODEBOOK_OBSERVABILITY_COL = "observability_v2"
     CODEBOOK_QUESTION_COL = "Questions"
     CODEBOOK_CHOICE_COL = "Choix de réponse "
+    CODEBOOK_OBSERVABILITY_COL = "observability"
+    CODEBOOK_OBSERVABILITY_COL_V2 = "observability_v2"
     CODEBOOK_COLS = [
         CODEBOOK_ID_COL,
         CODEBOOK_NAME_COL,
         CODEBOOK_TYPE_COL,
         CODEBOOK_OBSERVABILITY_COL,
+        CODEBOOK_OBSERVABILITY_COL_V2,
         CODEBOOK_QUESTION_COL,
         CODEBOOK_CHOICE_COL,
     ]
-
     CODEBOOK_TYPE_INTEGER_LABEL = "integer"
     CODEBOOK_TYPE_FLOAT_LABEL = "float"
     CODEBOOK_TYPE_ORDINAL_LABEL = "ordinal"

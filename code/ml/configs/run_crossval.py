@@ -14,13 +14,13 @@ class CrossvalConfig:
 
     # 0. Versioning
     RUN_TYPE = "REAL_FOLDER_NAME"  # SANDBOX_FOLDER_NAME or REAL_FOLDER_NAME
-    CODEBOOK_VERSION = "frozen_codebook_june_21.csv"
-    FEATURE_LIBRARY_VERSION = "feature_library_v4"
-    EXPERIMENT_NAME = "6_k_features_selection_score_scaled"
+    CODEBOOK_VERSION = "frozen_codebook_july_25.csv"
+    FEATURE_LIBRARY_VERSION = "feature_library_v6"
+    EXPERIMENT_NAME = "7_constraints_simon"
 
     # 1. Modeling
     # 1.1. Feature Selection
-    #FEATURE_SELECTION_METHOD = ("kbest", {"k": 20})
+    # FEATURE_SELECTION_METHOD = ("kbest", {"k": 20})
     FEATURE_SELECTION_METHOD = ("xgboost", {"k": 20})
 
     # 1.2 Evaluation
@@ -67,8 +67,10 @@ class CrossvalConfig:
             },
         },
     ]
-    TARGET_NAME = "C.TARGET_SCORE_TOT" # TARGET_SCORE_TOT, TARGET_POSITIVE_FUNCTIONING, TARGET_EMOTIONAL_HEALTH
-    TARGET_BORNE_SUP = 70 # 70 for score_tot, 55 for positive_functioning, 15 for emotional_health
+    TARGET_NAME = "C.TARGET_SCORE_TOT"  # TARGET_SCORE_TOT, TARGET_POSITIVE_FUNCTIONING, TARGET_EMOTIONAL_HEALTH
+    TARGET_BORNE_SUP = (
+        70  # 70 for score_tot, 55 for positive_functioning, 15 for emotional_health
+    )
 
     # Display config as a dictionary
     @classmethod

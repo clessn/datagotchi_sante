@@ -8,4 +8,3 @@ class DeployConfig:
 
     # Example
     N_USERS = 3
-
