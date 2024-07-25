@@ -43,6 +43,7 @@ def create_nominal_multiple_features(df_codebook, df_attributes, df_targets):
     ].copy()
 
     # Approximate to single nominal with categorical encoding
+    assert not Config.TARGET_ENCODING_MULTIPLE_NOMINAL # target encoding obsolete
     if Config.TARGET_ENCODING_MULTIPLE_NOMINAL:
         nominal_multiple_onehot_cols = df_nominal_multiple_features.columns.tolist()
         categories = np.unique(
@@ -104,6 +105,7 @@ def create_nominal_single_features(df_codebook, df_attributes, df_targets):
     ].copy()
 
     # Encode nominals
+    assert not Config.TARGET_ENCODING_SINGLE_NOMINAL # target encoding obsolete
     if Config.TARGET_ENCODING_SINGLE_NOMINAL:
         # remove missing values from target
         target_name = eval(Config.TARGET_NAME)
@@ -169,6 +171,13 @@ def create_numerical_features(df_codebook, df_attributes):
     logger.info(f"{len(numerical_variables_in_attributes)} variables are numerical.")
     return df_attributes.loc[:, numerical_variables_in_attributes]
 
+def generate_feature_lookup_table(df_codebook, nominal_single_feature_names):
+    nominal_mapping = [[feature_name, feature_name.split('_')[0]] for feature_name in nominal_single_feature_names]
+    df_nominal_mapping = pd.DataFrame(nominal_mapping, columns=[C.LOOKUP_FEATURE_NAME_COL, C.CODEBOOK_NAME_COL])
+    df_lookup = df_codebook.merge(df_nominal_mapping, how='outer', on=C.CODEBOOK_NAME_COL)
+    df_lookup = df_lookup[df_lookup.id > 0]
+    df_lookup[C.LOOKUP_FEATURE_NAME_COL] = df_lookup[C.LOOKUP_FEATURE_NAME_COL].fillna(df_lookup[C.CODEBOOK_NAME_COL])
+    return df_lookup[[C.CODEBOOK_ID_COL, C.CODEBOOK_NAME_COL, C.LOOKUP_FEATURE_NAME_COL]].sort_values(C.CODEBOOK_ID_COL)
 
 def keep_observable(df_codebook, df_attributes):
     df_codebook_observable = df_codebook[
@@ -230,13 +239,18 @@ if __name__ == "__main__":
         axis=1,
     )
 
+    # Generate feature look-up table
+    df_feature_lookup = generate_feature_lookup_table(df_codebook, df_nominal_single_features.columns)
+
     # Save features and targets to csv
     write_feature_library(
         df_features,
         df_targets,
+        df_feature_lookup,
         ml_run_path / C.FEATURE_LIBRARIES_FOLDER_NAME,
         C.FEATURE_LIBRARY_FILENAME,
         C.TARGETS_FILENAME,
+        C.FEATURE_LOOKUP_FILENAME,
     )
 
     logger.info("Features and Targets created with success !! :-)")

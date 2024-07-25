@@ -17,6 +17,9 @@ score-features:
 build-sandbox:
 	poetry run python code$(SEP)ml$(SEP)sandbox.py
 
+generate-example:
+	poetry run python code$(SEP)ml$(SEP)generate_example.py
+
 run-crossval:
 	poetry run python code$(SEP)ml$(SEP)crossval.py
 

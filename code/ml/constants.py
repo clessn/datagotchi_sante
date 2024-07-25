@@ -18,6 +18,7 @@ class Constants:
     FEATURE_SELECTION_FOLDER_NAME = "feature_selection"
     EXPERIMENTS_FOLDER_NAME = "experiments"
     EXPERIMENTS_ARTIFACTS_FOLDER_NAME = "artifacts"
+    DEPLOY_FOLDER_NAME = "deploy"
 
     # Paths
     LOGGING_PATH = Path(os.getcwd()) / "code" / "ml"
@@ -39,12 +40,25 @@ class Constants:
     ARTIFACTS_CONFIG_FILENAME = "config.json"
     ARTIFACTS_HP_FILENAME = "best_hyperparameters.json"
     ARTIFACTS_PREDICTIONS_FILENAME = "predictions.csv"
+    FEATURE_LOOKUP_FILENAME = "feature_lookup.csv"
+    QUESTIONNAIRE_FILENAME = "questionnaire.csv"
+    EXAMPLE_FILENAME = "example.csv"
 
     # Codebook fields
+    CODEBOOK_ID_COL = "id"
     CODEBOOK_NAME_COL = "raw_variable_name"
     CODEBOOK_TYPE_COL = "raw_variable_type"
-    CODEBOOK_OBSERVABILITY_COL = "observability"
-    CODEBOOK_COLS = [CODEBOOK_NAME_COL, CODEBOOK_TYPE_COL, CODEBOOK_OBSERVABILITY_COL]
+    CODEBOOK_OBSERVABILITY_COL = "observability_v2"
+    CODEBOOK_QUESTION_COL = "Questions"
+    CODEBOOK_CHOICE_COL = "Choix de réponse "
+    CODEBOOK_COLS = [
+        CODEBOOK_ID_COL,
+        CODEBOOK_NAME_COL,
+        CODEBOOK_TYPE_COL,
+        CODEBOOK_OBSERVABILITY_COL,
+        CODEBOOK_QUESTION_COL,
+        CODEBOOK_CHOICE_COL,
+    ]
 
     CODEBOOK_TYPE_INTEGER_LABEL = "integer"
     CODEBOOK_TYPE_FLOAT_LABEL = "float"
@@ -73,6 +87,9 @@ class Constants:
         TARGET_SCORE_TOT,
         TARGET_HEALTH_INDICATOR,
     ]
+
+    # Feature Lookup table col
+    LOOKUP_FEATURE_NAME_COL = "feature_name"
 
     # Metrics fields
     METRICS_RUN_ID_FIELD = "run_id"

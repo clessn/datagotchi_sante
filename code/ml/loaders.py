@@ -21,6 +21,9 @@ def load_attributes(path, filename):
     df = df.set_index(C.ATTRIBUTE_ID_COL)
     return df
 
+def load_feature_lookup_table(path, filename):
+    df = pd.read_csv(path / filename)
+    return df
 
 def load_feature_library(path, filename):
     df_feature_library = pd.read_csv(
