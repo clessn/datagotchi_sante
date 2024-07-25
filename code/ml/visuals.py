@@ -10,6 +10,7 @@ def menu():
         )        
         st.page_link("pages/visuals_feature_saturation.py", label="Feature Selection Saturation", icon="📈")
         st.page_link("pages/visuals_experiments.py", label="Experiments", icon="⚙️")
+        st.page_link("pages/visuals_constraints.py", label="Constraints on features", icon="🎛️")
 
 
 ############### Streamlit launch ###############
