@@ -63,7 +63,7 @@ class CrossvalConfig:
             "param_grid": {
                 "imputer": [SimpleImputer(strategy="mean"), KNNImputer()],
                 "scaler": [StandardScaler(), MinMaxScaler()],
-                "regressor__alpha": [1.0, 2.0, 3.0, 4.0],
+                "regressor__alpha": [4.0, 5.0, 7.0, 10.0, 100.0],
             },
         },
     ]

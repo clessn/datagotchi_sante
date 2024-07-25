@@ -5,6 +5,7 @@ import pandas as pd
 from configs.create_feature import CreateFeatureConfig as Config
 from constants import Constants as C
 from loaders import load_attributes, load_codebook
+from sklearn.preprocessing import TargetEncoder
 from tracking import write_feature_library
 from utils import configure_main_logger
 
@@ -23,8 +24,7 @@ def features_in_codebook_and_attributes(fields, df_codebook, df_attributes):
     return codebook_fields_attributes_variables
 
 
-def create_nominal_multiple_features(df_codebook, df_attributes):
-
+def create_nominal_multiple_features(df_codebook, df_attributes, df_targets):
     # Select nominal_multiple_features
     nominal_multiple_fields = [
         C.CODEBOOK_TYPE_NOMINAL_MULTIPLE_LABEL,
@@ -42,14 +42,54 @@ def create_nominal_multiple_features(df_codebook, df_attributes):
         nominal_multiple_variables_in_attributes
     ].copy()
 
-    # Convert '1.0' into 1 and Nan into 0
-    # TODO: Keep Nan when no answer to the question
-    df_nominal_multiple_features = df_nominal_multiple_features.fillna(0).astype(int)
+    # Approximate to single nominal with categorical encoding
+    if Config.TARGET_ENCODING_MULTIPLE_NOMINAL:
+        nominal_multiple_onehot_cols = df_nominal_multiple_features.columns.tolist()
+        categories = np.unique(
+            [col.split("_")[0] for col in nominal_multiple_onehot_cols]
+        )
+        for category in categories:
+            onehot_cols_in_category = [
+                col
+                for col in nominal_multiple_onehot_cols
+                if col.split("_")[0] == category
+            ]
+            df_nominal_multiple_features[category] = df_nominal_multiple_features[
+                onehot_cols_in_category
+            ].idxmax(axis=1)
+        df_nominal_multiple_features = df_nominal_multiple_features.drop(
+            nominal_multiple_onehot_cols, axis=1
+        )
+
+        # remove missing values from target
+        target_name = eval(Config.TARGET_NAME)
+        df_targets_filled = df_targets[target_name].copy()
+        df_targets_filled = df_targets_filled.fillna(df_targets_filled.mean())
+
+        # target encode
+        enc_auto = TargetEncoder(smooth="auto")
+        column_names, index_names = (
+            df_nominal_multiple_features.columns,
+            df_nominal_multiple_features.index,
+        )
+        X_nominal_multiple_features = enc_auto.fit_transform(
+            df_nominal_multiple_features, df_targets_filled
+        )
+        df_nominal_multiple_features = pd.DataFrame(
+            data=X_nominal_multiple_features,
+            columns=column_names,
+            index=index_names,
+        )
+    else:
+        # Convert '1.0' into 1 and Nan into 0
+        # TODO: Keep Nan when no answer to the question
+        df_nominal_multiple_features = df_nominal_multiple_features.fillna(0).astype(
+            int
+        )
     return df_nominal_multiple_features
 
 
-def create_nominal_single_features(df_codebook, df_attributes):
-
+def create_nominal_single_features(df_codebook, df_attributes, df_targets):
     # Select nominal_single_features
     nominal_single_fields = [
         C.CODEBOOK_TYPE_NOMINAL_SINGLE_LABEL,
@@ -63,28 +103,57 @@ def create_nominal_single_features(df_codebook, df_attributes):
         nominal_single_variables_in_attributes
     ].copy()
 
-    # Convert it into dummies (one-hot encoding)
-    # TODO: Take categories from codebook (num, not text), assert values are in categories, add the categories in getdummies
-    df_nominal_single_features = pd.get_dummies(
-        df_nominal_single_features,
-        columns=nominal_single_variables_in_attributes,
-        dtype=int,
-        drop_first=True,
-        dummy_na=True
-    )
+    # Encode nominals
+    if Config.TARGET_ENCODING_SINGLE_NOMINAL:
+        # remove missing values from target
+        target_name = eval(Config.TARGET_NAME)
+        df_targets_filled = df_targets[target_name].copy()
+        df_targets_filled = df_targets_filled.fillna(df_targets_filled.mean())
 
-    # Convert into Nan if Nan initially and remove Nan columns added with get_dummies
-    for column in nominal_single_variables_in_attributes:
-        nan_column = f"{column}_nan"
-        if nan_column in df_nominal_single_features.columns:
-            # Write Nan in columns concerned
-            df_nominal_single_features.loc[df_nominal_single_features[nan_column] == 1, df_nominal_single_features.columns.str.startswith(column)] = np.nan
-            # Remove columns _nan
-            df_nominal_single_features.drop(columns=[nan_column], inplace=True)
+        # target encode
+        enc_auto = TargetEncoder(smooth="auto")
+        column_names, index_names = (
+            df_nominal_single_features.columns,
+            df_nominal_single_features.index,
+        )
+        X_nominal_single_features = enc_auto.fit_transform(
+            df_nominal_single_features, df_targets_filled
+        )
+        df_nominal_single_features = pd.DataFrame(
+            data=X_nominal_single_features,
+            columns=column_names,
+            index=index_names,
+        )
 
-    logger.info(
-        f"{len(nominal_single_variables_in_attributes)} variables are nominal single and are converted into {len(df_nominal_single_features.columns)} variables one-hot encoded."
-    )
+        logger.info(
+            f"{len(nominal_single_variables_in_attributes)} variables are nominal single and are Target encoded on {target_name}."
+        )
+    else:
+        # Convert it into dummies (one-hot encoding)
+        # TODO: Take categories from codebook (num, not text), assert values are in categories, add the categories in getdummies
+        df_nominal_single_features = pd.get_dummies(
+            df_nominal_single_features,
+            columns=nominal_single_variables_in_attributes,
+            dtype=int,
+            drop_first=True,
+            dummy_na=True,
+        )
+
+        # Convert into Nan if Nan initially and remove Nan columns added with get_dummies
+        for column in nominal_single_variables_in_attributes:
+            nan_column = f"{column}_nan"
+            if nan_column in df_nominal_single_features.columns:
+                # Write Nan in columns concerned
+                df_nominal_single_features.loc[
+                    df_nominal_single_features[nan_column] == 1,
+                    df_nominal_single_features.columns.str.startswith(column),
+                ] = np.nan
+                # Remove columns _nan
+                df_nominal_single_features.drop(columns=[nan_column], inplace=True)
+
+        logger.info(
+            f"{len(nominal_single_variables_in_attributes)} variables are nominal single and are converted into {len(df_nominal_single_features.columns)} variables one-hot encoded."
+        )
     return df_nominal_single_features
 
 
@@ -143,12 +212,12 @@ if __name__ == "__main__":
 
     # Nominal single features, one-hot encoded
     df_nominal_single_features = create_nominal_single_features(
-        df_codebook, df_candidate_observable
+        df_codebook, df_candidate_observable, df_targets
     )
 
     # Nominal multiple features
     df_nominal_multiple_features = create_nominal_multiple_features(
-        df_codebook, df_candidate_observable
+        df_codebook, df_candidate_observable, df_targets
     )
 
     # Aggregate here different type of features
@@ -169,7 +238,5 @@ if __name__ == "__main__":
         C.FEATURE_LIBRARY_FILENAME,
         C.TARGETS_FILENAME,
     )
-
-
 
     logger.info("Features and Targets created with success !! :-)")
