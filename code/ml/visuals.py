@@ -7,8 +7,12 @@ def menu():
         # st.page_link('streamlit_home_page.py', label='Home', icon='🏠')
         st.page_link(
             "pages/visuals_feature_selection.py", label="Feature Selection", icon="🛒"
-        )        
-        st.page_link("pages/visuals_feature_saturation.py", label="Feature Selection Saturation", icon="📈")
+        )
+        st.page_link(
+            "pages/visuals_feature_saturation.py",
+            label="Feature Selection Saturation",
+            icon="📈",
+        )
         st.page_link("pages/visuals_experiments.py", label="Experiments", icon="⚙️")
 
 

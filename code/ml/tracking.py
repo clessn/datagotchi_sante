@@ -105,7 +105,13 @@ class CustomEncoder(json.JSONEncoder):
 
 
 def write_feature_library(
-    df_features, df_targets, path, feature_filename, targets_filename
+    df_features,
+    df_targets,
+    df_feature_lookup,
+    path,
+    feature_filename,
+    targets_filename,
+    feature_lookup_filename,
 ):
     # TODO: use parquet instead
     # Create directory if missing
@@ -114,6 +120,7 @@ def write_feature_library(
     # Write features and targets
     df_features.to_csv(path / feature_filename)
     df_targets.to_csv(path / targets_filename)
+    df_feature_lookup.to_csv(path / feature_lookup_filename, index=False)
     logger.info("Feature library saved with targets")
 
 
@@ -207,3 +214,14 @@ def track_results(
     # - write predictions
     predictions_df.to_csv(artifacts_run_id_path / artifacts_predictions_filename)
     logger.info("Predictions saved")
+
+
+def write_example(
+    df_questionnaire, df_example, deploy_path, questionnaire_filename, example_filename
+):
+    # Create directory if missing
+    Path(deploy_path).mkdir(parents=True, exist_ok=True)
+
+    df_questionnaire.to_csv(deploy_path / questionnaire_filename, index=False)
+    df_example.to_csv(deploy_path / example_filename)
+    logger.info("Questionnaire and example saved")

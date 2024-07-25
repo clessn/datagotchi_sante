@@ -117,11 +117,11 @@ def show_config(experiments_path, selected_experiment, selected_run_name):
     )
     config_df = load_config(selected_run_path)
     hp_df = load_hp(selected_run_path)
-    
+
     # Write configuration we want to see
-    st.write("**Feature library version**: ",config_df["FEATURE_LIBRARY_VERSION"])
-    st.write("**Feature selection method**: ",config_df["FEATURE_SELECTION_METHOD"])
-    st.write("**Target variable**: ",config_df["TARGET_NAME"])
+    st.write("**Feature library version**: ", config_df["FEATURE_LIBRARY_VERSION"])
+    st.write("**Feature selection method**: ", config_df["FEATURE_SELECTION_METHOD"])
+    st.write("**Target variable**: ", config_df["TARGET_NAME"])
     st.write("**Best hyperparameters**: ")
 
     # Select fold
@@ -129,13 +129,13 @@ def show_config(experiments_path, selected_experiment, selected_run_name):
     selected_fold = st.selectbox(
         "Which fold do you want to see the configuration?", folds_list
     )
-    
+
     # Select model
     model_list = hp_df[str(selected_fold)].keys()
     selected_model = st.selectbox(
         "Which model do you want to see the configuration?", model_list
     )
-    
+
     # Show config for this fold and model
     hp_df[str(selected_fold)][selected_model]
 
@@ -156,7 +156,9 @@ menu()
 st.title("Experiments")
 
 # Selection of the run and loading results of it
-metrics_df, selected_experiment, selected_run_name = select_experiment_run(experiments_path)
+metrics_df, selected_experiment, selected_run_name = select_experiment_run(
+    experiments_path
+)
 
 # Select a metric and visualize results of the run
 # table_metrics_all(metrics_df)

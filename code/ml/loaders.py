@@ -22,6 +22,11 @@ def load_attributes(path, filename):
     return df
 
 
+def load_feature_lookup_table(path, filename):
+    df = pd.read_csv(path / filename)
+    return df
+
+
 def load_feature_library(path, filename):
     df_feature_library = pd.read_csv(
         path / filename,
@@ -87,6 +92,7 @@ def load_config(run_path):
     config_file = open(run_path / C.ARTIFACTS_CONFIG_FILENAME)
     config_df = json.load(config_file)
     return config_df
+
 
 def load_hp(run_path):
     # Opening JSON file
