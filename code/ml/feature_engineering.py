@@ -172,7 +172,7 @@ def create_numerical_features(df_codebook, df_attributes):
 
 def keep_observable(df_codebook, df_attributes):
     df_codebook_observable = df_codebook[
-        df_codebook[C.CODEBOOK_OBSERVABILITY_COL].isin(C.OBSERVABILITY_LEVEL)
+        df_codebook[eval(Config.CODEBOOK_OBSERVABILITY_COL_NAME)].isin(C.OBSERVABILITY_LEVEL)
     ].copy()
     observables_variables = df_codebook_observable[C.CODEBOOK_NAME_COL].values
     observables_variables_in_attributes = [
