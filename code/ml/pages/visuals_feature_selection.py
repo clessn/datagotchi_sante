@@ -9,9 +9,22 @@ from visuals import menu
 
 ###################### Functions  ########################
 
+### Select a feature library
+def select_feature_library(feature_selection_path):
+
+    # Title of sidebar
+    st.sidebar.title("Selection of a feature library")
+
+    # Select the feature library
+    feature_library_list = [library for library in os.listdir(feature_selection_path)]
+    feature_library_list_sorted = sorted(feature_library_list, reverse=True)
+    selected_feature_library = st.sidebar.selectbox(
+        "Choose the feature library you want to see", feature_library_list_sorted
+    )
+    return selected_feature_library
 
 ### Function to select the feature selection method
-def select_feature_selection_method(feature_selection_path):
+def select_feature_selection_method(feature_selection_library_path):
 
     # Title of sidebar
     st.sidebar.title("Feature selection")
@@ -21,7 +34,7 @@ def select_feature_selection_method(feature_selection_path):
     suffix = C.FEATURE_SELECTION_FILENAME.split("{}")[1]
     available_feature_selection = [
         feature_selection_method.replace(prefix, "").replace(suffix, "")
-        for feature_selection_method in os.listdir(feature_selection_path)
+        for feature_selection_method in os.listdir(feature_selection_library_path)
     ]
 
     # Put it in a dictionnary
@@ -79,7 +92,7 @@ def select_feature_selection_method(feature_selection_path):
             selected_feature_selection_method,
             selected_feature_selection_method_parameters,
         ),
-        feature_selection_path,
+        feature_selection_library_path,
         C.FEATURE_SELECTION_FILENAME,
     )
 
@@ -129,15 +142,12 @@ def plot_feature_selection_scores(
     # Plot results
     st.plotly_chart(fig)
 
-
 ###################### Preloading  ########################
 
 # Derive paths from configs
 ml_run_path = C.ML_PATH / eval(f"C.{Config.RUN_TYPE}")
 frozen_library_folder_name = Config.FEATURE_LIBRARY_VERSION
-feature_selection_path = (
-    ml_run_path / C.FEATURE_SELECTION_FOLDER_NAME / frozen_library_folder_name
-)
+feature_selection_path = (ml_run_path / C.FEATURE_SELECTION_FOLDER_NAME)
 
 
 ###################### Content page ##########################
@@ -148,9 +158,13 @@ menu()
 # Text
 st.title("Feature Selection")
 
+# Selection of feature library
+selected_feature_library = select_feature_library(feature_selection_path)
+feature_selection_library_path = (feature_selection_path / selected_feature_library)
+
 # Selection of feature selection method and loading scores of the features
 selected_feature_selection_method, df_features_scores_sorted = (
-    select_feature_selection_method(feature_selection_path)
+    select_feature_selection_method(feature_selection_library_path)
 )
 
 # Visualize feature selection scores
