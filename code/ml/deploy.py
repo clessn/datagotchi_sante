@@ -196,7 +196,7 @@ def predict_for_example(ml_run_path, frozen_library_folder_name):
     )
 
 
-# Run crossval
+# Run deploy
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Deploy script")
     parser.add_argument("function", type=str, help="Function to execute")
