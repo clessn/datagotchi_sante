@@ -18,7 +18,7 @@ class DeployConfig:
             "scaler": [StandardScaler(), MinMaxScaler()],
             "regressor__max_depth": [3, 6, 9],
             "regressor__subsample": [0.5, 0.8],
-        }
+        },
     }
     MIN_TRAIN_SIZE = 30
     TARGET_NAME = "C.TARGET_SCORE_TOT"  # TARGET_SCORE_TOT, TARGET_POSITIVE_FUNCTIONING, TARGET_EMOTIONAL_HEALTH
@@ -26,7 +26,6 @@ class DeployConfig:
         70  # 70 for score_tot, 55 for positive_functioning, 15 for emotional_health
     )
     KFOLD_HP = 3
-
 
     # Example generation
     N_USERS = 3

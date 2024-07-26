@@ -1,24 +1,24 @@
-import logging
 import argparse
+import logging
 
 import numpy as np
 import pandas as pd
-
 from configs.deploy import DeployConfig as Config
 from constants import Constants as C
 from crossval import preallocate_pipeline, scaling_y
 from feature_engineering import create_features
 from loaders import (
     load_attributes,
+    load_best_model,
     load_codebook,
+    load_df_X_y,
     load_feature_lookup_table,
     load_selected_features,
-    load_df_X_y,
-    load_best_model,
 )
 from sklearn.model_selection import GridSearchCV
-from tracking import write_example, write_best_model, save_example_predictions
+from tracking import save_example_predictions, write_best_model, write_example
 from utils import configure_main_logger
+
 logger = logging.getLogger(__name__)
 
 
@@ -56,6 +56,7 @@ def create_example(df_attributes, raw_variable_names):
     df_users.index = range(Config.N_USERS)
     df_users.index.name = C.ATTRIBUTE_ID_COL
     return df_users
+
 
 def generate_questionnaire_and_example(ml_run_path, frozen_library_folder_name):
 
@@ -96,6 +97,7 @@ def generate_questionnaire_and_example(ml_run_path, frozen_library_folder_name):
         C.EXAMPLE_ANSWERS_FILENAME,
     )
 
+
 def train_best_model(ml_run_path, frozen_library_folder_name):
     # Load data
     df_X, df_y = load_df_X_y(
@@ -111,7 +113,7 @@ def train_best_model(ml_run_path, frozen_library_folder_name):
     )
     df_X_selected = df_X.loc[:, selected_features]
 
-     # Prepare X_train and y_train
+    # Prepare X_train and y_train
     X_train = df_X_selected.values
     y_train = df_y.values
     y_train = scaling_y(y_train, Config.TARGET_BORNE_SUP)
@@ -143,7 +145,7 @@ def train_best_model(ml_run_path, frozen_library_folder_name):
     best_model = grid_search.best_estimator_
     best_model.fit(X_train, y_train)
     best_hyperparameters = grid_search.best_params_
-    best_hyperparameters['model_name'] = model_name
+    best_hyperparameters["model_name"] = model_name
 
     write_best_model(
         best_model,
@@ -154,6 +156,7 @@ def train_best_model(ml_run_path, frozen_library_folder_name):
         C.BEST_PARAMS_FILENAME,
     )
 
+
 def create_features_for_example(df_attributes_example, ml_run_path):
     df_attributes = load_attributes(ml_run_path, C.ATTRIBUTES_FILENAME)
     df_codebook = load_codebook(C.CODEBOOK_PATH, Config.CODEBOOK_VERSION)
@@ -162,19 +165,18 @@ def create_features_for_example(df_attributes_example, ml_run_path):
         (df_attributes[df_attributes_example.columns], df_attributes_example),
         axis=0,
     )
-    df_features, _ = create_features(
-        df_attributes_with_example,
-        df_codebook
-    )
-    return df_features.iloc[-df_attributes_example.shape[0]:,:]
+    df_features, _ = create_features(df_attributes_with_example, df_codebook)
+    return df_features.iloc[-df_attributes_example.shape[0] :, :]
 
 
 def predict_for_example(ml_run_path, frozen_library_folder_name):
     df_attributes_example = pd.read_csv(
         ml_run_path / C.DEPLOY_FOLDER_NAME / C.EXAMPLE_ANSWERS_FILENAME
     ).set_index(C.ATTRIBUTE_ID_COL)
-    df_features_example = create_features_for_example(df_attributes_example, ml_run_path)
-    
+    df_features_example = create_features_for_example(
+        df_attributes_example, ml_run_path
+    )
+
     best_model, selected_features = load_best_model(
         ml_run_path / C.DEPLOY_FOLDER_NAME,
         C.BEST_MODEL_FILENAME,
@@ -185,7 +187,7 @@ def predict_for_example(ml_run_path, frozen_library_folder_name):
     df_y = pd.DataFrame(
         y,
         index=df_features_example.index,
-        columns=[f'{eval(Config.TARGET_NAME)}_prediction'],
+        columns=[f"{eval(Config.TARGET_NAME)}_prediction"],
     )
     save_example_predictions(
         df_y,
@@ -223,5 +225,3 @@ if __name__ == "__main__":
         )
     else:
         print(f"Function {args.function} not recognized")
-
-    

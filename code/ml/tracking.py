@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import pickle
 import random
 from datetime import datetime
 from pathlib import Path
@@ -8,7 +9,6 @@ from pathlib import Path
 import pandas as pd
 from constants import Constants as C
 from loaders import load_results_metrics
-import pickle
 from utils import create_label
 
 logger = logging.getLogger(__name__)
@@ -229,6 +229,7 @@ def write_example(
     df_example.to_csv(deploy_path / example_filename)
     logger.info("Example saved !")
 
+
 def write_best_model(
     best_model,
     selected_features,
@@ -238,16 +239,16 @@ def write_best_model(
     best_params_filename,
 ):
     # Save the model to a pickle file
-    with open(deploy_path / best_model_filename, 'wb') as pickle_file:
+    with open(deploy_path / best_model_filename, "wb") as pickle_file:
         pickle.dump((best_model, selected_features), pickle_file)
     logger.info("Best model saved !")
 
     # Save the hyperparameters to a json file
-    with open(deploy_path / best_params_filename, 'w') as json_file:
+    with open(deploy_path / best_params_filename, "w") as json_file:
         json.dump(best_hyperparameters, json_file, indent=4, cls=CustomEncoder)
     logger.info("Best hyperpameters saved !")
+
 
 def save_example_predictions(df_y, path, filename):
     df_y.to_csv(path / filename)
     logger.info("Example prediction written with success !")
-    

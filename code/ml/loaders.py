@@ -101,7 +101,8 @@ def load_hp(run_path):
     hp_df = json.load(hp_file)
     return hp_df
 
+
 def load_best_model(path, filename):
-    with open(path / filename, 'rb') as pickle_file:
+    with open(path / filename, "rb") as pickle_file:
         (best_model, selected_features) = pickle.load(pickle_file)
         return best_model, selected_features

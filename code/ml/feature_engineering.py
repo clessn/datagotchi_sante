@@ -210,6 +210,7 @@ def keep_observable(df_codebook, df_attributes):
     )
     return df_attributes_observable
 
+
 def create_features(df_candidate_observable, df_codebook):
 
     # Numerical features
@@ -238,6 +239,7 @@ def create_features(df_candidate_observable, df_codebook):
     )
 
     return df_features, df_nominal_single_features
+
 
 # Run feature_engineering
 if __name__ == "__main__":
