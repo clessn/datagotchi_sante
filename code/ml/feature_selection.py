@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from configs.score_feature import ScoreFeatureConfig as Config
 from constants import Constants as C
-from loaders import load_df_X_y
+from loaders import load_df_X_y, load_feature_lookup_table
 from sklearn.feature_selection import (
     SelectFromModel,
     SelectKBest,
@@ -72,14 +72,45 @@ def select_k_best_features(df_X, df_y, k):
     # Fit
     selector.fit_transform(df_X, df_y)
 
+    # Scores
     feature_scores = selector.scores_
-    threshold = np.partition(feature_scores, -k)[-k]
-    feature_selected = (feature_scores >= threshold).astype(int)
-
+    
     # Normalize scores
     feature_scores = score_normalization(feature_scores)
+    
+    # Create a dataframe with features selected
+    df_features = feature_selected(feature_scores, df_X)
+    
+    #threshold = np.partition(feature_scores, -k)[-k]
+    #feature_selected = (feature_scores >= threshold).astype(int)
 
-    return feature_scores, feature_selected
+    return df_features['feature_scores'], df_features['feature_selected']
+
+
+# Create a dataframe with features selected
+def feature_selected(feature_scores, df_X):
+
+    # Create dataframe
+    dico_features = {'feature_names': df_X.columns.tolist(), 'feature_scores': feature_scores}
+    df_features = pd.DataFrame(dico_features)
+
+    # Order by scores
+    df_features_sorted = df_features.sort_values(by='feature_scores')
+
+    # Derive paths from configs
+    ml_run_path = C.ML_PATH / eval(f"C.{Config.RUN_TYPE}")
+    frozen_library_folder_name = Config.FEATURE_LIBRARY_VERSION
+    feature_library_path = (
+        ml_run_path / C.FEATURE_LIBRARIES_FOLDER_NAME / frozen_library_folder_name
+    )
+
+    # Feature lookup table
+    df_feature_lookup = load_feature_lookup_table(feature_library_path, C.FEATURE_LOOKUP_FILENAME)
+
+    # Merge the two dataframes
+    df_feature_score_lookup = df_features_sorted.merge(df_feature_lookup, on='feature_names', how='inner')
+
+    return df_features
 
 
 # Feature selection based on xgboost
