@@ -20,7 +20,7 @@ class CrossvalConfig:
 
     # 1. Modeling
     # 1.1. Feature Selection
-    #FEATURE_SELECTION_METHOD = ("kbest", {"k": 20})
+    # FEATURE_SELECTION_METHOD = ("kbest", {"k": 20})
     FEATURE_SELECTION_METHOD = ("xgboost", {"k": 20})
 
     # 1.2 Evaluation
@@ -67,8 +67,10 @@ class CrossvalConfig:
             },
         },
     ]
-    TARGET_NAME = "C.TARGET_SCORE_TOT" # TARGET_SCORE_TOT, TARGET_POSITIVE_FUNCTIONING, TARGET_EMOTIONAL_HEALTH
-    TARGET_BORNE_SUP = 70 # 70 for score_tot, 55 for positive_functioning, 15 for emotional_health
+    TARGET_NAME = "C.TARGET_SCORE_TOT"  # TARGET_SCORE_TOT, TARGET_POSITIVE_FUNCTIONING, TARGET_EMOTIONAL_HEALTH
+    TARGET_BORNE_SUP = (
+        70  # 70 for score_tot, 55 for positive_functioning, 15 for emotional_health
+    )
 
     # Display config as a dictionary
     @classmethod

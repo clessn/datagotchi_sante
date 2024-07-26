@@ -1,4 +1,5 @@
 import json
+import pickle
 
 import pandas as pd
 from constants import Constants as C
@@ -19,6 +20,11 @@ def load_codebook(path, filename):
 def load_attributes(path, filename):
     df = pd.read_csv(path / filename)
     df = df.set_index(C.ATTRIBUTE_ID_COL)
+    return df
+
+
+def load_feature_lookup_table(path, filename):
+    df = pd.read_csv(path / filename)
     return df
 
 
@@ -88,8 +94,15 @@ def load_config(run_path):
     config_df = json.load(config_file)
     return config_df
 
+
 def load_hp(run_path):
     # Opening JSON file
     hp_file = open(run_path / C.ARTIFACTS_HP_FILENAME)
     hp_df = json.load(hp_file)
     return hp_df
+
+
+def load_best_model(path, filename):
+    with open(path / filename, "rb") as pickle_file:
+        (best_model, selected_features) = pickle.load(pickle_file)
+        return best_model, selected_features

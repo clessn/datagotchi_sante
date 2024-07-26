@@ -35,9 +35,11 @@ def preallocate_pipeline(model_name, param_grid):
 
     return Pipeline(pipeline_steps)
 
-def scaling_y(y):
-    y_transformed = y / Config.TARGET_BORNE_SUP * 100
+
+def scaling_y(y, target_borne_sup):
+    y_transformed = y / target_borne_sup * 100
     return y_transformed
+
 
 def crossval(X, y, index, model_list):
     """Cross-validation (evaluation realized for each fold of each model)
@@ -52,7 +54,7 @@ def crossval(X, y, index, model_list):
     """
 
     # Transform target between 0 and 100
-    y_transformed = scaling_y(y)
+    y_transformed = scaling_y(y, Config.TARGET_BORNE_SUP)
 
     # Split in folds
     logger.info(f"Crossvalidation : split dataset in {Config.KFOLD} folds")

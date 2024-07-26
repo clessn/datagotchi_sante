@@ -24,7 +24,7 @@ def features_in_codebook_and_attributes(fields, df_codebook, df_attributes):
     return codebook_fields_attributes_variables
 
 
-def create_nominal_multiple_features(df_codebook, df_attributes, df_targets):
+def create_nominal_multiple_features(df_codebook, df_attributes):
     # Select nominal_multiple_features
     nominal_multiple_fields = [
         C.CODEBOOK_TYPE_NOMINAL_MULTIPLE_LABEL,
@@ -43,6 +43,7 @@ def create_nominal_multiple_features(df_codebook, df_attributes, df_targets):
     ].copy()
 
     # Approximate to single nominal with categorical encoding
+    assert not Config.TARGET_ENCODING_MULTIPLE_NOMINAL  # target encoding obsolete
     if Config.TARGET_ENCODING_MULTIPLE_NOMINAL:
         nominal_multiple_onehot_cols = df_nominal_multiple_features.columns.tolist()
         categories = np.unique(
@@ -89,7 +90,7 @@ def create_nominal_multiple_features(df_codebook, df_attributes, df_targets):
     return df_nominal_multiple_features
 
 
-def create_nominal_single_features(df_codebook, df_attributes, df_targets):
+def create_nominal_single_features(df_codebook, df_attributes):
     # Select nominal_single_features
     nominal_single_fields = [
         C.CODEBOOK_TYPE_NOMINAL_SINGLE_LABEL,
@@ -104,6 +105,7 @@ def create_nominal_single_features(df_codebook, df_attributes, df_targets):
     ].copy()
 
     # Encode nominals
+    assert not Config.TARGET_ENCODING_SINGLE_NOMINAL  # target encoding obsolete
     if Config.TARGET_ENCODING_SINGLE_NOMINAL:
         # remove missing values from target
         target_name = eval(Config.TARGET_NAME)
@@ -170,9 +172,31 @@ def create_numerical_features(df_codebook, df_attributes):
     return df_attributes.loc[:, numerical_variables_in_attributes]
 
 
+def generate_feature_lookup_table(df_codebook, nominal_single_feature_names):
+    nominal_mapping = [
+        [feature_name, feature_name.rsplit("_", 1)[0]]
+        for feature_name in nominal_single_feature_names
+    ]
+    df_nominal_mapping = pd.DataFrame(
+        nominal_mapping, columns=[C.LOOKUP_FEATURE_NAME_COL, C.CODEBOOK_NAME_COL]
+    )
+    df_lookup = df_codebook.merge(
+        df_nominal_mapping, how="outer", on=C.CODEBOOK_NAME_COL
+    )
+    df_lookup = df_lookup[df_lookup.id > 0]
+    df_lookup[C.LOOKUP_FEATURE_NAME_COL] = df_lookup[C.LOOKUP_FEATURE_NAME_COL].fillna(
+        df_lookup[C.CODEBOOK_NAME_COL]
+    )
+    return df_lookup[
+        [C.CODEBOOK_ID_COL, C.CODEBOOK_NAME_COL, C.LOOKUP_FEATURE_NAME_COL]
+    ].sort_values(C.CODEBOOK_ID_COL)
+
+
 def keep_observable(df_codebook, df_attributes):
     df_codebook_observable = df_codebook[
-        df_codebook[eval(Config.CODEBOOK_OBSERVABILITY_COL_NAME)].isin(C.OBSERVABILITY_LEVEL)
+        df_codebook[eval(Config.CODEBOOK_OBSERVABILITY_COL_NAME)].isin(
+            C.OBSERVABILITY_LEVEL
+        )
     ].copy()
     observables_variables = df_codebook_observable[C.CODEBOOK_NAME_COL].values
     observables_variables_in_attributes = [
@@ -187,23 +211,7 @@ def keep_observable(df_codebook, df_attributes):
     return df_attributes_observable
 
 
-# Run feature_engineering
-if __name__ == "__main__":
-    logger = configure_main_logger("feature_engineering")
-    ml_run_path = C.ML_PATH / eval(f"C.{Config.RUN_TYPE}")
-
-    # Load codebook and attributes
-    df_codebook = load_codebook(C.CODEBOOK_PATH, Config.CODEBOOK_VERSION)
-    df_attributes = load_attributes(ml_run_path, C.ATTRIBUTES_FILENAME)
-
-    # Targets
-    df_targets = df_attributes.loc[:, C.TARGET_COLS]
-
-    # Candidates attributes, removing targets
-    df_candidate = df_attributes.drop(columns=C.TARGET_COLS)
-
-    # Observable variables
-    df_candidate_observable = keep_observable(df_codebook, df_candidate)
+def create_features(df_candidate_observable, df_codebook):
 
     # Numerical features
     df_numerical_features = create_numerical_features(
@@ -212,12 +220,12 @@ if __name__ == "__main__":
 
     # Nominal single features, one-hot encoded
     df_nominal_single_features = create_nominal_single_features(
-        df_codebook, df_candidate_observable, df_targets
+        df_codebook, df_candidate_observable
     )
 
     # Nominal multiple features
     df_nominal_multiple_features = create_nominal_multiple_features(
-        df_codebook, df_candidate_observable, df_targets
+        df_codebook, df_candidate_observable
     )
 
     # Aggregate here different type of features
@@ -230,13 +238,45 @@ if __name__ == "__main__":
         axis=1,
     )
 
+    return df_features, df_nominal_single_features
+
+
+# Run feature_engineering
+if __name__ == "__main__":
+    logger = configure_main_logger("feature_engineering")
+    ml_run_path = C.ML_PATH / eval(f"C.{Config.RUN_TYPE}")
+
+    # Load codebook and attributes
+    df_codebook = load_codebook(C.CODEBOOK_PATH, Config.CODEBOOK_VERSION)
+    df_attributes = load_attributes(ml_run_path, C.ATTRIBUTES_FILENAME)
+
+    # Create target and features
+    df_targets = df_attributes.loc[:, C.TARGET_COLS]
+
+    # Candidates attributes, removing targets
+    df_candidate = df_attributes.drop(columns=C.TARGET_COLS)
+
+    # Observable variables
+    df_candidate_observable = keep_observable(df_codebook, df_candidate)
+
+    df_features, df_nominal_single_features = create_features(
+        df_candidate_observable, df_codebook
+    )
+
+    # Generate feature look-up table
+    df_feature_lookup = generate_feature_lookup_table(
+        df_codebook, df_nominal_single_features.columns
+    )
+
     # Save features and targets to csv
     write_feature_library(
         df_features,
         df_targets,
+        df_feature_lookup,
         ml_run_path / C.FEATURE_LIBRARIES_FOLDER_NAME,
         C.FEATURE_LIBRARY_FILENAME,
         C.TARGETS_FILENAME,
+        C.FEATURE_LOOKUP_FILENAME,
     )
 
     logger.info("Features and Targets created with success !! :-)")
