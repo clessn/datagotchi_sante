@@ -110,7 +110,7 @@ def feature_selected(feature_scores, df_X):
     # Merge the two dataframes
     df_feature_score_lookup = df_features_sorted.merge(df_feature_lookup, on='feature_names', how='inner')
 
-    return df_features
+    return df_feature_score_lookup
 
 
 # Feature selection based on xgboost
