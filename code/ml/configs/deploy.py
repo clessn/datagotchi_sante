@@ -7,17 +7,16 @@ class DeployConfig:
     CODEBOOK_VERSION = "frozen_codebook_july_25.csv"
 
     # Best feature selection
-    FEATURE_LIBRARY_VERSION = "feature_library_v6"
+    FEATURE_LIBRARY_VERSION = "feature_library_v7"
     FEATURE_SELECTION_METHOD = ("xgboost", {"k": 20})
 
     # Best Model
     BEST_MODEL = {
-        "model_name": "xgboost_regressor",
+        "model_name": "ridge_regressor",
         "param_grid": {
             "imputer": [SimpleImputer(strategy="mean"), KNNImputer()],
             "scaler": [StandardScaler(), MinMaxScaler()],
-            "regressor__max_depth": [3, 6, 9],
-            "regressor__subsample": [0.5, 0.8],
+            "regressor__alpha": [4.0, 5.0, 7.0, 10.0, 100.0],
         },
     }
     MIN_TRAIN_SIZE = 30
