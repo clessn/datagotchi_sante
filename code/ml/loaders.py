@@ -33,6 +33,10 @@ def load_feature_library(path, filename):
         path / filename,
         index_col=C.ATTRIBUTE_ID_COL,
     )
+
+    # Remove id of -1 in features
+    df_feature_library = df_feature_library.loc[df_feature_library[C.CODEBOOK_ID_COL] > 0, :]
+    
     return df_feature_library
 
 
