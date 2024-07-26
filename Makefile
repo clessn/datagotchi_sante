@@ -20,6 +20,9 @@ build-sandbox:
 generate-example:
 	poetry run python code$(SEP)ml$(SEP)deploy.py generate_questionnaire_and_example
 
+predict-for-example:
+	poetry run python code$(SEP)ml$(SEP)deploy.py predict_for_example
+
 run-crossval:
 	poetry run python code$(SEP)ml$(SEP)crossval.py
 

@@ -2,19 +2,22 @@ import logging
 import argparse
 
 import numpy as np
+import pandas as pd
 
 from configs.deploy import DeployConfig as Config
 from constants import Constants as C
 from crossval import preallocate_pipeline, scaling_y
+from feature_engineering import create_features
 from loaders import (
     load_attributes,
     load_codebook,
     load_feature_lookup_table,
     load_selected_features,
     load_df_X_y,
+    load_best_model,
 )
 from sklearn.model_selection import GridSearchCV
-from tracking import write_example, write_best_model
+from tracking import write_example, write_best_model, save_example_predictions
 from utils import configure_main_logger
 logger = logging.getLogger(__name__)
 
@@ -33,7 +36,6 @@ def create_questionnaire(
         .unique()
         .tolist()
     )
-
     df_questionnaire = df_codebook.loc[
         df_codebook[C.CODEBOOK_NAME_COL].isin(questions),
         [
@@ -43,6 +45,7 @@ def create_questionnaire(
             C.CODEBOOK_CHOICE_COL,
         ],
     ]
+
     return df_questionnaire
 
 
@@ -50,6 +53,8 @@ def create_example(df_attributes, raw_variable_names):
     df_users = df_attributes.sample(n=Config.N_USERS, random_state=42)[
         raw_variable_names
     ]
+    df_users.index = range(Config.N_USERS)
+    df_users.index.name = C.ATTRIBUTE_ID_COL
     return df_users
 
 def generate_questionnaire_and_example(ml_run_path, frozen_library_folder_name):
@@ -88,7 +93,7 @@ def generate_questionnaire_and_example(ml_run_path, frozen_library_folder_name):
         df_example,
         ml_run_path / C.DEPLOY_FOLDER_NAME,
         C.QUESTIONNAIRE_FILENAME,
-        C.EXAMPLE_FILENAME,
+        C.EXAMPLE_ANSWERS_FILENAME,
     )
 
 def train_best_model(ml_run_path, frozen_library_folder_name):
@@ -142,11 +147,52 @@ def train_best_model(ml_run_path, frozen_library_folder_name):
 
     write_best_model(
         best_model,
+        selected_features,
         grid_search.best_params_,
         ml_run_path / C.DEPLOY_FOLDER_NAME,
         C.BEST_MODEL_FILENAME,
         C.BEST_PARAMS_FILENAME,
     )
+
+def create_features_for_example(df_attributes_example, ml_run_path):
+    df_attributes = load_attributes(ml_run_path, C.ATTRIBUTES_FILENAME)
+    df_codebook = load_codebook(C.CODEBOOK_PATH, Config.CODEBOOK_VERSION)
+    assert all([col in df_attributes for col in df_attributes_example])
+    df_attributes_with_example = pd.concat(
+        (df_attributes[df_attributes_example.columns], df_attributes_example),
+        axis=0,
+    )
+    df_features, _ = create_features(
+        df_attributes_with_example,
+        df_codebook
+    )
+    return df_features.iloc[-df_attributes_example.shape[0]:,:]
+
+
+def predict_for_example(ml_run_path, frozen_library_folder_name):
+    df_attributes_example = pd.read_csv(
+        ml_run_path / C.DEPLOY_FOLDER_NAME / C.EXAMPLE_ANSWERS_FILENAME
+    ).set_index(C.ATTRIBUTE_ID_COL)
+    df_features_example = create_features_for_example(df_attributes_example, ml_run_path)
+    
+    best_model, selected_features = load_best_model(
+        ml_run_path / C.DEPLOY_FOLDER_NAME,
+        C.BEST_MODEL_FILENAME,
+    )
+    assert all(col in df_features_example.columns for col in selected_features)
+    X = df_features_example[selected_features].values
+    y = best_model.predict(X)
+    df_y = pd.DataFrame(
+        y,
+        index=df_features_example.index,
+        columns=[f'{eval(Config.TARGET_NAME)}_prediction'],
+    )
+    save_example_predictions(
+        df_y,
+        ml_run_path / C.DEPLOY_FOLDER_NAME,
+        C.EXAMPLE_PREDICTION_FILENAME,
+    )
+
 
 # Run crossval
 if __name__ == "__main__":
@@ -167,6 +213,11 @@ if __name__ == "__main__":
         )
     elif args.function == "train_best_model":
         train_best_model(
+            ml_run_path,
+            frozen_library_folder_name,
+        )
+    elif args.function == "predict_for_example":
+        predict_for_example(
             ml_run_path,
             frozen_library_folder_name,
         )
