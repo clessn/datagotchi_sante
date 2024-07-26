@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import pickle
 import random
 from datetime import datetime
 from pathlib import Path
@@ -223,5 +224,31 @@ def write_example(
     Path(deploy_path).mkdir(parents=True, exist_ok=True)
 
     df_questionnaire.to_csv(deploy_path / questionnaire_filename, index=False)
+    logger.info("Questionnaire saved !")
+
     df_example.to_csv(deploy_path / example_filename)
-    logger.info("Questionnaire and example saved")
+    logger.info("Example saved !")
+
+
+def write_best_model(
+    best_model,
+    selected_features,
+    best_hyperparameters,
+    deploy_path,
+    best_model_filename,
+    best_params_filename,
+):
+    # Save the model to a pickle file
+    with open(deploy_path / best_model_filename, "wb") as pickle_file:
+        pickle.dump((best_model, selected_features), pickle_file)
+    logger.info("Best model saved !")
+
+    # Save the hyperparameters to a json file
+    with open(deploy_path / best_params_filename, "w") as json_file:
+        json.dump(best_hyperparameters, json_file, indent=4, cls=CustomEncoder)
+    logger.info("Best hyperpameters saved !")
+
+
+def save_example_predictions(df_y, path, filename):
+    df_y.to_csv(path / filename)
+    logger.info("Example prediction written with success !")

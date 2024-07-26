@@ -42,7 +42,10 @@ class Constants:
     ARTIFACTS_PREDICTIONS_FILENAME = "predictions.csv"
     FEATURE_LOOKUP_FILENAME = "feature_lookup.csv"
     QUESTIONNAIRE_FILENAME = "questionnaire.csv"
-    EXAMPLE_FILENAME = "example.csv"
+    EXAMPLE_ANSWERS_FILENAME = "example_answers.csv"
+    BEST_MODEL_FILENAME = "model.pkl"
+    BEST_PARAMS_FILENAME = "model_details.json"
+    EXAMPLE_PREDICTION_FILENAME = "example_predictions.csv"
 
     # Codebook fields
     CODEBOOK_ID_COL = "id"
