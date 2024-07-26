@@ -43,6 +43,8 @@ class Constants:
     FEATURE_LOOKUP_FILENAME = "feature_lookup.csv"
     QUESTIONNAIRE_FILENAME = "questionnaire.csv"
     EXAMPLE_FILENAME = "example.csv"
+    BEST_MODEL_FILENAME = "model.pkl"
+    BEST_PARAMS_FILENAME = "model_details.json"
 
     # Codebook fields
     CODEBOOK_ID_COL = "id"
