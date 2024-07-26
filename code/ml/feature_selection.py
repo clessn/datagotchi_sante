@@ -121,7 +121,7 @@ def feature_selected(feature_scores, df_X, k):
     df_features = pd.DataFrame(dico_features)
 
     # Order by scores
-    df_features_sorted = df_features.sort_values(by='feature_scores')
+    df_features_sorted = df_features.sort_values(by='feature_scores', ascending=False)
 
     # Derive paths from configs
     ml_run_path = C.ML_PATH / eval(f"C.{Config.RUN_TYPE}")
