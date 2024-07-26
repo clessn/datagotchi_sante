@@ -117,7 +117,7 @@ def select_xgboost_features(df_X, df_y, k):
 def feature_selected(feature_scores, df_X, k):
 
     # Create dataframe
-    dico_features = {'feature_names': df_X.columns.tolist(), 'feature_scores': feature_scores}
+    dico_features = {C.LOOKUP_FEATURE_NAME_COL: df_X.columns.tolist(), 'feature_scores': feature_scores}
     df_features = pd.DataFrame(dico_features)
 
     # Order by scores
@@ -134,10 +134,13 @@ def feature_selected(feature_scores, df_X, k):
     df_feature_lookup = load_feature_lookup_table(feature_library_path, C.FEATURE_LOOKUP_FILENAME)
 
     # Merge the two dataframes
-    df_feature_score_lookup = df_features_sorted.merge(df_feature_lookup, on='feature_names', how='inner')
+    df_feature_score_lookup = df_features_sorted.merge(df_feature_lookup, on=C.LOOKUP_FEATURE_NAME_COL, how='left')
+
+    # Assert lookup table has same id
+    assert ~df_feature_score_lookup[C.CODEBOOK_ID_COL].isna().any()
 
     # Count unique id
-    df_feature_score_lookup['count_unique_id_feature'] = df_feature_score_lookup['id'].expanding().apply(lambda x: x.nunique())
+    df_feature_score_lookup['count_unique_id_feature'] = df_feature_score_lookup[C.CODEBOOK_ID_COL].expanding().apply(lambda x: x.nunique())
 
     # Select features
     df_feature_score_lookup['feature_selected'] = (df_feature_score_lookup['count_unique_id_feature'] <= k).astype(int)
