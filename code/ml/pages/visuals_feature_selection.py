@@ -146,7 +146,6 @@ def plot_feature_selection_scores(
 
 # Derive paths from configs
 ml_run_path = C.ML_PATH / eval(f"C.{Config.RUN_TYPE}")
-frozen_library_folder_name = Config.FEATURE_LIBRARY_VERSION
 feature_selection_path = (ml_run_path / C.FEATURE_SELECTION_FOLDER_NAME)
 
 
