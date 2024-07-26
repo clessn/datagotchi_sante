@@ -7,3 +7,4 @@ class VisualsConfig:
         "mae",
     ]
     FEATURE_SELECTION_METHOD_NAME = "xgboost"
+    CODEBOOK_VERSION = "frozen_codebook_july_25.csv"
