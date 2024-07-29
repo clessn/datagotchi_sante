@@ -1,7 +1,7 @@
 class ScoreFeatureConfig:
     # Versioning
     RUN_TYPE = "REAL_FOLDER_NAME"  # SANDBOX_FOLDER_NAME or REAL_FOLDER_NAME
-    FEATURE_LIBRARY_VERSION = "feature_library_v8"
+    FEATURE_LIBRARY_VERSION = "feature_library_v9"
 
     # Feature Selection Grid
     FEATURE_SELECTION_METHOD = ("xgboost", {"k": 20})
