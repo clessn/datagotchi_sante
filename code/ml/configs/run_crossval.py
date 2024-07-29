@@ -14,13 +14,11 @@ class CrossvalConfig:
 
     # 0. Versioning
     RUN_TYPE = "REAL_FOLDER_NAME"  # SANDBOX_FOLDER_NAME or REAL_FOLDER_NAME
-    CODEBOOK_VERSION = "frozen_codebook_july_25.csv"
-    FEATURE_LIBRARY_VERSION = "feature_library_v7"
-    EXPERIMENT_NAME = "8_constraints_corentin_flore"
+    FEATURE_LIBRARY_VERSION = "feature_library_v9"
+    EXPERIMENT_NAME = "10_export_question_for_phase_1"
 
     # 1. Modeling
     # 1.1. Feature Selection
-    # FEATURE_SELECTION_METHOD = ("kbest", {"k": 20})
     FEATURE_SELECTION_METHOD = ("xgboost", {"k": 20})
 
     # 1.2 Evaluation
@@ -63,7 +61,7 @@ class CrossvalConfig:
             "param_grid": {
                 "imputer": [SimpleImputer(strategy="mean"), KNNImputer()],
                 "scaler": [StandardScaler(), MinMaxScaler()],
-                "regressor__alpha": [4.0, 5.0, 7.0, 10.0, 100.0],
+                "regressor__alpha": [1.0, 2.0, 3.0, 4.0],
             },
         },
     ]

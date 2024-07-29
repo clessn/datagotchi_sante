@@ -143,7 +143,7 @@ def write_selected_features(
 
     # Create a dictionary with the data
     data = {
-        "feature_names": feature_names,
+        C.LOOKUP_FEATURE_NAME_COL: feature_names,
         "feature_scores": feature_scores,
         "feature_selected": feature_selected,
     }

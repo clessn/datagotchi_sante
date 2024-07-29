@@ -13,8 +13,10 @@ def explore_raw_data(path, filename):
 
 
 def load_codebook(path, filename):
-    df = pd.read_csv(path / filename)
-    return df.loc[:, C.CODEBOOK_COLS].drop_duplicates()
+    df_codebook = pd.read_csv(path / filename)
+    # Remove id of -1 in features
+    df_codebook = df_codebook.loc[df_codebook[C.CODEBOOK_ID_COL] > 0, :]
+    return df_codebook.loc[:, C.CODEBOOK_COLS].drop_duplicates()
 
 
 def load_attributes(path, filename):
@@ -78,7 +80,7 @@ def load_selected_features(
     """
     df_scores = load_scores_features(feature_selection_method, path, filename)
     selected_features = df_scores.loc[
-        df_scores["feature_selected"] == 1, "feature_names"
+        df_scores["feature_selected"] == 1, C.LOOKUP_FEATURE_NAME_COL
     ].tolist()
     return selected_features
 
