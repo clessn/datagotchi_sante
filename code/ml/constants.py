@@ -93,7 +93,7 @@ class Constants:
     ]
 
     # Feature Lookup table col
-    LOOKUP_FEATURE_NAME_COL = "feature_name"
+    LOOKUP_FEATURE_NAME_COL = "feature_names"
 
     # Metrics fields
     METRICS_RUN_ID_FIELD = "run_id"

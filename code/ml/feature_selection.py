@@ -41,7 +41,7 @@ def select_all_features(df_X, df_y):
     feature_names = df_X.columns
     feature_scores = [1.0] * len(feature_names)
     feature_selected = [1] * len(feature_names)
-    return feature_selected, feature_scores
+    return df_X.columns.tolist(), feature_selected, feature_scores
 
 
 # Feature selection based on variance
@@ -55,7 +55,7 @@ def select_above_variance_treshold_features(df_X, df_y, threshold):
     # Normalize scores
     feature_scores = score_normalization(feature_variances)
 
-    return feature_scores, feature_selected
+    return df_X.columns.tolist(), feature_scores, feature_selected
 
 
 # Feature selection based on k best features
@@ -79,12 +79,12 @@ def select_k_best_features(df_X, df_y, k):
     feature_scores = score_normalization(feature_scores)
     
     # Create a dataframe with features selected
-    df_features = feature_selected(feature_scores, df_X, k)
+    df_features = creation_feature_selected(feature_scores, df_X, k)
     
     #threshold = np.partition(feature_scores, -k)[-k]
     #feature_selected = (feature_scores >= threshold).astype(int)
 
-    return df_features['feature_scores'], df_features['feature_selected']
+    return df_features[C.LOOKUP_FEATURE_NAME_COL], df_features['feature_scores'], df_features['feature_selected']
 
 
 # Feature selection based on xgboost
@@ -108,13 +108,13 @@ def select_xgboost_features(df_X, df_y, k):
     feature_scores = score_normalization(feature_importances)
 
     # Create a dataframe with features selected
-    df_features = feature_selected(feature_scores, df_X, k)
+    df_features = creation_feature_selected(feature_scores, df_X, k)
 
-    return df_features['feature_scores'], df_features['feature_selected']
+    return df_features[C.LOOKUP_FEATURE_NAME_COL], df_features['feature_scores'], df_features['feature_selected']
 
 
 # Create a dataframe with features selected
-def feature_selected(feature_scores, df_X, k):
+def creation_feature_selected(feature_scores, df_X, k):
 
     # Create dataframe
     dico_features = {C.LOOKUP_FEATURE_NAME_COL: df_X.columns.tolist(), 'feature_scores': feature_scores}
@@ -167,11 +167,11 @@ if __name__ == "__main__":
     )
     method_name, method_params = Config.FEATURE_SELECTION_METHOD
     feature_selection_method = available_feature_selection[method_name]
-    feature_scores, feature_selected = feature_selection_method(
+    feature_names, feature_scores, feature_selected = feature_selection_method(
         df_X, df_y, **method_params
     )
     write_selected_features(
-        df_X.columns.tolist(),
+        feature_names,
         feature_scores,
         feature_selected,
         Config.FEATURE_SELECTION_METHOD,

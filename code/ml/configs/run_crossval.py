@@ -15,7 +15,7 @@ class CrossvalConfig:
     # 0. Versioning
     RUN_TYPE = "REAL_FOLDER_NAME"  # SANDBOX_FOLDER_NAME or REAL_FOLDER_NAME
     CODEBOOK_VERSION = "frozen_codebook_july_25.csv"
-    FEATURE_LIBRARY_VERSION = "feature_library_v7"
+    FEATURE_LIBRARY_VERSION = "feature_library_v8"
     EXPERIMENT_NAME = "8_constraints_corentin_flore"
 
     # 1. Modeling

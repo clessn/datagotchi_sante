@@ -80,7 +80,7 @@ def load_selected_features(
     """
     df_scores = load_scores_features(feature_selection_method, path, filename)
     selected_features = df_scores.loc[
-        df_scores["feature_selected"] == 1, "feature_names"
+        df_scores["feature_selected"] == 1, C.LOOKUP_FEATURE_NAME_COL
     ].tolist()
     return selected_features
 
