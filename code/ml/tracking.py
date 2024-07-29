@@ -223,7 +223,7 @@ def write_example(
     # Create directory if missing
     Path(deploy_path).mkdir(parents=True, exist_ok=True)
 
-    df_questionnaire.to_csv(deploy_path / questionnaire_filename, index=False)
+    df_questionnaire.to_csv(deploy_path / questionnaire_filename, index=False, sep=';')
     logger.info("Questionnaire saved !")
 
     df_example.to_csv(deploy_path / example_filename)

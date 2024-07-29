@@ -4,10 +4,10 @@ from sklearn.preprocessing import MinMaxScaler, RobustScaler, StandardScaler
 
 class DeployConfig:
     RUN_TYPE = "REAL_FOLDER_NAME"  # SANDBOX_FOLDER_NAME or REAL_FOLDER_NAME
-    CODEBOOK_VERSION = "frozen_codebook_july_25.csv"
+    CODEBOOK_VERSION = "frozen_codebook_july_29.csv"
 
     # Best feature selection
-    FEATURE_LIBRARY_VERSION = "feature_library_v7"
+    FEATURE_LIBRARY_VERSION = "feature_library_v9"
     FEATURE_SELECTION_METHOD = ("xgboost", {"k": 20})
 
     # Best Model
@@ -16,7 +16,7 @@ class DeployConfig:
         "param_grid": {
             "imputer": [SimpleImputer(strategy="mean"), KNNImputer()],
             "scaler": [StandardScaler(), MinMaxScaler()],
-            "regressor__alpha": [4.0, 5.0, 7.0, 10.0, 100.0],
+            "regressor__alpha": [1.0, 2.0, 3.0, 4.0],
         },
     }
     MIN_TRAIN_SIZE = 30

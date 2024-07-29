@@ -45,6 +45,7 @@ def create_questionnaire(
             C.CODEBOOK_CHOICE_COL,
         ],
     ]
+    df_questionnaire = df_questionnaire.drop_duplicates(C.CODEBOOK_ID_COL)
 
     return df_questionnaire
 
