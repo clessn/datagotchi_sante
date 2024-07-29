@@ -1,7 +1,7 @@
 class CreateFeatureConfig:
     # Versioning
     RUN_TYPE = "REAL_FOLDER_NAME"  # SANDBOX_FOLDER_NAME or REAL_FOLDER_NAME
-    CODEBOOK_VERSION = "frozen_codebook_july_25.csv"
+    CODEBOOK_VERSION = "frozen_codebook_july_29.csv"
     CODEBOOK_OBSERVABILITY_COL_NAME = "C.CODEBOOK_OBSERVABILITY_COL"  # C.CODEBOOK_OBSERVABILITY_COL or C.CODEBOOK_OBSERVABILITY_COL_V2
 
     # Target encoding
