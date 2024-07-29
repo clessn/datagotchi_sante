@@ -80,9 +80,6 @@ def select_k_best_features(df_X, df_y, k):
     
     # Create a dataframe with features selected
     df_features = creation_feature_selected(feature_scores, df_X, k)
-    
-    #threshold = np.partition(feature_scores, -k)[-k]
-    #feature_selected = (feature_scores >= threshold).astype(int)
 
     return df_features[C.LOOKUP_FEATURE_NAME_COL], df_features['feature_scores'], df_features['feature_selected']
 
@@ -97,9 +94,6 @@ def select_xgboost_features(df_X, df_y, k):
     # Model xgboost
     model = XGBRegressor()
     model.fit(df_X, df_y)
-
-    # Selector
-    selector = SelectFromModel(model, threshold="mean", max_features=k)
 
     # Importance for features
     feature_importances = model.feature_importances_
