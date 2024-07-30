@@ -31,3 +31,36 @@ launch-visuals:
 
 train-best-model:
 	poetry run python code$(SEP)ml$(SEP)deploy.py train_best_model
+
+assign-conditions:
+	poetry run python -c "from scripts.assign_conditions import assign_conditions; assign_conditions()"
+
+cloud-connect:
+	gcloud compute ssh datagotchi
+
+create-model:
+	poetry run python -c "from scripts.train_recommender_model import create_recommender_model; create_recommender_model()"
+
+display-users:
+	poetry run python -c "from scripts.view_databases import display_users; display_users()"
+
+display-products:
+	poetry run python -c "from scripts.view_databases import display_products; display_products()"
+
+display-ratings:
+	poetry run python -c "from scripts.view_databases import display_ratings; display_ratings()"
+
+display-purchases:
+	poetry run python -c "from scripts.view_databases import display_purchases; display_purchases()"
+
+display-assignments:
+	poetry run python -c "from scripts.view_databases import display_assignments; display_assignments()"
+
+reload-experiment:
+	poetry run python -c "from scripts.reload_experiment import reload_databases; reload_databases()"
+
+update-deploy:
+	git pull
+	sudo supervisorctl stop microblog
+	flask db upgrade
+	sudo supervisorctl start microblog
