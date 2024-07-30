@@ -199,3 +199,6 @@ __pycache__
 # ipynb checkpoints
 *.ipynb_checkpoints
 
+# db file
+*.db
+
