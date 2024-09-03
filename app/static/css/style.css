@@ -64,3 +64,41 @@ body{
   text-indent: 1em ;
 }
 
+
+.large-text {
+  font-size: 20px; 
+}
+.likert-scale {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  margin-left: 300px; /* Marge à gauche */
+  margin-right: 300px; /* Marge à droite */
+}
+.likert-point {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #ccc;
+  cursor: pointer;
+}
+.likert-point:hover {
+  background-color: black;
+}
+.likert-value {
+  position: absolute;
+  bottom: -40px; /* Augmenter l'espace par rapport à la ligne inférieure */
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 20px; /* Augmenter la taille du texte des choix */
+  color: green; /* Changer la couleur du texte */
+  white-space: nowrap; /* Empêcher le retour à la ligne */
+}
+/* Ajoutez une marge à gauche pour le premier point et une marge à droite pour le dernier point */
+.likert-point:first-child {
+  margin-left: 20px;
+}
+.likert-point:last-child {
+  margin-right: 20px;
+}

@@ -14,14 +14,86 @@
             </td>
         </tr>
     </table>
-    <a>
-        <form action="{{ url_for('main.intent') }}" method="post">
-            {{ form.hidden_tag() }}
-            <span aria-hidden="true">{{ form.submit(value='Next step', class_='btn btn-success mb-2 btn-lg') }}</span>
-        </form>
-    </a>
+
+
     <br>
+    <form action="/intent" method="post">
+        <h3 style="margin-left: 50px;"><label for="q1">The movie recommendations were helpful :</label></h3>
+        <div class="likert-scale">
+            <div class="likert-point" data-value="-2"><span class="likert-value">Strongly Disagree</span></div>
+            <div class="likert-point" data-value="-1"><span class="likert-value">Disagree</span></div>
+            <div class="likert-point" data-value="0"><span class="likert-value">Neither</span></div>
+            <div class="likert-point" data-value="1"><span class="likert-value">Agree</span></div>
+            <div class="likert-point" data-value="2"><span class="likert-value">Strongly Agree</span></div>
+        </div>
+        <input type="hidden" id="q1" name="q1" value="5">
+        <br><br>
+
+        <h3 style="margin-left: 50px;"><label for="q2">I enjoyed the movies recommended by the website :</label></h3>
+        <div class="likert-scale">
+            <div class="likert-point" data-value="-2"><span class="likert-value">Strongly Disagree</span></div>
+            <div class="likert-point" data-value="-1"><span class="likert-value">Disagree</span></div>
+            <div class="likert-point" data-value="0"><span class="likert-value">Neither</span></div>
+            <div class="likert-point" data-value="1"><span class="likert-value">Agree</span></div>
+            <div class="likert-point" data-value="2"><span class="likert-value">Strongly Agree</span></div>
+        </div>
+        <input type="hidden" id="q2" name="q2" value="5">
+        <br><br>
+        <br><br>
+        <br>
+
+        <h3 style="color: rgb(89, 108, 71); text-align: right;">Please submit your answers by clicking on this button :</h3>
+        <div style="text-align: right;">
+            <input type="submit" value="Submit" class="btn btn-primary btn-lg" style="font-size: 20px;">
+        </div>
+        <h4 style="text-align: right; color: red;">Make sure to answer all the questions before submitting.</h4>
+        <br><br>
+    </form>
 </div>
+<script>    
+    const likertScales = document.querySelectorAll('.likert-scale');
+
+    likertScales.forEach(scale => {
+        const hiddenInput = scale.nextElementSibling;
+        const likertPoints = scale.querySelectorAll('.likert-point');
+
+        likertPoints.forEach(point => {
+            point.addEventListener('click', () => {
+                const value = parseInt(point.dataset.value);
+                hiddenInput.value = value;
+                // Change color of points to indicate selection
+                likertPoints.forEach(p => {
+                    if (p === point) {
+                        p.style.backgroundColor = 'rgb(89, 108, 71)';
+                    } else {
+                        p.style.backgroundColor = '#ccc';
+                    }
+                });
+            });
+        });
+    });
+
+    function validateForm() {
+        const hiddenInputs = document.querySelectorAll('input[type="hidden"]');
+        for (let i = 0; i < hiddenInputs.length; i++) {
+            if (hiddenInputs[i].value === '5') {
+                alert('Please answer all questions before submitting.');
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    document.querySelector('form').addEventListener('submit', function(event) {
+        if (!validateForm()) {
+            event.preventDefault();
+        } else {
+            alert('Your answers have been successfully submitted!');
+            // window.location.href = "{{ url_for('main.intent')}}"; // Obsolete due to action ?
+        }
+    });
+</script> 
 {% endblock %}
 
 
