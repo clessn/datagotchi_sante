@@ -18,14 +18,50 @@ class User(db.Model):
     def __repr__(self):
         return '<User {}>'.format(self.email)
 
+class Question(db.Model):
+    question_id: so.Mapped[str] = so.mapped_column(sa.String(64), primary_key=True)
+    question_content: so.Mapped[str] = so.mapped_column(sa.String(1000),
+                                             unique=True)                               
+
+    logs: so.WriteOnlyMapped['Log'] = so.relationship(
+        back_populates='question')
+    
+    answers: so.WriteOnlyMapped['Answer'] = so.relationship(
+        back_populates='question')
+
+    def __repr__(self):
+        return '<Question {}>'.format(self.question_id)
+    
+class Answer(db.Model):
+    answer_id: so.Mapped[str] = so.mapped_column(sa.String(64), primary_key=True)
+    answer_content: so.Mapped[str] = so.mapped_column(sa.String(1000)) 
+
+    question_id: so.Mapped[str] = so.mapped_column(sa.ForeignKey(Question.question_id),index=True)                           
+    question: so.Mapped['Question'] = so.relationship(back_populates='answers')
+
+    logs: so.WriteOnlyMapped['Log'] = so.relationship(
+        back_populates='answer')
+
+    def __repr__(self):
+        return '<Answer {}>'.format(self.answer_id)
+
 class Log(db.Model):
     log_id: so.Mapped[int] = so.mapped_column(primary_key=True)
     timestamp: so.Mapped[datetime] = so.mapped_column(
         index=True, default=lambda: datetime.now(timezone.utc))
-    user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.user_id),index=True)
+    
+    user_id: so.Mapped[str] = so.mapped_column(sa.ForeignKey(User.user_id),index=True)
     participant: so.Mapped['User'] = so.relationship(back_populates='logs')
+
+    question_id: so.Mapped[str] = so.mapped_column(sa.ForeignKey(Question.question_id),index=True)
+    question: so.Mapped['Question'] = so.relationship(back_populates='logs')
+
+    answer_id: so.Mapped[str] = so.mapped_column(sa.ForeignKey(Answer.answer_id),index=True)
+    answer: so.Mapped['Answer'] = so.relationship(back_populates='logs')
 
     phase_id: so.Mapped[str] = so.mapped_column(sa.String(64))
 
     def __repr__(self):
         return '<Log {}>'.format(self.timestamp)
+
+
