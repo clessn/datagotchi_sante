@@ -37,6 +37,55 @@ def consent():
     form = PurchaseForm()
     return render_template('main/consent.html', form = form, reco_list = g.reco_list)
 
+@bp.route('/knowledge_before')
+@login_required
+def knowledge_before():
+    form = PurchaseForm()
+    return render_template('main/knowledge_before.html', form = form, reco_list = g.reco_list)
+
+@bp.route('/knowledge_after')
+@login_required
+def knowledge_after():
+    form = PurchaseForm()
+    return render_template('main/knowledge_after.html', form = form, reco_list = g.reco_list)
+
+@bp.route('/lifestyle')
+@login_required
+def lifestyle():
+    form = PurchaseForm()
+    return render_template('main/lifestyle.html', form = form, reco_list = g.reco_list)
+
+@bp.route('/explain')
+@login_required
+def explain():
+    form = PurchaseForm()
+    return render_template('main/explain.html', form = form, reco_list = g.reco_list)
+
+
+@bp.route('/satisfaction')
+@login_required
+def satisfaction():
+    form = PurchaseForm()
+    return render_template('main/satisfaction.html', form = form, reco_list = g.reco_list)
+
+@bp.route('/intent')
+@login_required
+def intent():
+    form = PurchaseForm()
+    return render_template('main/intent.html', form = form, reco_list = g.reco_list)
+
+@bp.route('/essaim')
+@login_required
+def essaim():
+    form = PurchaseForm()
+    return render_template('main/essaim.html', form = form, reco_list = g.reco_list)
+
+@bp.route('/merci')
+@login_required
+def merci():
+    form = PurchaseForm()
+    return render_template('main/merci.html', form = form, reco_list = g.reco_list)
+
 
 @bp.route('/product_category/<category_name>')
 @login_required

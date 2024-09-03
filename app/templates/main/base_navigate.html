@@ -28,9 +28,16 @@
         <div class="container">
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li><a href="{{ url_for('main.recommendation') }}"><p class = "secondnavbut"> Formulaire de consentement</p></a></li>
-                    <li><a href="{{ url_for('main.product_category', category_name='sandw') }}"><p class = "secondnavbut">Sandwiches</p></a></li>
-                    <li><a href="{{ url_for('main.product_category', category_name='salade') }}"><p class = "secondnavbut">Salads</p></a></li>
+                    <li><a href="{{ url_for('main.consent') }}"><p class = "secondnavbut"> Consent</p></a></li>
+                    <li><a href="{{ url_for('main.knowledge_before') }}"><p class = "secondnavbut"> Know. Before</p></a></li>
+                    <li><a href="{{ url_for('main.lifestyle') }}"><p class = "secondnavbut"> Lifestyle</p></a></li>
+                    <li><a href="{{ url_for('main.explain') }}"><p class = "secondnavbut"> Explain</p></a></li>
+                    <li><a href="{{ url_for('main.satisfaction') }}"><p class = "secondnavbut"> Satisfaction</p></a></li>
+                    <li><a href="{{ url_for('main.intent') }}"><p class = "secondnavbut"> Intent</p></a></li>
+                    <li><a href="{{ url_for('main.knowledge_after') }}"><p class = "secondnavbut"> Know. After</p></a></li>
+                    <li><a href="{{ url_for('main.essaim') }}"><p class = "secondnavbut"> ESSAIM</p></a></li>
+                    <li><a href="{{ url_for('main.merci') }}"><p class = "secondnavbut"> Merci</p></a></li>
+                    <!-- <li><a href="{{ url_for('main.product_category', category_name='sandw') }}"><p class = "secondnavbut">Sandwiches</p></a></li> -->
                 </ul>
             </div>
         </div>

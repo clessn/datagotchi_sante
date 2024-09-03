@@ -48,6 +48,12 @@ body{
   background-color:rgb(255, 255, 255);
   border-radius: 30px;
 }
+
+.pagestyle {
+  background-color:rgb(255, 255, 255);
+  border-radius: 30px;
+}
+
 .identtext {
   text-indent: 14em ;
   color: rgb(245, 247, 243);
