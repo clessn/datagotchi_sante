@@ -1,6 +1,6 @@
 import os
 from app import create_app,db
-from app.models import User, Product
+from app.models import User, Log
 from config import configs
 from dotenv import load_dotenv
 import argparse
@@ -15,7 +15,7 @@ app = create_app(config_class=configs[config_name])
 
 @app.shell_context_processor
 def make_shell_context():
-    return {'db': db, 'User': User, 'Product': Product}
+    return {'db': db, 'User': User, 'Log': Log}
 
 
 if __name__ == '__main__':

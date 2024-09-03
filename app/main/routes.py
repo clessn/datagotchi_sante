@@ -1,7 +1,7 @@
 from app.main import bp
 from flask import render_template, flash, redirect, url_for, current_app, make_response, g
 from flask_login import current_user, login_required
-from app.models import User, Product
+from app.models import User, Log
 from flask import request
 from app.main.forms import PurchaseForm
 from app.auth.forms import Close
