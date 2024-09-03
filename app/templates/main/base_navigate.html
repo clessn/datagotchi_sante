@@ -1,7 +1,7 @@
 {% extends 'bootstrap/base.html' %}
 
 {% block title %}
-    DELCam
+    Datagotchi Mental Health Pilot
 {% endblock %}
 
 {% block navbar %}
@@ -20,13 +20,6 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-left">
                     <li><a href="{{ url_for('main.recommendation') }}"><h1 class = "pnavbut"> <b>Explainability in mental health</b></h1></a></li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <br>
-                        <img src="{{ url_for('static', filename='img/basket.jpg') }}" height="50px">
-                    </li>
-                    <li><a href="{{ url_for('main.cart') }}"><h1 class = "pnavbut"> <b>Cart</b></h1></a></li>
                 </ul>
             </div>
         </div>

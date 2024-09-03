@@ -24,11 +24,11 @@ class RateConfig(Config):
     RECOMMENDATION=None
 
 class FixedRecommendationConfig(Config):
-    MAIN_PAGE='main.recommendation'
+    MAIN_PAGE='main.consent'
     RECOMMENDATION='fixed'
 
 class TrainedRecommendationConfig(Config):
-    MAIN_PAGE='main.recommendation' 
+    MAIN_PAGE='main.consent' 
     RECOMMENDATION='trained' 
 
 

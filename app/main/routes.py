@@ -31,6 +31,13 @@ def recommendation():
     form = PurchaseForm()
     return render_template('main/recommendation.html', form = form, reco_list = g.reco_list)
 
+@bp.route('/consent')
+@login_required
+def consent():
+    form = PurchaseForm()
+    return render_template('main/consent.html', form = form, reco_list = g.reco_list)
+
+
 @bp.route('/product_category/<category_name>')
 @login_required
 def product_category(category_name):
