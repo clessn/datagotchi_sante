@@ -37,50 +37,50 @@ def consent():
     form = PurchaseForm()
     return render_template('main/consent.html', form = form, reco_list = g.reco_list)
 
-@bp.route('/knowledge_before')
+@bp.route('/knowledge_before', methods=["POST"])
 @login_required
 def knowledge_before():
     form = PurchaseForm()
     return render_template('main/knowledge_before.html', form = form, reco_list = g.reco_list)
 
-@bp.route('/knowledge_after')
+@bp.route('/knowledge_after', methods=["POST"])
 @login_required
 def knowledge_after():
     form = PurchaseForm()
     return render_template('main/knowledge_after.html', form = form, reco_list = g.reco_list)
 
-@bp.route('/lifestyle')
+@bp.route('/lifestyle', methods=["POST"])
 @login_required
 def lifestyle():
     form = PurchaseForm()
     return render_template('main/lifestyle.html', form = form, reco_list = g.reco_list)
 
-@bp.route('/explain')
+@bp.route('/explain', methods=["POST"])
 @login_required
 def explain():
     form = PurchaseForm()
     return render_template('main/explain.html', form = form, reco_list = g.reco_list)
 
 
-@bp.route('/satisfaction')
+@bp.route('/satisfaction', methods=["POST"])
 @login_required
 def satisfaction():
     form = PurchaseForm()
     return render_template('main/satisfaction.html', form = form, reco_list = g.reco_list)
 
-@bp.route('/intent')
+@bp.route('/intent', methods=["POST"])
 @login_required
 def intent():
     form = PurchaseForm()
     return render_template('main/intent.html', form = form, reco_list = g.reco_list)
 
-@bp.route('/essaim')
+@bp.route('/essaim', methods=["POST"])
 @login_required
 def essaim():
     form = PurchaseForm()
     return render_template('main/essaim.html', form = form, reco_list = g.reco_list)
 
-@bp.route('/merci')
+@bp.route('/merci', methods=["POST"])
 @login_required
 def merci():
     form = PurchaseForm()
