@@ -28,6 +28,7 @@ def display_questions():
         for question in questions:
             print(question)
             print(question.get_answer())
+            print(question.type_id)
 
 def display_answers():
     with app.app_context():
