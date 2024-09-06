@@ -10,7 +10,7 @@
         </tr>
         <tr> 
             <td ALIGN="LEFT">
-                <p>Vous consentez à ce que nous utilisions vos données à des fins scientifiques. Merci !</p>
+                <p>Here is a questionnaire of satisfaction about explanations !</p>
             </td>
         </tr>
     </table>
@@ -18,28 +18,16 @@
 
     <br>
     <form action="/intent" method="post">
-        <h3 style="margin-left: 50px;"><label for="q1">The movie recommendations were helpful :</label></h3>
-        <div class="likert-scale">
-            <div class="likert-point" data-value="-2"><span class="likert-value">Strongly Disagree</span></div>
-            <div class="likert-point" data-value="-1"><span class="likert-value">Disagree</span></div>
-            <div class="likert-point" data-value="0"><span class="likert-value">Neither</span></div>
-            <div class="likert-point" data-value="1"><span class="likert-value">Agree</span></div>
-            <div class="likert-point" data-value="2"><span class="likert-value">Strongly Agree</span></div>
-        </div>
-        <input type="hidden" id="q1" name="q1" value="5">
-        <br><br>
-
-        <h3 style="margin-left: 50px;"><label for="q2">I enjoyed the movies recommended by the website :</label></h3>
-        <div class="likert-scale">
-            <div class="likert-point" data-value="-2"><span class="likert-value">Strongly Disagree</span></div>
-            <div class="likert-point" data-value="-1"><span class="likert-value">Disagree</span></div>
-            <div class="likert-point" data-value="0"><span class="likert-value">Neither</span></div>
-            <div class="likert-point" data-value="1"><span class="likert-value">Agree</span></div>
-            <div class="likert-point" data-value="2"><span class="likert-value">Strongly Agree</span></div>
-        </div>
-        <input type="hidden" id="q2" name="q2" value="5">
-        <br><br>
-        <br><br>
+        {% for (question_id,question_content), questionnaire_value  in questionnaire_dico.items() %}
+            <h3 style="margin-left: 50px;"><label for={{questionnaire_key}}>{{question_content}}</label></h3>
+            <div class="likert-scale">
+                {% for (answer_value, answer_content) in questionnaire_value %}
+                    <div class="likert-point" data-value={{answer_value}}><span class="likert-value">{{answer_content}}</span></div>
+                {% endfor %}
+            </div>
+            <input type="hidden" id={{questionnaire_key}} name={{questionnaire_key}} value="5">
+            <br><br>
+        {% endfor %}
         <br>
 
         <h3 style="color: rgb(89, 108, 71); text-align: right;">Please submit your answers by clicking on this button :</h3>
