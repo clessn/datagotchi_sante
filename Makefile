@@ -45,16 +45,16 @@ display-users:
 	poetry run python -c "from scripts.view_databases import display_users; display_users()"
 
 display-logs:
-	poetry run python -c "from scripts.view_databases import display_products; display_logs()"
+	poetry run python -c "from scripts.view_databases import display_logs; display_logs()"
 
 display-questions:
-	poetry run python -c "from scripts.view_databases import display_ratings; display_questions()"
+	poetry run python -c "from scripts.view_databases import display_questions; display_questions()"
 
 display-answers:
-	poetry run python -c "from scripts.view_databases import display_purchases; display_answers()"
+	poetry run python -c "from scripts.view_databases import display_answers; display_answers()"
 
 display-activity:
-	poetry run python -c "from scripts.view_databases import display_assignments; display_activity()"
+	poetry run python -c "from scripts.view_databases import display_activity; display_activity()"
 
 reload-experiment:
 	poetry run python -c "from scripts.reload_experiment import reload_databases; reload_databases()"

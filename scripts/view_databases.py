@@ -27,6 +27,7 @@ def display_questions():
         questions = Question.query.all()
         for question in questions:
             print(question)
+            print(question.get_answer())
 
 def display_answers():
     with app.app_context():

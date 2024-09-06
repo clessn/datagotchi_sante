@@ -31,7 +31,13 @@ class Question(db.Model):
 
     def __repr__(self):
         return '<Question {}>'.format(self.question_id)
-    
+
+    def get_answer(self):
+        query = self.answers.select()
+        answers = db.session.scalars(query).all()
+        return answers
+
+
 class Answer(db.Model):
     answer_id: so.Mapped[str] = so.mapped_column(sa.String(64), primary_key=True)
     answer_content: so.Mapped[str] = so.mapped_column(sa.String(1000)) 
@@ -44,6 +50,7 @@ class Answer(db.Model):
 
     def __repr__(self):
         return '<Answer {}>'.format(self.answer_id)
+
 
 class Log(db.Model):
     log_id: so.Mapped[int] = so.mapped_column(primary_key=True)

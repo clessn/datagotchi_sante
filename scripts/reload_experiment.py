@@ -16,13 +16,13 @@ load_dotenv()
 
 app = create_app()
 
-USER_FILENAME = 'users.csv'
-QUESTION_FILENAME = 'questions.csv'
-ANSWER_FILENAME = 'answers.csv'
+USER_FILENAME = 'user.csv'
+QUESTION_FILENAME = 'question.csv'
+ANSWER_FILENAME = 'answer.csv'
 
 
 def populate_db(db_name, csv_file):
-    df = pd.read_csv(csv_file)
+    df = pd.read_csv(csv_file, delimiter=";")
     for record in df.to_dict("records"):
         new_entry = db_name(**record)
         db.session.add(new_entry)
