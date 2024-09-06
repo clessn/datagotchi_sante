@@ -3,9 +3,17 @@ from typing import Optional
 import sqlalchemy as sa
 import sqlalchemy.orm as so
 from app import db
+from app import login
 
-class User(db.Model):
-    user_id: so.Mapped[str] = so.mapped_column(sa.String(64), primary_key=True)
+from flask_login import UserMixin
+
+@login.user_loader
+def load_user(id):
+    return User.query.get(id)
+
+
+class User(UserMixin, db.Model):
+    id: so.Mapped[str] = so.mapped_column(sa.String(64), primary_key=True)
     email: so.Mapped[str] = so.mapped_column(sa.String(120), index=True,
                                              unique=True)
     interac: so.Mapped[Optional[str]] = so.mapped_column(sa.String(120), index=True,
@@ -17,6 +25,7 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User {}>'.format(self.email)
+
 
 class Question(db.Model):
     question_id: so.Mapped[str] = so.mapped_column(sa.String(64), primary_key=True)
@@ -57,7 +66,7 @@ class Log(db.Model):
     timestamp: so.Mapped[datetime] = so.mapped_column(
         index=True, default=lambda: datetime.now(timezone.utc))
     
-    user_id: so.Mapped[str] = so.mapped_column(sa.ForeignKey(User.user_id),index=True)
+    user_id: so.Mapped[str] = so.mapped_column(sa.ForeignKey(User.id),index=True)
     participant: so.Mapped['User'] = so.relationship(back_populates='logs')
 
     question_id: so.Mapped[str] = so.mapped_column(sa.ForeignKey(Question.question_id),index=True)

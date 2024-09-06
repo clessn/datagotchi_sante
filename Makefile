@@ -66,4 +66,4 @@ update-deploy:
 	sudo supervisorctl start microblog
 
 start-website:
-	poetry run python microapp.py --config=fixedrec
+	poetry run python microapp.py --config=default

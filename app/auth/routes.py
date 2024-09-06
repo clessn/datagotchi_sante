@@ -17,7 +17,7 @@ def login(): #mettre le code de ce qu'il y a à faire sur cette page "login" = n
         return redirect(url_for(current_app.config['MAIN_PAGE'])) #On redirige vers la page main
     form=LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(code=form.code.data).first()
+        user = User.query.filter_by(id=form.code.data).first()
         if user is None :
             flash('Invalid code')
             return redirect(url_for('auth.login'))
@@ -29,11 +29,11 @@ def login(): #mettre le code de ce qu'il y a à faire sur cette page "login" = n
 @login_required
 def close():
     logout_user()
-    return redirect(url_for('auth.survey')) #redirige vers ma route survey
+    return redirect(url_for('auth.survey'))
 
 @bp.route('/survey', methods=['GET', 'POST'])
 def survey():
-    return render_template('main/survey.html') #redirige vers ma page survey
+    return render_template('main/survey.html')
 
 
 
