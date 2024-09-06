@@ -2,26 +2,24 @@ import csv
 import pandas as pd
 from app import create_app
 from flask import current_app
-from app.models import User, Product
+from app.models import User, Log, Question, Answer
 from app import db
 from config import Config as Cf
 from sqlalchemy import inspect
 from sqlalchemy.exc import NoSuchTableError
+from dotenv import load_dotenv
+import os
+from pathlib import Path
+
+# Load the .env file
+load_dotenv()
 
 app = create_app()
 
-# OUT
-USER_FILENAME = 'users_conditions.csv'
+USER_FILENAME = 'users.csv'
+QUESTION_FILENAME = 'questions.csv'
+ANSWER_FILENAME = 'answers.csv'
 
-# RAW
-PRODUCT_FILENAME = 'products.csv'
-ASSIGNMENTS_FILENAME = 'assignments.csv'
-
-def delete_entries_from_db(db_name):
-    entries = db_name.query.all()
-    for entry in entries:
-        db.session.delete(entry)
-    db.session.commit()
 
 def populate_db(db_name, csv_file):
     df = pd.read_csv(csv_file)
@@ -30,22 +28,6 @@ def populate_db(db_name, csv_file):
         db.session.add(new_entry)
         db.session.commit()
 
-def assign_products_to_users():
-    df = pd.read_csv(Cf.DATA_PATH_RAW / ASSIGNMENTS_FILENAME)
-    for user_id, product_id in zip(df['user_id'].values, df['product_id'].values):
-        user = User.query.get(user_id.item())
-        product = Product.query.get(product_id.item())
-        if user and product:
-            user.assign_product(product)
-            db.session.commit()
-
-def populate_users():
-    populate_db(User, Cf.DATA_PATH_OUT / USER_FILENAME)
-    assign_products_to_users()
-
-
-def populate_products():
-    populate_db(Product, Cf.DATA_PATH_RAW / PRODUCT_FILENAME)
 
 def drop_tables_in_order(table_names, foreign_keys, engine):
     # Function to perform topological sort
@@ -102,11 +84,16 @@ def drop_all_tables():
 
     drop_tables_in_order(table_names, foreign_keys, db.engine)
 
+def populate_all_db():
+    data_path = Path(os.getenv("DATA_WEBAPP_PATH"))
+    populate_db(User, data_path / USER_FILENAME)
+    populate_db(Question, data_path / QUESTION_FILENAME)
+    populate_db(Answer, data_path / ANSWER_FILENAME)
+
 
 def reload_databases():
     with app.app_context():
         drop_all_tables()
         db.create_all()
-        populate_products()
-        populate_users()
+        populate_all_db()
         print('reloaded databases with success !')
