@@ -3,11 +3,13 @@ import logging
 
 import numpy as np
 import pandas as pd
-from configs.deploy import DeployConfig as Config
-from constants import Constants as C
-from crossval import preallocate_pipeline, scaling_y
-from feature_engineering import create_features
-from loaders import (
+from sklearn.model_selection import GridSearchCV
+
+from code.ml.configs.deploy import DeployConfig as Config
+from code.ml.constants import Constants as C
+from code.ml.crossval import preallocate_pipeline, scaling_y
+from code.ml.feature_engineering import create_features
+from code.ml.loaders import (
     load_attributes,
     load_best_model,
     load_codebook,
@@ -15,9 +17,8 @@ from loaders import (
     load_feature_lookup_table,
     load_selected_features,
 )
-from sklearn.model_selection import GridSearchCV
-from tracking import save_example_predictions, write_best_model, write_example
-from utils import configure_main_logger
+from code.ml.tracking import save_example_predictions, write_best_model, write_example
+from code.ml.utils import configure_main_logger
 
 logger = logging.getLogger(__name__)
 
@@ -169,7 +170,10 @@ def create_features_for_example(df_attributes_example, ml_run_path):
     return df_features.iloc[-df_attributes_example.shape[0] :, :]
 
 
-def predict_for_example(ml_run_path, frozen_library_folder_name):
+def predict_for_example(
+    ml_run_path= C.ML_PATH / eval(f"C.{Config.RUN_TYPE}"),
+    frozen_library_folder_name=Config.FEATURE_LIBRARY_VERSION,
+):
     df_attributes_example = pd.read_csv(
         ml_run_path / C.DEPLOY_FOLDER_NAME / C.EXAMPLE_ANSWERS_FILENAME
     ).set_index(C.ATTRIBUTE_ID_COL)
