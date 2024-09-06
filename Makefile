@@ -44,17 +44,17 @@ create-model:
 display-users:
 	poetry run python -c "from scripts.view_databases import display_users; display_users()"
 
-display-products:
-	poetry run python -c "from scripts.view_databases import display_products; display_products()"
+display-logs:
+	poetry run python -c "from scripts.view_databases import display_products; display_logs()"
 
-display-ratings:
-	poetry run python -c "from scripts.view_databases import display_ratings; display_ratings()"
+display-questions:
+	poetry run python -c "from scripts.view_databases import display_ratings; display_questions()"
 
-display-purchases:
-	poetry run python -c "from scripts.view_databases import display_purchases; display_purchases()"
+display-answers:
+	poetry run python -c "from scripts.view_databases import display_purchases; display_answers()"
 
-display-assignments:
-	poetry run python -c "from scripts.view_databases import display_assignments; display_assignments()"
+display-activity:
+	poetry run python -c "from scripts.view_databases import display_assignments; display_activity()"
 
 reload-experiment:
 	poetry run python -c "from scripts.reload_experiment import reload_databases; reload_databases()"

@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, make_response
 import pandas as pd
 import sqlite3
 import csv
-from app.models import User, Product, Rating
+from app.models import User, Log, Question, Answer
 from app import create_app
 from app import db
 
@@ -15,38 +15,31 @@ def display_users():
         users = User.query.all()
         for user in users:
             print(user)
-            print(user.id)
 
-def display_ratings():
+def display_logs():
     with app.app_context():
-        ratings = Rating.query.all()
-        for rating in ratings:
+        logs = Log.query.all()
+        for log in logs:
             print(rating)
 
-def display_purchases():
+def display_questions():
+    with app.app_context():
+        questions = Question.query.all()
+        for question in questions:
+            print(question)
+
+def display_answers():
+    with app.app_context():
+        answers = Answer.query.all()
+        for answer in answers:
+            print(answer)
+
+def display_activity():
     with app.app_context():
         for user in User.query.all():
-            print(f"User: {user.code}")
-            print("Purchased Products:")
-            query = user.purchases.select()
-            products = db.session.scalars(query).all()
-            for product in products:
-                print(f"- {product.name}")
-            print()
-
-def display_assignments():
-    with app.app_context():
-        for user in User.query.all():
-            print(f"User: {user.code}")
-            print("Assignments:")
-            query = user.assignments.select()
-            products = db.session.scalars(query).all()
-            for product in products:
-                print(f"- {product.name}")
-            print()
-
-def display_products():
-    with app.app_context():
-        products = Product.query.all()
-        for product in products:
-            print(product)
+            print(user)
+            print("User logs:")
+            query = user.logs.select()
+            logs = db.session.scalars(query).all()
+            for log in logs:
+                print(f"- {log.name}")
