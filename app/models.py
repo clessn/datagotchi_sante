@@ -54,6 +54,7 @@ class Question(db.Model):
 class Answer(db.Model):
     answer_id: so.Mapped[str] = so.mapped_column(sa.String(64), primary_key=True)
     answer_content: so.Mapped[str] = so.mapped_column(sa.String(1000)) 
+    answer_weight: so.Mapped[int] = so.mapped_column(sa.Integer)
 
     question_id: so.Mapped[str] = so.mapped_column(sa.ForeignKey(Question.question_id),index=True)                           
     question: so.Mapped['Question'] = so.relationship(back_populates='answers')
