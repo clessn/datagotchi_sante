@@ -1,10 +1,11 @@
 import numpy as np
 import xgboost as xgb
-from configs.run_crossval import CrossvalConfig as Config
 from sklearn.base import BaseEstimator, RegressorMixin
 from sklearn.linear_model import Ridge
 from sklearn.tree import ExtraTreeRegressor
 from xgboost import XGBRegressor
+
+from code.ml.configs.run_crossval import CrossvalConfig as Config
 
 
 class MeanRegressor(BaseEstimator, RegressorMixin):
