@@ -49,11 +49,19 @@ class Question(db.Model):
         query = self.answers.select()
         answers = db.session.scalars(query).all()
         return answers
-
+    
+    def get_form(self):
+        form = []
+        query = self.answers.select()
+        answers = db.session.scalars(query).all()
+        for answer in answers:
+            form.append((answer.answer_weight,answer.answer_content))
+        return form
 
 class Answer(db.Model):
     answer_id: so.Mapped[str] = so.mapped_column(sa.String(64), primary_key=True)
     answer_content: so.Mapped[str] = so.mapped_column(sa.String(1000)) 
+    answer_weight: so.Mapped[int] = so.mapped_column(sa.Integer)
 
     question_id: so.Mapped[str] = so.mapped_column(sa.ForeignKey(Question.question_id),index=True)                           
     question: so.Mapped['Question'] = so.relationship(back_populates='answers')
