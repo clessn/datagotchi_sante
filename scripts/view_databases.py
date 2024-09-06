@@ -29,6 +29,7 @@ def display_questions():
             print(question)
             print(question.get_answer())
             print(question.type_id)
+            print(question.get_form())
 
 def display_answers():
     with app.app_context():

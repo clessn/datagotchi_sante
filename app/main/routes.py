@@ -1,13 +1,13 @@
 from app.main import bp
 from flask import render_template, flash, redirect, url_for, current_app, make_response, g
 from flask_login import current_user, login_required
-from app.models import User, Log
+from app.models import User, Log, Question, Answer
 from flask import request
 from app.main.forms import PurchaseForm
 from app.auth.forms import Close
 from app import db
+from app import create_app
 import pickle
-
 
 # @bp.before_app_request
 # def before_request():
@@ -47,8 +47,13 @@ def explain():
 @bp.route('/satisfaction', methods=["POST"])
 @login_required
 def satisfaction():
-    form = PurchaseForm()
-    return render_template('main/satisfaction.html', form = form)
+    questionnaire_dico = {}
+
+    questions = Question.query.all()
+    for question in questions:
+        questionnaire_dico[(question.question_id, question.question_content)] = question.get_form()
+
+    return render_template('main/satisfaction.html', questionnaire_dico = questionnaire_dico)
 
 @bp.route('/intent', methods=["POST"])
 @login_required
