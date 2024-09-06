@@ -33,7 +33,8 @@ class User(UserMixin, db.Model):
 class Question(db.Model):
     question_id: so.Mapped[str] = so.mapped_column(sa.String(64), primary_key=True)
     question_content: so.Mapped[str] = so.mapped_column(sa.String(1000),
-                                             unique=True)                               
+                                             unique=True) 
+    type_id: so.Mapped[str] = so.mapped_column(sa.String(64))                              
 
     logs: so.WriteOnlyMapped['Log'] = so.relationship(
         back_populates='question')
