@@ -48,12 +48,12 @@ def explain():
 @bp.route('/satisfaction', methods=['GET', 'POST'])
 @login_required
 def satisfaction():
+    # step 1 : extract questions
     questionnaire_dico = {}
-    questions = Question.query.all()
+    questions = Question.query.filter(Question.group_id == "satisfaction").all()
     for question in questions:
         questionnaire_dico[(question.question_id, question.question_content)] = question.get_form()
-
-    print(questionnaire_dico)
+        
     return render_template('main/satisfaction.html', questionnaire_dico = questionnaire_dico)
 
 @bp.route('/intent', methods=['GET', 'POST'])
@@ -61,7 +61,7 @@ def satisfaction():
 def intent():
     # step 1 : extract questions ids
     questionnaire_dico = {}
-    questions = Question.query.all()
+    questions = Question.query.filter(Question.group_id == "satisfaction").all()
     for question in questions:
         questionnaire_dico[(question.question_id, question.question_content)] = question.get_form()
     question_ids = [question_id for question_id, _ in questionnaire_dico.keys()]
