@@ -10,18 +10,70 @@
         </tr>
         <tr> 
             <td ALIGN="LEFT">
-                <p>Vous consentez à ce que nous utilisions vos données à des fins scientifiques. Merci !</p>
+                <p>Here is a questionnaire about your lifestyle</p>
             </td>
         </tr>
     </table>
-    <a>
-        <form action="{{ url_for('main.explain') }}" method="post">
-            {{ form.hidden_tag() }}
-            <span aria-hidden="true">{{ form.submit(value='Next step', class_='btn btn-success mb-2 btn-lg') }}</span>
+
+    <form id="demographicForm" action="/recommendation2" method="post" onsubmit="return validateForm()">
+        <h3 style="margin-left: 50px;"><label for="gender" class="bold-label">What is your gender ?</label></h3>
+        <select id="gender" name="gender" class="large-text" style="margin-left: 50px;">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+        </select><br><br>
+
+        <h3 style="margin-left: 50px;"><label for="age" class="bold-label">How old are you ?</label></h3>
+        <select id="age" name="age" class="large-text" style="margin-left: 50px;">
+            <option value="Under 18">Under 18</option>
+            <option value="Between 18 and 24">Between 18 and 24</option>
+            <option value="Between 25 and 34">Between 25 and 34</option>
+            <option value="Between 35 and 44">Between 35 and 44</option>
+            <option value="Between 45 and 54">Between 45 and 54</option>
+            <option value="Between 55 and 64">Between 55 and 64</option>
+            <option value="65-over">65 and over</option>
+        </select><br><br>
+
+        <h3 style="color: rgb(89, 108, 71); text-align: right;"><b>Please submit your answers by clicking on this button :</b></h3>
+            <div style="margin: 0px; text-align: right;">
+                <input type="submit" value="Submit" class="btn btn-primary btn-lg" style="font-size: 20px;">
+            </div>
+            <h4 style="color: red; text-align: right;">Make sure to fill out all fields before submitting.</h4>
+            <br><br>  
         </form>
-    </a>
-    <br>
 </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        function validateForm() {
+            var gender = document.getElementById("gender").value;
+            var age = document.getElementById("age").value;
+
+            // Vérification des autres champs
+            if (gender == "" || age == "") {
+                alert("Please fill in all fields.");
+                return false;
+            }
+            return true;
+        }
+
+        // Fonction pour la soumission du formulaire
+        document.getElementById("demographicForm").onsubmit = function() {
+            // Vérification de la validité du formulaire
+            if (!validateForm()) {
+                // Empêcher le formulaire de soumettre via l'action par défaut si la validation échoue
+                return false;
+            } else {
+                // Affichage du message de succès
+                alert("Your answers have been successfully submitted!");
+                // Redirection vers la page suivante
+                window.location.href = "{{ url_for('main.explain')}}"; // Obsolete due to action ?
+            }
+        };
+
+    </script>
+
 {% endblock %}
 
 
