@@ -29,7 +29,7 @@ def display_questions():
         for question in questions:
             print(question)
             print(question.get_answer())
-            print(question.type_id)
+            print(question.group_id)
             print(question.get_form())
 
 def display_answers():
