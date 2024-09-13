@@ -55,7 +55,7 @@ class Question(db.Model):
         query = self.answers.select()
         answers = db.session.scalars(query).all()
         for answer in answers:
-            form.append((answer.answer_weight,answer.answer_content))
+            form.append((answer.answer_id,answer.answer_content))
         return form
 
 class Answer(db.Model):

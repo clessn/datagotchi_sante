@@ -8,6 +8,7 @@ from app.auth.forms import Close
 from app import db
 from app import create_app
 import pickle
+from datetime import datetime, timezone
 
 # @bp.before_app_request
 # def before_request():
@@ -48,17 +49,40 @@ def explain():
 @login_required
 def satisfaction():
     questionnaire_dico = {}
-
     questions = Question.query.all()
     for question in questions:
         questionnaire_dico[(question.question_id, question.question_content)] = question.get_form()
 
+    print('out of satis')
     return render_template('main/satisfaction.html', questionnaire_dico = questionnaire_dico)
 
 @bp.route('/intent', methods=["POST"])
 @login_required
 def intent():
-    form = PurchaseForm()
+    # step 1 : extract questions ids
+    questionnaire_dico = {}
+    questions = Question.query.all()
+    for question in questions:
+        questionnaire_dico[(question.question_id, question.question_content)] = question.get_form()
+    question_ids = [question_id for question_id, _ in questionnaire_dico.keys()]
+    
+    # step 2 : extract answer values
+    timestamp = datetime.now(timezone.utc)
+    for question_id in question_ids:
+        print(question_id)
+        answer_id = request.form[question_id]
+        print(answer_id)
+        print('end')
+        new_log = Log(
+            timestamp=timestamp,
+            user_id=current_user.user_id,
+            question_id=question_id,
+            answer_id=answer_id,
+            phase_id='satisfaction'
+        )
+        db.session.add(new_log)
+    db.session.commit()
+
     return render_template('main/intent.html', form = form)
 
 @bp.route('/essaim', methods=["POST"])
