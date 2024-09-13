@@ -45,7 +45,7 @@ def explain():
     return render_template('main/explain.html', form = form)
 
 
-@bp.route('/satisfaction', methods=["POST"])
+@bp.route('/satisfaction', methods=['GET', 'POST'])
 @login_required
 def satisfaction():
     questionnaire_dico = {}
@@ -53,10 +53,10 @@ def satisfaction():
     for question in questions:
         questionnaire_dico[(question.question_id, question.question_content)] = question.get_form()
 
-    print('out of satis')
+    print(questionnaire_dico)
     return render_template('main/satisfaction.html', questionnaire_dico = questionnaire_dico)
 
-@bp.route('/intent', methods=["POST"])
+@bp.route('/intent', methods=['GET', 'POST'])
 @login_required
 def intent():
     # step 1 : extract questions ids
@@ -77,7 +77,6 @@ def intent():
             answer_id=answer_id,
             phase_id='satisfaction'
         )
-        print(answer_id)
         db.session.add(new_log)
     db.session.commit()
     form = PurchaseForm()

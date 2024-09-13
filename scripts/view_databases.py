@@ -20,7 +20,8 @@ def display_logs():
     with app.app_context():
         logs = Log.query.all()
         for log in logs:
-            print(rating)
+            print(f'{log.timestamp} - {question_id} - {answer_id}')
+
 
 def display_questions():
     with app.app_context():
@@ -45,4 +46,4 @@ def display_activity():
             query = user.logs.select()
             logs = db.session.scalars(query).all()
             for log in logs:
-                print(f"- {log.name}")
+                print(f'{log.timestamp} - {log.question_id} - {log.answer_id}')

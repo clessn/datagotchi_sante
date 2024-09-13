@@ -18,7 +18,7 @@
 
     <br>
     <form action="/intent" method="post">
-        {% for (question_id,question_content), questionnaire_value  in questionnaire_dico.items() %}
+        {% for (question_id, question_content), questionnaire_value  in questionnaire_dico.items() %}
             <h3 style="margin-left: 50px;"><label for={{question_id}}>{{question_content}}</label></h3>
             <div class="likert-scale">
                 {% for (answer_id, answer_content) in questionnaire_value %}
@@ -47,7 +47,8 @@
 
         likertPoints.forEach(point => {
             point.addEventListener('click', () => {
-                const value = parseInt(point.dataset.value);
+                const value = point.dataset.value;
+
                 hiddenInput.value = value;
                 // Change color of points to indicate selection
                 likertPoints.forEach(p => {
@@ -78,7 +79,7 @@
             event.preventDefault();
         } else {
             alert('Your answers have been successfully submitted!');
-            // window.location.href = "{{ url_for('main.intent')}}"; // Obsolete due to action ?
+            window.location.href = "{{ url_for('main.intent')}}"; // Obsolete due to action ?
         }
     });
 </script> 
