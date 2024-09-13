@@ -69,10 +69,7 @@ def intent():
     # step 2 : extract answer values
     timestamp = datetime.now(timezone.utc)
     for question_id in question_ids:
-        print(question_id)
         answer_id = request.form[question_id]
-        print(answer_id)
-        print('end')
         new_log = Log(
             timestamp=timestamp,
             user_id=current_user.user_id,
@@ -80,9 +77,10 @@ def intent():
             answer_id=answer_id,
             phase_id='satisfaction'
         )
+        print(answer_id)
         db.session.add(new_log)
     db.session.commit()
-
+    form = PurchaseForm()
     return render_template('main/intent.html', form = form)
 
 @bp.route('/essaim', methods=["POST"])

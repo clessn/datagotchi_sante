@@ -19,13 +19,13 @@
     <br>
     <form action="/intent" method="post">
         {% for (question_id,question_content), questionnaire_value  in questionnaire_dico.items() %}
-            <h3 style="margin-left: 50px;"><label for={{questionnaire_key}}>{{question_content}}</label></h3>
+            <h3 style="margin-left: 50px;"><label for={{question_id}}>{{question_content}}</label></h3>
             <div class="likert-scale">
                 {% for (answer_id, answer_content) in questionnaire_value %}
                     <div class="likert-point" data-value={{answer_id}}><span class="likert-value">{{answer_content}}</span></div>
                 {% endfor %}
             </div>
-            <input type="hidden" id={{questionnaire_key}} name={{questionnaire_key}} value="5">
+            <input type="hidden" id={{question_id}} name={{question_id}} value="5">
             <br><br>
         {% endfor %}
         <br>
