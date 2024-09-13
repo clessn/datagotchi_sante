@@ -42,7 +42,7 @@ def lifestyle():
 @login_required
 def explain():
     form = PurchaseForm()
-    return render_template('main/explain.html', form = form)
+    return render_template(f'main/{current_user.condition_id}.html', form = form)
 
 
 @bp.route('/satisfaction', methods=['GET', 'POST'])
