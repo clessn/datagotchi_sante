@@ -16,11 +16,12 @@ def display_users():
         for user in users:
             print(user)
 
+
 def display_logs():
     with app.app_context():
         logs = Log.query.all()
         for log in logs:
-            print(f'{log.timestamp} - {question_id} - {answer_id}')
+            print(log)
 
 
 def display_questions():
@@ -28,9 +29,6 @@ def display_questions():
         questions = Question.query.all()
         for question in questions:
             print(question)
-            print(question.get_answer())
-            print(question.type_id)
-            print(question.get_form())
 
 def display_answers():
     with app.app_context():
@@ -46,4 +44,4 @@ def display_activity():
             query = user.logs.select()
             logs = db.session.scalars(query).all()
             for log in logs:
-                print(f'{log.timestamp} - {log.question_id} - {log.answer_id}')
+                print(log)

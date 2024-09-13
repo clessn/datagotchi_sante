@@ -24,10 +24,15 @@ class User(UserMixin, db.Model):
         back_populates='participant')
 
     def __repr__(self):
-        return '<User {}>'.format(self.email)
+        return f'{self.email} - condition : {self.condition_id}'
     
     def get_id(self):
         return self.user_id
+
+    def assign_condition(self, condition_id):
+        """Assigns a condition ID to the user."""
+        self.condition_id = condition_id
+        db.session.commit()
 
 
 class Question(db.Model):
@@ -44,7 +49,8 @@ class Question(db.Model):
         back_populates='question')
 
     def __repr__(self):
-        return '<Question {}>'.format(self.question_id)
+        return f'{self.question_id} ({self.group_id}) - {self.form_id}'
+
 
     def get_answer(self):
         query = self.answers.select()
@@ -71,7 +77,8 @@ class Answer(db.Model):
         back_populates='answer')
 
     def __repr__(self):
-        return '<Answer {}>'.format(self.answer_id)
+        return f'{self.answer_id} - weight: {self.answer_weight}'
+
 
 
 class Log(db.Model):
@@ -91,6 +98,6 @@ class Log(db.Model):
     phase_id: so.Mapped[str] = so.mapped_column(sa.String(64))
 
     def __repr__(self):
-        return '<Log {}>'.format(self.timestamp)
+        return f'{self.timestamp} - Q:{self.question_id} - A:{self.answer_id}'
 
 
