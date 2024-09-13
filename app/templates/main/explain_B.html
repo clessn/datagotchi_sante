@@ -1,0 +1,27 @@
+{% extends "main/base_navigate.html" %}
+
+{% block app_content %}
+<br>
+<br>
+<div class ="pagestyle">
+    <table class="table table-borderless">
+        <tr> 
+            <td ALIGN="CENTER"><h4 class = "pnavbut"> <b>Hello ! Je suis Explain B !!</b></h4> </td>
+        </tr>
+        <tr> 
+            <td ALIGN="LEFT">
+                <p>Vous consentez à ce que nous utilisions vos données à des fins scientifiques. Merci !</p>
+            </td>
+        </tr>
+    </table>
+    <a>
+        <form action="{{ url_for('main.satisfaction') }}" method="post">
+            {{ form.hidden_tag() }}
+            <span aria-hidden="true">{{ form.submit(value='Next step', class_='btn btn-success mb-2 btn-lg') }}</span>
+        </form>
+    </a>
+    <br>
+</div>
+{% endblock %}
+
+
