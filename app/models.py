@@ -40,7 +40,8 @@ class Question(db.Model):
     question_content: so.Mapped[str] = so.mapped_column(sa.String(1000),
                                              unique=True) 
     group_id: so.Mapped[str] = so.mapped_column(sa.String(64))
-    form_id: so.Mapped[str] = so.mapped_column(sa.String(64))                              
+    form_id: so.Mapped[str] = so.mapped_column(sa.String(64))  
+    pilote_id: so.Mapped[str] = so.mapped_column(sa.String(64), nullable=True)                             
 
     logs: so.WriteOnlyMapped['Log'] = so.relationship(
         back_populates='question')
