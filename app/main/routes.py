@@ -36,7 +36,13 @@ def knowledge_after():
 @login_required
 def lifestyle():
     form = PurchaseForm()
-    return render_template('main/lifestyle.html', form = form)
+    # step 1 : extract questions
+    questionnaire_dico = {}
+    questions = Question.query.filter(Question.group_id == "lifestyle").all()
+    for question in questions:
+        questionnaire_dico[(question.question_id, question.question_content, question.form_id)] = question.get_form()
+
+    return render_template('main/lifestyle.html', form = form, questionnaire_dico = questionnaire_dico)
 
 @bp.route('/explain', methods=["POST"])
 @login_required
