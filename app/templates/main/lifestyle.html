@@ -15,7 +15,19 @@
         </tr>
     </table>
 
+    {{questionnaire_dico}}
+
     <form id="demographicForm" action="/explain" method="post" onsubmit="return validateForm()">
+        {% for (question_id, question_content, form_id), questionnaire_value  in questionnaire_dico.items() %}
+            {% if form_id == "scroll" %}
+                <h3 style="margin-left: 50px;"><label for={{question_id}}>{{question_content}}</label></h3>
+                <select id={{question_id}} name={{question_id}} class="large-text" style="margin-left: 50px;">
+                    {% for (answer_id, answer_content) in questionnaire_value %}
+                        <option value={{answer_id}}>{{answer_content}}</option>
+                    {% endfor %}
+                </select><br><br>
+            {% endif %}
+        {% endfor %}
         <h3 style="margin-left: 50px;"><label for="gender" class="bold-label">What is your gender ?</label></h3>
         <select id="gender" name="gender" class="large-text" style="margin-left: 50px;">
                 <option value="Male">Male</option>
