@@ -15,14 +15,12 @@
         </tr>
     </table>
 
-    {{questionnaire_dico}}
-
-    <form id="demographicForm" action="/explain" method="post" onsubmit="return validateForm()">
+    <form action="/explain" method="post">
         {% for (question_id, question_content, form_id), questionnaire_value  in questionnaire_dico.items() %}
             {% if form_id == "scroll" %}
                 <h3 style="margin-left: 50px;"><label for={{question_id}}>{{question_content}}</label></h3>
                 <select id={{question_id}} name={{question_id}} class="large-text" style="margin-left: 50px;">
-                    <option value=""> </option>
+                    <option value=""></option>
                     {% for (answer_id, answer_content) in questionnaire_value %}
                         <option value={{answer_id}}>{{answer_content}}</option>
                     {% endfor %}
@@ -77,7 +75,16 @@
 
     function validateForm() {
 
-        // For likert scale
+        // For scroll questions
+        const scrollQuestions = document.querySelectorAll('select');
+        for (let i = 0; i < scrollQuestions.length; i++) {
+            if (scrollQuestions[i].value === "") {
+                alert("Please fill in all fields.");
+                return false;
+            }
+        }
+
+        // For likert scale questions
         const hiddenInputs = document.querySelectorAll('input[type="hidden"]');
         for (let i = 0; i < hiddenInputs.length; i++) {
             if (hiddenInputs[i].value === '5') {
