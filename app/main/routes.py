@@ -46,6 +46,34 @@ def lifestyle():
 @bp.route('/explain', methods=["POST"])
 @login_required
 def explain():
+    # step 1 : extract questions for lifestyle
+    questionnaire_dico = {}
+    questions = Question.query.filter(Question.group_id == "lifestyle").all()
+    for question in questions:
+        questionnaire_dico[(question.question_id, question.question_content, question.form_id)] = question.get_form()
+    
+    # step 2 : extract and load answer values for lifestyle
+    timestamp = datetime.now(timezone.utc)
+    for (question_id, question_content, form_id), questionnaire_value in questionnaire_dico.items():
+        # For cursor, answer_content is registered instead of answerd_id
+        if form_id=="cursor":
+            answer_content = request.form[question_id]
+            # Find the answer_id associated to this answer_content
+            for a_id, a_content in questionnaire_value:
+                if a_content == answer_content:
+                    answer_id = a_id
+        else:
+            answer_id = request.form[question_id]
+        new_log = Log(
+            timestamp=timestamp,
+            user_id=current_user.user_id,
+            question_id=question_id,
+            answer_id=answer_id,
+            phase_id='lifestyle'
+        )
+        db.session.add(new_log)
+    db.session.commit()
+
     form = PurchaseForm()
     return render_template(f'main/{current_user.condition_id}.html', form = form)
 
@@ -84,6 +112,7 @@ def intent():
         )
         db.session.add(new_log)
     db.session.commit()
+
     form = PurchaseForm()
     return render_template('main/intent.html', form = form)
 
