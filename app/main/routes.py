@@ -35,7 +35,7 @@ def knowledge_after():
 @bp.route('/lifestyle', methods=['GET', 'POST'])
 @login_required
 def lifestyle():
-    # step 1 : extract questions
+    # step 1 : extract questions for lifestyle
     questionnaire_dico = {}
     questions = Question.query.filter(Question.group_id == "lifestyle").all()
     for question in questions:
@@ -53,7 +53,7 @@ def explain():
 @bp.route('/satisfaction', methods=['GET', 'POST'])
 @login_required
 def satisfaction():
-    # step 1 : extract questions
+    # step 1 : extract questions for satisfaction
     questionnaire_dico = {}
     questions = Question.query.filter(Question.group_id == "satisfaction").all()
     for question in questions:
@@ -64,14 +64,14 @@ def satisfaction():
 @bp.route('/intent', methods=['GET', 'POST'])
 @login_required
 def intent():
-    # step 1 : extract questions ids
+    # step 1 : extract questions ids for satisfaction
     questionnaire_dico = {}
     questions = Question.query.filter(Question.group_id == "satisfaction").all()
     for question in questions:
         questionnaire_dico[(question.question_id, question.question_content)] = question.get_form()
     question_ids = [question_id for question_id, _ in questionnaire_dico.keys()]
     
-    # step 2 : extract answer values
+    # step 2 : extract and load answer values for satisfaction
     timestamp = datetime.now(timezone.utc)
     for question_id in question_ids:
         answer_id = request.form[question_id]
