@@ -66,7 +66,6 @@
         const hiddenInputs = document.querySelectorAll('input[type="hidden"]');
         for (let i = 0; i < hiddenInputs.length; i++) {
             if (hiddenInputs[i].value === '5') {
-                alert('Please answer all questions before submitting.');
                 return false;
             }
         }
@@ -76,6 +75,7 @@
 
     document.querySelector('form').addEventListener('submit', function(event) {
         if (!validateForm()) {
+            alert('Please answer all questions before submitting.');
             event.preventDefault();
         } else {
             alert('Your answers have been successfully submitted!');
