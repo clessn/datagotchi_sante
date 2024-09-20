@@ -15,14 +15,12 @@
         </tr>
 
     </table>
-    <a>
-        <form action="{{ url_for('main.knowledge_before') }}" method="post">
-            <div style="text-align: right;">
-                <input type="submit" value="Next" class="btn btn-success mb-2 btn-lg">
-            </div>
-        </form>
-    </a>
-    <br>
+    
+    <form action="/knowledge_before" method="post">
+        <div style="text-align: right;">
+            <input type="submit" value="Next" class="btn btn-success mb-2 btn-lg">
+        </div>
+    </form>
 </div>
 {% endblock %}
 
