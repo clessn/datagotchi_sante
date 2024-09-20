@@ -72,8 +72,8 @@ body{
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
-  margin-left: 300px; /* Marge à gauche */
-  margin-right: 300px; /* Marge à droite */
+  margin-left: 300px; 
+  margin-right: 300px; 
 }
 .likert-point {
   position: relative;
@@ -88,14 +88,14 @@ body{
 }
 .likert-value {
   position: absolute;
-  bottom: -40px; /* Augmenter l'espace par rapport à la ligne inférieure */
+  bottom: -40px; /* Increasing spacing from bottom line */
   left: 50%;
   transform: translateX(-50%);
-  font-size: 20px; /* Augmenter la taille du texte des choix */
-  color: green; /* Changer la couleur du texte */
-  white-space: nowrap; /* Empêcher le retour à la ligne */
+  font-size: 20px; /* Increasing text size for choices */
+  color: green; /* Changing text color */
+  white-space: nowrap; /* Preventing line breaks */
 }
-/* Ajoutez une marge à gauche pour le premier point et une marge à droite pour le dernier point */
+/* Adding a left margin for the first point and a right margin for the last point */
 .likert-point:first-child {
   margin-left: 20px;
 }

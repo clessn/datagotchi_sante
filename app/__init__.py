@@ -8,7 +8,7 @@ from flask_bootstrap import Bootstrap
 db = SQLAlchemy()
 migrate = Migrate()
 login = LoginManager()
-login.login_view = 'auth.login' #Nom de la view function qui contient le login 
+login.login_view = 'auth.login' 
 bootstrap = Bootstrap()
 
 def create_app(config_class=Config):

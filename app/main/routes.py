@@ -4,7 +4,6 @@ from flask_login import current_user, login_required
 from app.models import User, Log, Question, Answer
 from flask import request
 from app.main.forms import PurchaseForm
-from app.auth.forms import Close
 from app import db
 from app import create_app
 import pickle
