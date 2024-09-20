@@ -6,6 +6,6 @@ class LoginForm(FlaskForm):
     code = StringField('Code', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
-#Creation du bouton pour quitter l'enquête et se lougout 
+# Button to quit and log out
 class Close(FlaskForm):
     submit = SubmitField('Finish and go to survey') 
