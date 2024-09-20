@@ -16,8 +16,7 @@ from datetime import datetime, timezone
 @bp.route('/consent')
 @login_required
 def consent():
-    form = PurchaseForm()
-    return render_template('main/consent.html', form = form)
+    return render_template('main/consent.html')
 
 @bp.route('/knowledge_before', methods=["POST"])
 @login_required
