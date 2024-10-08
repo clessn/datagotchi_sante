@@ -20,6 +20,30 @@
         {% include 'main/knowledge.html' %}
     </form>
 </div>
+
+<script>
+    function validateForm() {
+        const hiddenInputs = document.querySelectorAll('input[type="hidden"]');
+        for (let i = 0; i < hiddenInputs.length; i++) {
+            if (hiddenInputs[i].value === '5') {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    document.querySelector('form').addEventListener('submit', function(event) {
+        if (!validateForm()) {
+            alert('Please answer all questions before submitting.');
+            event.preventDefault();
+        } else {
+            alert('Your answers have been successfully submitted!');
+            window.location.href = "{{ url_for('main.essaim')}}"; // Obsolete due to action ?
+        }
+    });
+</script>
+
 {% endblock %}
 
 

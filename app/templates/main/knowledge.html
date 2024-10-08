@@ -1,6 +1,18 @@
 <tr> 
     <td ALIGN="LEFT">
-        <p>Knowledge questionnaire</p>
+        <p>Here are ten statements about things that may be important for good mental health. On a scale of 1 to 5, how accurate is each statement?</p>
+
+        {% for (question_id, question_content), questionnaire_value  in questionnaire_dico.items() %}
+            <h3 style="margin-left: 50px;"><label for={{question_id}}>{{question_content}}</label></h3>
+            <div class="likert-scale">
+                {% for (answer_id, answer_content) in questionnaire_value %}
+                    <div class="likert-point" data-value={{answer_id}}><span class="likert-value">{{answer_content}}</span></div>
+                {% endfor %}
+            </div>
+            <input type="hidden" id={{question_id}} name={{question_id}} value="5">
+            <br><br>
+        {% endfor %}
+        <br>
 
         <h3 style="color: rgb(89, 108, 71); text-align: right;"><b>Please submit your answers by clicking on this button :</b></h3>
         <div style="text-align: right;">
@@ -11,3 +23,28 @@
 
     </td>
 </tr>
+
+<script>    
+    const likertScales = document.querySelectorAll('.likert-scale');
+
+    likertScales.forEach(scale => {
+        const hiddenInput = scale.nextElementSibling;
+        const likertPoints = scale.querySelectorAll('.likert-point');
+
+        likertPoints.forEach(point => {
+            point.addEventListener('click', () => {
+                const value = point.dataset.value;
+
+                hiddenInput.value = value;
+                // Change color of points to indicate selection
+                likertPoints.forEach(p => {
+                    if (p === point) {
+                        p.style.backgroundColor = 'rgb(89, 108, 71)';
+                    } else {
+                        p.style.backgroundColor = '#ccc';
+                    }
+                });
+            });
+        });
+    });
+</script>

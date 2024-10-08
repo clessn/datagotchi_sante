@@ -21,12 +21,24 @@ def consent():
 @bp.route('/knowledge_before', methods=["POST"])
 @login_required
 def knowledge_before():
-    return render_template('main/knowledge_before.html')
+     # step 1 : extract questions for knowledge
+    questionnaire_dico = {}
+    questions = Question.query.filter(Question.group_id == "knowledge").all()
+    for question in questions:
+        questionnaire_dico[(question.question_id, question.question_content)] = question.get_form()
+
+    return render_template('main/knowledge_before.html', questionnaire_dico = questionnaire_dico)
 
 @bp.route('/knowledge_after', methods=["POST"])
 @login_required
 def knowledge_after():
-    return render_template('main/knowledge_after.html')
+    # step 1 : extract questions for knowledge
+    questionnaire_dico = {}
+    questions = Question.query.filter(Question.group_id == "knowledge").all()
+    for question in questions:
+        questionnaire_dico[(question.question_id, question.question_content)] = question.get_form()
+
+    return render_template('main/knowledge_after.html', questionnaire_dico = questionnaire_dico)
 
 @bp.route('/lifestyle', methods=['GET', 'POST'])
 @login_required
