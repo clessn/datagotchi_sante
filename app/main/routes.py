@@ -21,14 +21,12 @@ def consent():
 @bp.route('/knowledge_before', methods=["POST"])
 @login_required
 def knowledge_before():
-    form = PurchaseForm()
-    return render_template('main/knowledge_before.html', form = form)
+    return render_template('main/knowledge_before.html')
 
 @bp.route('/knowledge_after', methods=["POST"])
 @login_required
 def knowledge_after():
-    form = PurchaseForm()
-    return render_template('main/knowledge_after.html', form = form)
+    return render_template('main/knowledge_after.html')
 
 @bp.route('/lifestyle', methods=['GET', 'POST'])
 @login_required
