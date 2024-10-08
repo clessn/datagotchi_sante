@@ -25,7 +25,7 @@ def knowledge_before():
     questionnaire_dico = {}
     questions = Question.query.filter(Question.group_id == "knowledge").all()
     for question in questions:
-        questionnaire_dico[(question.question_id, question.question_content)] = question.get_form()
+        questionnaire_dico[(question.question_id, question.question_content, question.form_id)] = question.get_form()
 
     return render_template('main/knowledge_before.html', questionnaire_dico = questionnaire_dico)
 
@@ -36,8 +36,8 @@ def knowledge_after():
     questionnaire_dico_responses = {}
     questions = Question.query.filter(Question.group_id == "intent").all()
     for question in questions:
-        questionnaire_dico_responses[(question.question_id, question.question_content)] = question.get_form()
-    question_ids = [question_id for question_id, _ in questionnaire_dico_responses.keys()]
+        questionnaire_dico_responses[(question.question_id, question.question_content, question.form_id)] = question.get_form()
+    question_ids = [question_id for question_id, _, _ in questionnaire_dico_responses.keys()]
     
     # step 2 : extract and load answer values for intent
     timestamp = datetime.now(timezone.utc)
@@ -57,7 +57,7 @@ def knowledge_after():
     questionnaire_dico = {}
     questions = Question.query.filter(Question.group_id == "knowledge").all()
     for question in questions:
-        questionnaire_dico[(question.question_id, question.question_content)] = question.get_form()
+        questionnaire_dico[(question.question_id, question.question_content, question.form_id)] = question.get_form()
 
     return render_template('main/knowledge_after.html', questionnaire_dico = questionnaire_dico)
 
@@ -69,8 +69,8 @@ def lifestyle():
     questionnaire_dico_responses = {}
     questions = Question.query.filter(Question.group_id == "knowledge").all()
     for question in questions:
-        questionnaire_dico_responses[(question.question_id, question.question_content)] = question.get_form()
-    question_ids = [question_id for question_id, _ in questionnaire_dico_responses.keys()]
+        questionnaire_dico_responses[(question.question_id, question.question_content, question.form_id)] = question.get_form()
+    question_ids = [question_id for question_id, _, _ in questionnaire_dico_responses.keys()]
     
     # step 2 : extract and load answer values for knowledge before
     timestamp = datetime.now(timezone.utc)
@@ -97,6 +97,7 @@ def lifestyle():
 @bp.route('/explain', methods=["POST"])
 @login_required
 def explain():
+
     # step 1 : extract questions for lifestyle
     questionnaire_dico_responses = {}
     questions = Question.query.filter(Question.group_id == "lifestyle").all()
@@ -136,7 +137,7 @@ def satisfaction():
     questionnaire_dico = {}
     questions = Question.query.filter(Question.group_id == "satisfaction").all()
     for question in questions:
-        questionnaire_dico[(question.question_id, question.question_content)] = question.get_form()
+        questionnaire_dico[(question.question_id, question.question_content, question.form_id)] = question.get_form()
         
     return render_template('main/satisfaction.html', questionnaire_dico = questionnaire_dico)
 
@@ -147,8 +148,8 @@ def intent():
     questionnaire_dico_responses = {}
     questions = Question.query.filter(Question.group_id == "satisfaction").all()
     for question in questions:
-        questionnaire_dico_responses[(question.question_id, question.question_content)] = question.get_form()
-    question_ids = [question_id for question_id, _ in questionnaire_dico_responses.keys()]
+        questionnaire_dico_responses[(question.question_id, question.question_content, question.form_id)] = question.get_form()
+    question_ids = [question_id for question_id, _, _ in questionnaire_dico_responses.keys()]
     
     # step 2 : extract and load answer values for satisfaction
     timestamp = datetime.now(timezone.utc)
@@ -180,10 +181,10 @@ def essaim():
     questionnaire_dico_responses = {}
     questions = Question.query.filter(Question.group_id == "knowledge").all()
     for question in questions:
-        questionnaire_dico_responses[(question.question_id, question.question_content)] = question.get_form()
-    question_ids = [question_id for question_id, _ in questionnaire_dico_responses.keys()]
+        questionnaire_dico_responses[(question.question_id, question.question_content, question.form_id)] = question.get_form()
+    question_ids = [question_id for question_id, _, _ in questionnaire_dico_responses.keys()]
     
-    # step 2 : extract and load answer values for satisfaction
+    # step 2 : extract and load answer values for knowledge after
     timestamp = datetime.now(timezone.utc)
     for question_id in question_ids:
         answer_id = request.form[question_id]
