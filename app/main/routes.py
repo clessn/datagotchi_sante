@@ -198,12 +198,39 @@ def essaim():
         db.session.add(new_log)
     db.session.commit()
 
-    form = PurchaseForm()
-    return render_template('main/essaim.html', form = form)
+    # step 3 : extract questions for essaim
+    questionnaire_dico = {}
+    questions = Question.query.filter(Question.group_id == "essaim").all()
+    for question in questions:
+        questionnaire_dico[(question.question_id, question.question_content, question.form_id)] = question.get_form()
+
+    return render_template('main/essaim.html', questionnaire_dico = questionnaire_dico)
 
 @bp.route('/merci', methods=["POST"])
 @login_required
 def merci():
+
+    # step 1 : extract questions ids for essaim
+    questionnaire_dico_responses = {}
+    questions = Question.query.filter(Question.group_id == "essaim").all()
+    for question in questions:
+        questionnaire_dico_responses[(question.question_id, question.question_content, question.form_id)] = question.get_form()
+    question_ids = [question_id for question_id, _, _ in questionnaire_dico_responses.keys()]
+    
+    # step 2 : extract and load answer values for essaim
+    timestamp = datetime.now(timezone.utc)
+    for question_id in question_ids:
+        answer_id = request.form[question_id]
+        new_log = Log(
+            timestamp=timestamp,
+            user_id=current_user.user_id,
+            question_id=question_id,
+            answer_id=answer_id,
+            phase_id='essaim'
+        )
+        db.session.add(new_log)
+    db.session.commit()
+
     form = PurchaseForm()
     return render_template('main/merci.html', form = form)
 

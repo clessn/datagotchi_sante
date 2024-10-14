@@ -10,18 +10,81 @@
         </tr>
         <tr> 
             <td ALIGN="LEFT">
-                <p>Vous consentez à ce que nous utilisions vos données à des fins scientifiques. Merci !</p>
+                <p>Here is a questionnaire to improve our prediction algorithm with questions about how do you perceive your mental health.</p>
             </td>
         </tr>
     </table>
-    <a>
-        <form action="{{ url_for('main.merci') }}" method="post">
-            {{ form.hidden_tag() }}
-            <span aria-hidden="true">{{ form.submit(value='Next step', class_='btn btn-success mb-2 btn-lg') }}</span>
-        </form>
-    </a>
+    
     <br>
+    <form action="/merci" method="post">
+        {% for (question_id, question_content, form_id), questionnaire_value  in questionnaire_dico.items() %}
+            {% if form_id == "likert" %}
+                <h3 style="margin-left: 50px;"><label for={{question_id}}>{{question_content}}</label></h3>
+                <div class="likert-scale">
+                    {% for (answer_id, answer_content) in questionnaire_value %}
+                        <div class="likert-point" data-value={{answer_id}}><span class="likert-value">{{answer_content}}</span></div>
+                    {% endfor %}
+                </div>
+                <input type="hidden" id={{question_id}} name={{question_id}} value="5">
+                <br><br>
+            {% endif %}
+
+        {% endfor %}
+        <br>
+
+        <h3 style="color: rgb(89, 108, 71); text-align: right;">Please submit your answers by clicking on this button :</h3>
+        <div style="text-align: right;">
+            <input type="submit" value="Next" class="btn btn-success mb-2 btn-lg">
+        </div>
+        <h4 style="text-align: right; color: red;">Make sure to answer all the questions before submitting.</h4>
+        <br><br>
+    </form>
 </div>
+<script>    
+    const likertScales = document.querySelectorAll('.likert-scale');
+
+    likertScales.forEach(scale => {
+        const hiddenInput = scale.nextElementSibling;
+        const likertPoints = scale.querySelectorAll('.likert-point');
+
+        likertPoints.forEach(point => {
+            point.addEventListener('click', () => {
+                const value = point.dataset.value;
+
+                hiddenInput.value = value;
+                // Change color of points to indicate selection
+                likertPoints.forEach(p => {
+                    if (p === point) {
+                        p.style.backgroundColor = 'rgb(89, 108, 71)';
+                    } else {
+                        p.style.backgroundColor = '#ccc';
+                    }
+                });
+            });
+        });
+    });
+
+    function validateForm() {
+        const hiddenInputs = document.querySelectorAll('input[type="hidden"]');
+        for (let i = 0; i < hiddenInputs.length; i++) {
+            if (hiddenInputs[i].value === '5') {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    document.querySelector('form').addEventListener('submit', function(event) {
+        if (!validateForm()) {
+            alert('Please answer all questions before submitting.');
+            event.preventDefault();
+        } else {
+            alert('Your answers have been successfully submitted!');
+            window.location.href = "{{ url_for('main.merci')}}"; // Obsolete due to action ?
+        }
+    });
+</script> 
 {% endblock %}
 
 
