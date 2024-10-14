@@ -231,6 +231,5 @@ def merci():
         db.session.add(new_log)
     db.session.commit()
 
-    form = PurchaseForm()
-    return render_template('main/merci.html', form = form)
+    return render_template('main/merci.html')
 
