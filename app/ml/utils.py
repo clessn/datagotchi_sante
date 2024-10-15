@@ -1,6 +1,6 @@
 import logging.config
 
-from code.ml.constants import Constants as C
+from constants import Constants as C
 
 
 def configure_main_logger(logger_name):
