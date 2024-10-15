@@ -12,12 +12,12 @@ from xgboost import XGBRegressor
 
 from sklearn.preprocessing import MinMaxScaler
 
-from code.ml.configs.score_feature import ScoreFeatureConfig as Config
-from code.ml.constants import Constants as C
-from code.ml.loaders import load_df_X_y, load_feature_lookup_table
+from configs.score_feature import ScoreFeatureConfig as Config
+from constants import Constants as C
+from loaders import load_df_X_y, load_feature_lookup_table
 
-from code.ml.tracking import write_selected_features
-from code.ml.utils import configure_main_logger
+from tracking import write_selected_features
+from utils import configure_main_logger
 
 logger = logging.getLogger(__name__)
 

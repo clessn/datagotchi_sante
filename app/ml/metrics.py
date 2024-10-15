@@ -3,7 +3,7 @@ import logging
 import numpy as np
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 
-from code.ml.configs.run_crossval import CrossvalConfig as Config
+from configs.run_crossval import CrossvalConfig as Config
 
 logger = logging.getLogger(__name__)
 

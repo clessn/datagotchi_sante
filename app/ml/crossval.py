@@ -8,14 +8,14 @@ from sklearn.model_selection import GridSearchCV, KFold
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import RobustScaler
 
-from code.ml.configs.run_crossval import CrossvalConfig as Config
-from code.ml.constants import Constants as C
-from code.ml.loaders import load_df_X_y, load_selected_features
-from code.ml.metrics import available_metrics_dict
-from code.ml.models import available_models_dict
+from configs.run_crossval import CrossvalConfig as Config
+from constants import Constants as C
+from loaders import load_df_X_y, load_selected_features
+from metrics import available_metrics_dict
+from models import available_models_dict
 
-from code.ml.tracking import track_results
-from code.ml.utils import configure_main_logger
+from tracking import track_results
+from utils import configure_main_logger
 
 logger = logging.getLogger(__name__)
 

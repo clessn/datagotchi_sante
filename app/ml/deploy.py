@@ -5,11 +5,11 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import GridSearchCV
 
-from code.ml.configs.deploy import DeployConfig as Config
-from code.ml.constants import Constants as C
-from code.ml.crossval import preallocate_pipeline, scaling_y
-from code.ml.feature_engineering import create_features
-from code.ml.loaders import (
+from configs.deploy import DeployConfig as Config
+from constants import Constants as C
+from crossval import preallocate_pipeline, scaling_y
+from feature_engineering import create_features
+from loaders import (
     load_attributes,
     load_best_model,
     load_codebook,
@@ -17,8 +17,8 @@ from code.ml.loaders import (
     load_feature_lookup_table,
     load_selected_features,
 )
-from code.ml.tracking import save_example_predictions, write_best_model, write_example
-from code.ml.utils import configure_main_logger
+from tracking import save_example_predictions, write_best_model, write_example
+from utils import configure_main_logger
 
 logger = logging.getLogger(__name__)
 
