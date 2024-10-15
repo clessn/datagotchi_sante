@@ -14,8 +14,8 @@ class CrossvalConfig:
 
     # 0. Versioning
     RUN_TYPE = "REAL_FOLDER_NAME"  # SANDBOX_FOLDER_NAME or REAL_FOLDER_NAME
-    FEATURE_LIBRARY_VERSION = "feature_library_v9"
-    EXPERIMENT_NAME = "10_export_question_for_phase_1"
+    FEATURE_LIBRARY_VERSION = "feature_library_v10"
+    EXPERIMENT_NAME = "11_export_question_with_filter_on_countries"
 
     # 1. Modeling
     # 1.1. Feature Selection

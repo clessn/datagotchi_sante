@@ -4,10 +4,10 @@ from sklearn.preprocessing import MinMaxScaler, RobustScaler, StandardScaler
 
 class DeployConfig:
     RUN_TYPE = "REAL_FOLDER_NAME"  # SANDBOX_FOLDER_NAME or REAL_FOLDER_NAME
-    CODEBOOK_VERSION = "frozen_codebook_july_29.csv"
+    CODEBOOK_VERSION = "frozen_codebook_october_15.csv"
 
     # Best feature selection
-    FEATURE_LIBRARY_VERSION = "feature_library_v9"
+    FEATURE_LIBRARY_VERSION = "feature_library_v10"
     FEATURE_SELECTION_METHOD = ("xgboost", {"k": 20})
 
     # Best Model

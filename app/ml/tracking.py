@@ -235,9 +235,11 @@ def write_best_model(
     best_model,
     selected_features,
     best_hyperparameters,
+    feature_coeff_dict,
     deploy_path,
     best_model_filename,
     best_params_filename,
+    best_model_coefficient_filename,
 ):
     # Save the model to a pickle file
     with open(deploy_path / best_model_filename, "wb") as pickle_file:
@@ -249,6 +251,10 @@ def write_best_model(
         json.dump(best_hyperparameters, json_file, indent=4, cls=CustomEncoder)
     logger.info("Best hyperpameters saved !")
 
+    # Save the coefficient to a json file
+    with open(deploy_path / best_model_coefficient_filename, "w") as json_file:
+        json.dump(feature_coeff_dict, json_file, indent=4, cls=CustomEncoder)
+    logger.info("Model coefficients saved !")
 
 def save_example_predictions(df_y, path, filename):
     df_y.to_csv(path / filename)

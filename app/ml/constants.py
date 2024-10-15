@@ -21,7 +21,7 @@ class Constants:
     DEPLOY_FOLDER_NAME = "deploy"
 
     # Paths
-    LOGGING_PATH = Path(os.getcwd()) / "code" / "ml"
+    LOGGING_PATH = Path(os.getcwd()) / "app" / "ml"
     DATA_PATH = Path(os.getenv("DATA_PATH"))
     RAW_PATH = DATA_PATH / RAW_FOLDER_NAME
     ML_PATH = DATA_PATH / ML_FOLDER_NAME
@@ -44,6 +44,7 @@ class Constants:
     QUESTIONNAIRE_FILENAME = "questionnaire.csv"
     EXAMPLE_ANSWERS_FILENAME = "example_answers.csv"
     BEST_MODEL_FILENAME = "model.pkl"
+    BEST_MODEL_COEFFICIENT_FILENAME = "model_coefficients.json"
     BEST_PARAMS_FILENAME = "model_details.json"
     EXAMPLE_PREDICTION_FILENAME = "example_predictions.csv"
 

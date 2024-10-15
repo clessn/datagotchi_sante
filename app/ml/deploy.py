@@ -144,17 +144,28 @@ def train_best_model(ml_run_path, frozen_library_folder_name):
         f"- Fitting with: {grid_search.best_params_}",
     )
     best_model = grid_search.best_estimator_
+
     best_model.fit(X_train, y_train)
+
+    # Additional info
+    # - hyperparemeters
     best_hyperparameters = grid_search.best_params_
     best_hyperparameters["model_name"] = model_name
+
+    # - coefficients
+    coefficients = best_model.named_steps["regressor"].coef_
+    feature_coeff_dict = dict(zip(selected_features, coefficients))
+    sorted_feature_coeff_dict = dict(sorted(feature_coeff_dict.items(), key=lambda item: item[1], reverse=True))
 
     write_best_model(
         best_model,
         selected_features,
         grid_search.best_params_,
+        sorted_feature_coeff_dict,
         ml_run_path / C.DEPLOY_FOLDER_NAME,
         C.BEST_MODEL_FILENAME,
         C.BEST_PARAMS_FILENAME,
+        C.BEST_MODEL_COEFFICIENT_FILENAME,
     )
 
 
