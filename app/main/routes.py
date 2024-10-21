@@ -8,6 +8,7 @@ from app import db
 from app import create_app
 import pickle
 from datetime import datetime, timezone
+import pandas as pd
 
 # @bp.before_app_request
 # def before_request():
@@ -98,6 +99,9 @@ def lifestyle():
 @login_required
 def explain():
 
+    # Dico for prediction
+    lifestyle_dico = {}
+
     # step 1 : extract questions for lifestyle
     questionnaire_dico_responses = {}
     questions = Question.query.filter(Question.group_id == "lifestyle").all()
@@ -124,7 +128,18 @@ def explain():
             phase_id='lifestyle'
         )
         db.session.add(new_log)
+
+        # Add save answer in dico for prediction
+        pilote_id = Question.query.filter(Question.question_id == question_id).first().pilote_id
+        answer_weight = Answer.query.filter(Answer.answer_id == answer_id).first().answer_weight
+        lifestyle_dico[pilote_id] = answer_weight
+
     db.session.commit()
+
+    # Predict    
+    print(lifestyle_dico)
+    #lifestyle_df = pd.DataFrame(lifestyle_dico)
+    #print(lifestyle_df)
 
     form = PurchaseForm()
     return render_template(f'main/{current_user.condition_id}.html', form = form)
