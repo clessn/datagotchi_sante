@@ -138,8 +138,8 @@ def explain():
 
     # Predict    
     print(lifestyle_dico)
-    #lifestyle_df = pd.DataFrame(lifestyle_dico)
-    #print(lifestyle_df)
+    lifestyle_df = pd.DataFrame([lifestyle_dico])
+    print(lifestyle_df)
 
     form = PurchaseForm()
     return render_template(f'main/{current_user.condition_id}.html', form = form)
