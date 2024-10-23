@@ -5,7 +5,14 @@ from flask_login import current_user, login_user, login_required, logout_user
 import csv
 from app.models import User
 
-CONDITION_ID_LIST = ['explain_A', 'explain_B', 'explain_C']
+
+CONDITION_ID_LIST = [
+    'explain_baseline',
+    'explain_visual',
+    'explain_textual',
+    'explain_contextual',
+    'explain_interactive',
+]
 
 def get_next_condition_id(user_class, condition_id_list):
     """
