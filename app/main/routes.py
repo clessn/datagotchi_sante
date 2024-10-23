@@ -9,6 +9,7 @@ from app import create_app
 import pickle
 from datetime import datetime, timezone
 import pandas as pd
+from app.ml.deploy import predict_for_example
 
 # @bp.before_app_request
 # def before_request():
@@ -136,10 +137,11 @@ def explain():
 
     db.session.commit()
 
-    # Predict    
-    print(lifestyle_dico)
+    # Convert to dataframe    
     lifestyle_df = pd.DataFrame([lifestyle_dico])
     print(lifestyle_df)
+    #df_y = predict_for_example(lifestyle_df)
+    #print(df_y)
 
     form = PurchaseForm()
     return render_template(f'main/{current_user.condition_id}.html', form = form)
