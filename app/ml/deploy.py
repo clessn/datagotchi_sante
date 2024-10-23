@@ -182,12 +182,9 @@ def create_features_for_example(df_attributes_example, ml_run_path):
 
 
 def predict_for_example(
-    ml_run_path= C.ML_PATH / eval(f"C.{Config.RUN_TYPE}"),
-    frozen_library_folder_name=Config.FEATURE_LIBRARY_VERSION,
+    df_attributes_example,
+    ml_run_path= C.ML_PATH / eval(f"C.{Config.RUN_TYPE}")
 ):
-    df_attributes_example = pd.read_csv(
-        ml_run_path / C.DEPLOY_FOLDER_NAME / C.EXAMPLE_ANSWERS_FILENAME
-    ).set_index(C.ATTRIBUTE_ID_COL)
     df_features_example = create_features_for_example(
         df_attributes_example, ml_run_path
     )
@@ -204,11 +201,7 @@ def predict_for_example(
         index=df_features_example.index,
         columns=[f"{eval(Config.TARGET_NAME)}_prediction"],
     )
-    save_example_predictions(
-        df_y,
-        ml_run_path / C.DEPLOY_FOLDER_NAME,
-        C.EXAMPLE_PREDICTION_FILENAME,
-    )
+    return df_y
 
 
 # Run deploy
@@ -234,9 +227,23 @@ if __name__ == "__main__":
             frozen_library_folder_name,
         )
     elif args.function == "predict_for_example":
-        predict_for_example(
+        # Read attributes
+        df_attributes_example = pd.read_csv(
+        ml_run_path / C.DEPLOY_FOLDER_NAME / C.EXAMPLE_ANSWERS_FILENAME
+        ).set_index(C.ATTRIBUTE_ID_COL)
+        
+        # Predict
+        df_y = predict_for_example(
+            df_attributes_example,
             ml_run_path,
-            frozen_library_folder_name,
         )
+        
+        # Save predictions
+        save_example_predictions(
+            df_y,
+            ml_run_path / C.DEPLOY_FOLDER_NAME,
+            C.EXAMPLE_PREDICTION_FILENAME,
+        )
+
     else:
         print(f"Function {args.function} not recognized")
