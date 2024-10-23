@@ -6,7 +6,7 @@
 <div class ="pagestyle">
     <table class="table table-borderless">
         <tr> 
-            <td ALIGN="CENTER"><h4 class = "pnavbut"> <b>Hello ! Je suis Explain B !!</b></h4> </td>
+            <td ALIGN="CENTER"><h4 class = "pnavbut"> <b>Hello ! Je suis Explain Visual !!</b></h4> </td>
         </tr>
         <tr> 
             <td ALIGN="LEFT">
@@ -14,6 +14,8 @@
             </td>
         </tr>
     </table>
+    <h1>Radar Chart</h1>
+    <img src="{{ url_for('main.radar_chart') }}" alt="Radar Chart">
     <a>
         <form action="{{ url_for('main.satisfaction') }}" method="post">
             {{ form.hidden_tag() }}
