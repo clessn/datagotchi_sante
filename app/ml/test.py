@@ -1,6 +1,6 @@
-from configs.create_feature import CreateFeatureConfig as Config
-from constants import Constants as C
-from loaders import load_attributes
+from app.ml.configs.create_feature import CreateFeatureConfig as Config
+from app.ml.constants import Constants as C
+from app.ml.loaders import load_attributes
 from sklearn.decomposition import FactorAnalysis
 
 path = C.ML_PATH / "real"

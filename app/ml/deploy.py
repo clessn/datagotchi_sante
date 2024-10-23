@@ -5,11 +5,11 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import GridSearchCV
 
-from configs.deploy import DeployConfig as Config
-from constants import Constants as C
-from crossval import preallocate_pipeline, scaling_y
-from feature_engineering import create_features
-from loaders import (
+from app.ml.configs.deploy import DeployConfig as Config
+from app.ml.constants import Constants as C
+from app.ml.crossval import preallocate_pipeline, scaling_y
+from app.ml.feature_engineering import create_features
+from app.ml.loaders import (
     load_attributes,
     load_best_model,
     load_codebook,
@@ -17,8 +17,8 @@ from loaders import (
     load_feature_lookup_table,
     load_selected_features,
 )
-from tracking import save_example_predictions, write_best_model, write_example
-from utils import configure_main_logger
+from app.ml.tracking import save_example_predictions, write_best_model, write_example
+from app.ml.utils import configure_main_logger
 
 logger = logging.getLogger(__name__)
 
@@ -182,12 +182,9 @@ def create_features_for_example(df_attributes_example, ml_run_path):
 
 
 def predict_for_example(
-    ml_run_path= C.ML_PATH / eval(f"C.{Config.RUN_TYPE}"),
-    frozen_library_folder_name=Config.FEATURE_LIBRARY_VERSION,
+    df_attributes_example,
+    ml_run_path= C.ML_PATH / eval(f"C.{Config.RUN_TYPE}")
 ):
-    df_attributes_example = pd.read_csv(
-        ml_run_path / C.DEPLOY_FOLDER_NAME / C.EXAMPLE_ANSWERS_FILENAME
-    ).set_index(C.ATTRIBUTE_ID_COL)
     df_features_example = create_features_for_example(
         df_attributes_example, ml_run_path
     )
@@ -204,39 +201,46 @@ def predict_for_example(
         index=df_features_example.index,
         columns=[f"{eval(Config.TARGET_NAME)}_prediction"],
     )
-    save_example_predictions(
-        df_y,
-        ml_run_path / C.DEPLOY_FOLDER_NAME,
-        C.EXAMPLE_PREDICTION_FILENAME,
-    )
+    return df_y
 
 
 # Run deploy
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Deploy script")
-    parser.add_argument("function", type=str, help="Function to execute")
-
-    args = parser.parse_args()
+#if __name__ == "__main__":
+def deploy(deploy_type):
+    #parser = argparse.ArgumentParser(description="Deploy script")
+    #parser.add_argument("function", type=str, help="Function to execute")
+    #args = parser.parse_args()
 
     logger = configure_main_logger("deploy")
 
     ml_run_path = C.ML_PATH / eval(f"C.{Config.RUN_TYPE}")
     frozen_library_folder_name = Config.FEATURE_LIBRARY_VERSION
 
-    if args.function == "generate_questionnaire_and_example":
+    if deploy_type == "generate_questionnaire_and_example":
         generate_questionnaire_and_example(
             ml_run_path,
             frozen_library_folder_name,
         )
-    elif args.function == "train_best_model":
+    elif deploy_type == "train_best_model":
         train_best_model(
             ml_run_path,
             frozen_library_folder_name,
         )
-    elif args.function == "predict_for_example":
-        predict_for_example(
+    elif deploy_type == "predict_for_example":
+        # Read attributes
+        df_attributes_example = pd.read_csv(
+        ml_run_path / C.DEPLOY_FOLDER_NAME / C.EXAMPLE_ANSWERS_FILENAME
+        ).set_index(C.ATTRIBUTE_ID_COL)
+        
+        # Predict
+        df_y = predict_for_example(
+            df_attributes_example,
             ml_run_path,
-            frozen_library_folder_name,
         )
-    else:
-        print(f"Function {args.function} not recognized")
+        
+        # Save predictions
+        save_example_predictions(
+            df_y,
+            ml_run_path / C.DEPLOY_FOLDER_NAME,
+            C.EXAMPLE_PREDICTION_FILENAME,
+        )

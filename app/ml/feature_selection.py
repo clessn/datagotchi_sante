@@ -12,12 +12,12 @@ from xgboost import XGBRegressor
 
 from sklearn.preprocessing import MinMaxScaler
 
-from configs.score_feature import ScoreFeatureConfig as Config
-from constants import Constants as C
-from loaders import load_df_X_y, load_feature_lookup_table
+from app.ml.configs.score_feature import ScoreFeatureConfig as Config
+from app.ml.constants import Constants as C
+from app.ml.loaders import load_df_X_y, load_feature_lookup_table
 
-from tracking import write_selected_features
-from utils import configure_main_logger
+from app.ml.tracking import write_selected_features
+from app.ml.utils import configure_main_logger
 
 logger = logging.getLogger(__name__)
 
@@ -152,7 +152,8 @@ available_feature_selection = {
     "xgboost": select_xgboost_features,
 }
 
-if __name__ == "__main__":
+#if __name__ == "__main__":
+def feature_selection():
     logger = configure_main_logger("feature_selection")
     ml_run_path = C.ML_PATH / eval(f"C.{Config.RUN_TYPE}")
     frozen_library_folder_name = Config.FEATURE_LIBRARY_VERSION
