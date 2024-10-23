@@ -1,5 +1,5 @@
 from app.main import bp
-from flask import render_template, flash, redirect, url_for, current_app, make_response, g, send_file
+from flask import render_template, flash, redirect, url_for, current_app, make_response, g, send_file, Response
 from flask_login import current_user, login_required
 from app.models import User, Log, Question, Answer
 from flask import request
@@ -10,6 +10,9 @@ import pickle
 from datetime import datetime, timezone
 import numpy as np
 import matplotlib.pyplot as plt
+# Use the Agg backend for non-GUI rendering
+import matplotlib
+matplotlib.use('Agg')
 import io
 
 # @bp.before_app_request
@@ -135,13 +138,21 @@ def radar_chart():
     ax.set_xticks(angles[:-1])
     ax.set_xticklabels(labels)
 
-    # Save plot to a BytesIO object
-    img = io.BytesIO()
-    plt.savefig(img, format='png')
-    img.seek(0)
-    plt.close()
+    # # Save plot to a BytesIO object
+    # img = io.BytesIO()
+    # plt.savefig(img, format='png')
+    # img.seek(0)
+    # plt.close()
 
-    return send_file(img, mimetype='image/png')
+    # return send_file(img, mimetype='image/png')
+
+    # Save the figure to a bytes buffer
+    buf = io.BytesIO()
+    fig.savefig(buf, format='png')
+    buf.seek(0)
+    
+    # Return the image as a response
+    return Response(buf.getvalue(), mimetype='image/png')
 
 
 @bp.route('/explain', methods=["POST"])
