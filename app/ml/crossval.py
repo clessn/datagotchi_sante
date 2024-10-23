@@ -8,14 +8,14 @@ from sklearn.model_selection import GridSearchCV, KFold
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import RobustScaler
 
-from configs.run_crossval import CrossvalConfig as Config
-from constants import Constants as C
-from loaders import load_df_X_y, load_selected_features
-from metrics import available_metrics_dict
-from models import available_models_dict
+from app.ml.configs.run_crossval import CrossvalConfig as Config
+from app.ml.constants import Constants as C
+from app.ml.loaders import load_df_X_y, load_selected_features
+from app.ml.metrics import available_metrics_dict
+from app.ml.models import available_models_dict
 
-from tracking import track_results
-from utils import configure_main_logger
+from app.ml.tracking import track_results
+from app.ml.utils import configure_main_logger
 
 logger = logging.getLogger(__name__)
 
@@ -185,7 +185,8 @@ def crossval(X, y, index, model_list):
 
 
 # Run crossval
-if __name__ == "__main__":
+#if __name__ == "__main__":
+def run_crossval():
     logger = configure_main_logger("crossval")
     ml_run_path = C.ML_PATH / eval(f"C.{Config.RUN_TYPE}")
     frozen_library_folder_name = Config.FEATURE_LIBRARY_VERSION

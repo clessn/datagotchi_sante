@@ -9,28 +9,28 @@ clean-python:
 	poetry run black .
 
 create-features:
-	poetry run python app$(SEP)ml$(SEP)feature_engineering.py
+	poetry run python -c "from app.ml.feature_engineering import feature_engineering; feature_engineering()"
 
 score-features:
-	poetry run python app$(SEP)ml$(SEP)feature_selection.py
+	poetry run python -c "from app.ml.feature_selection import feature_selection; feature_selection()"
 
 build-sandbox:
 	poetry run python app$(SEP)ml$(SEP)sandbox.py
 
 generate-example:
-	poetry run python app$(SEP)ml$(SEP)deploy.py generate_questionnaire_and_example
+	poetry run python -c "from app.ml.deploy import deploy; deploy('generate_questionnaire_and_example')"
 
 predict-for-example:
-	poetry run python app$(SEP)ml$(SEP)deploy.py predict_for_example
+	poetry run python -c "from app.ml.deploy import deploy; deploy('predict_for_example')"
 
 run-crossval:
-	poetry run python app$(SEP)ml$(SEP)crossval.py
+	poetry run python -c "from app.ml.crossval import run_crossval; run_crossval()"
 
 launch-visuals:
 	poetry run streamlit run --client.showSidebarNavigation=False app$(SEP)ml$(SEP)visuals.py
 
 train-best-model:
-	poetry run python app$(SEP)ml$(SEP)deploy.py train_best_model
+	poetry run python -c "from app.ml.deploy import deploy; deploy('train_best_model')"
 
 assign-conditions:
 	poetry run python -c "from scripts.assign_conditions import assign_conditions; assign_conditions()"

@@ -2,8 +2,8 @@ import json
 import pickle
 
 import pandas as pd
-from constants import Constants as C
-from utils import create_label
+from app.ml.constants import Constants as C
+from app.ml.utils import create_label
 
 
 def explore_raw_data(path, filename):

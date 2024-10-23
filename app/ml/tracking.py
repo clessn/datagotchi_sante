@@ -8,9 +8,9 @@ from pathlib import Path
 
 import pandas as pd
 
-from constants import Constants as C
-from loaders import load_results_metrics
-from utils import create_label
+from app.ml.constants import Constants as C
+from app.ml.loaders import load_results_metrics
+from app.ml.utils import create_label
 
 logger = logging.getLogger(__name__)
 
