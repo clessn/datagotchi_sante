@@ -1,5 +1,5 @@
 from app.main import bp
-from flask import render_template, flash, redirect, url_for, current_app, make_response, g
+from flask import render_template, flash, redirect, url_for, current_app, make_response, g, send_file, Response
 from flask_login import current_user, login_required
 from app.models import User, Log, Question, Answer
 from flask import request
@@ -8,6 +8,12 @@ from app import db
 from app import create_app
 import pickle
 from datetime import datetime, timezone
+import numpy as np
+import matplotlib.pyplot as plt
+# Use the Agg backend for non-GUI rendering
+import matplotlib
+matplotlib.use('Agg')
+import io
 
 # @bp.before_app_request
 # def before_request():
@@ -93,6 +99,61 @@ def lifestyle():
         questionnaire_dico[(question.question_id, question.question_content, question.form_id)] = question.get_form()
 
     return render_template('main/lifestyle.html', questionnaire_dico = questionnaire_dico)
+
+# Example dictionary
+data = {
+    'Key1': 0.7,
+    'Key2': 0.4,
+    'Key3': 0.9,
+    'Key4': 0.6,
+    'Key5': 0.8,
+    'Key6': 0.5
+}
+
+@bp.route('/radar_chart')
+def radar_chart():
+    # Data preparation
+    labels = list(data.keys())
+    values = list(data.values())
+
+    # Number of variables
+    num_vars = len(labels)
+
+    # Compute angle for each category on the radar chart
+    angles = np.linspace(0, 2 * np.pi, num_vars, endpoint=False).tolist()
+
+    # Make the plot circular by closing the loop
+    values += values[:1]
+    angles += angles[:1]
+
+    # Initialize the radar chart
+    fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(polar=True))
+
+    # Plot the data
+    ax.fill(angles, values, color='b', alpha=0.25)
+    ax.plot(angles, values, color='b', linewidth=2)
+
+    # Labels and styling
+    ax.set_yticklabels([])
+    ax.set_xticks(angles[:-1])
+    ax.set_xticklabels(labels)
+
+    # # Save plot to a BytesIO object
+    # img = io.BytesIO()
+    # plt.savefig(img, format='png')
+    # img.seek(0)
+    # plt.close()
+
+    # return send_file(img, mimetype='image/png')
+
+    # Save the figure to a bytes buffer
+    buf = io.BytesIO()
+    fig.savefig(buf, format='png')
+    buf.seek(0)
+    
+    # Return the image as a response
+    return Response(buf.getvalue(), mimetype='image/png')
+
 
 @bp.route('/explain', methods=["POST"])
 @login_required
