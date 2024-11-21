@@ -10,7 +10,7 @@ CONDITION_ID_LIST = [
     'explain_baseline',
     'explain_visual',
     'explain_textual',
-    'explain_contextual',
+    'explain_quantitative',
     'explain_interactive',
 ]
 
