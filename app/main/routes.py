@@ -159,7 +159,6 @@ def explain():
 
     # Convert form from lifestyle with list for questions with multiple answers
     form_data = form_todict(request.form)
-    print(form_data)
 
     # Dico for prediction
     lifestyle_dico = {}
@@ -208,8 +207,25 @@ def explain():
             lifestyle_dico[pilote_id] = answer_weight
 
         # For checkbox, result is a list not a value
-        #else:
-            #print(request.form[question_id])
+        else:
+            answers = form_data[question_id]
+            for answer_id in answers:
+                
+                # New log
+                new_log = Log(
+                timestamp=timestamp,
+                user_id=current_user.user_id,
+                question_id=question_id,
+                answer_id=answer_id,
+                phase_id='lifestyle'
+                )
+                db.session.add(new_log)
+
+                # Add save answer in dico for prediction
+                pilote_id = Question.query.filter(Question.question_id == question_id).first().pilote_id
+                answer_weight = Answer.query.filter(Answer.answer_id == answer_id).first().answer_weight
+                pilote_id_multiple = pilote_id + "_" + str(int(answer_weight))
+                lifestyle_dico[pilote_id_multiple] = '1.0'
 
     db.session.commit()
 
