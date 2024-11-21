@@ -192,8 +192,23 @@ def explain():
     #df_y = predict_for_example(lifestyle_df)
     #print(df_y)
 
+    informative_questions_content_dic = {
+        "q1": ("How many friends do you have?", 70),
+        "q2": ("How many hours of sleep do you get?", 10),
+        "q3": ("How often do you exercise?", 10),
+    }
+    explain_dic = {
+        "predicted_score": 45,
+        "intermediate_predicted_score": 38,
+        "n_informative": len(informative_questions_content_dic),
+        "informative_questions_content_dic": informative_questions_content_dic,
+    }
     form = PurchaseForm()
-    return render_template(f'main/{current_user.condition_id}.html', form = form)
+    return render_template(
+        f'main/{current_user.condition_id}.html', 
+        form = form,
+        explain_textual_dic=explain_dic,
+    )
 
 
 @bp.route('/satisfaction', methods=['GET', 'POST'])
