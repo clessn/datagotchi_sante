@@ -1,0 +1,39 @@
+{% extends "main/base_navigate.html" %}
+
+{% block app_content %}
+<br>
+<br>
+<div class ="pagestyle">
+    <table class="table table-borderless">
+        <tr> 
+            <td ALIGN="CENTER"><h4 class = "pnavbut"> <b>Explanation of our predicted mental health score.</b></h4> </td>
+        </tr>
+        <tr> 
+            <td ALIGN="LEFT">
+                <p>Your mental health score is calculated based on how you answered <strong>{{ explain_dic.n_informative }}</strong> key lifestyle questions. These questions are particularly important because our analysis showed they are the best indicators of mental well-being. Here's how your score of <strong>{{ explain_dic.predicted_score }}</strong> was determined:</p>
+
+                <p><ol>
+                {% for question_id, (question_content, _, question_coefficient) in explain_dic.informative_questions_content_dic.items() %}
+                <li><strong>{{ question_content }}</strong>: This contributes <strong>{{ question_coefficient }}%</strong> to your score.</li>
+                {% endfor %}
+                </ol></p>
+
+                <p><strong>Total Contribution:</strong> Adding these factors together: <strong>{{ explain_dic.intermediate_predicted_score }}</strong> points.</p>
+
+                <p><strong>The Remaining Points:</strong> The rest of your score, 
+                <strong>{{ explain_dic.predicted_score }} - {{ explain_dic.intermediate_predicted_score }}</strong> = <strong>{{ explain_dic.predicted_score - explain_dic.intermediate_predicted_score }}</strong> points, come from your responses to other lifestyle and socio-demographic questions. These questions collectively play a smaller role in the prediction but still provide additional insights into your mental health.</p>
+
+                <p><strong>Why This Explanation Matters:</strong> This breakdown shows how much each factor influences your score. For instance, the most influential questions highlight the areas where small changes could significantly impact your mental health score. If you'd like more detailed insights or advice on how to improve your score, feel free to explore our recommendations!</p>
+
+            </td>
+        </tr>
+    </table>
+    <a>
+        <form action="{{ url_for('main.satisfaction') }}" method="post">
+            {{ form.hidden_tag() }}
+            <span aria-hidden="true">{{ form.submit(value='Next step', class_='btn btn-success mb-2 btn-lg') }}</span>
+        </form>
+    </a>
+    <br>
+</div>
+{% endblock %}

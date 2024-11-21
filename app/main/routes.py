@@ -96,11 +96,11 @@ data = {
     'Key6': 0.5
 }
 
-@bp.route('/radar_chart')
+@bp.route('/radar_chart', methods=["GET"])
 def radar_chart():
-    # Data preparation
-    labels = list(data.keys())
-    values = list(data.values())
+
+    labels = request.args.get('labels').split(',')
+    values = [float(value) for value in request.args.get('values').split(',')]
 
     # Number of variables
     num_vars = len(labels)
@@ -113,7 +113,7 @@ def radar_chart():
     angles += angles[:1]
 
     # Initialize the radar chart
-    fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(polar=True))
+    fig, ax = plt.subplots(figsize=(3, 3), subplot_kw=dict(polar=True))
 
     # Plot the data
     ax.fill(angles, values, color='b', alpha=0.25)
@@ -123,14 +123,6 @@ def radar_chart():
     ax.set_yticklabels([])
     ax.set_xticks(angles[:-1])
     ax.set_xticklabels(labels)
-
-    # # Save plot to a BytesIO object
-    # img = io.BytesIO()
-    # plt.savefig(img, format='png')
-    # img.seek(0)
-    # plt.close()
-
-    # return send_file(img, mimetype='image/png')
 
     # Save the figure to a bytes buffer
     buf = io.BytesIO()
@@ -219,8 +211,35 @@ def explain():
     #df_y = predict_for_example(lifestyle_df)
     #print(df_y)
 
+    informative_questions_content_dic = {
+        "q1": (
+                "How many friends do you have?", 
+                "Social connections often provide emotional support and a sense of belonging.",
+                50
+            ),
+        "q2": (
+                "How many hours of sleep do you get?",
+                "Sleep helps recharge your mind and body, impacting your well-being.",
+                30
+            ),
+        "q3": (
+                "How often do you exercise?",
+                "Regular exercise reduces stress and boosts your mood.",
+                20,
+            ),
+    }
+    explain_dic = {
+        "predicted_score": 45,
+        "intermediate_predicted_score": 38,
+        "n_informative": len(informative_questions_content_dic),
+        "informative_questions_content_dic": informative_questions_content_dic,
+    }
     form = PurchaseForm()
-    return render_template(f'main/{current_user.condition_id}.html', form = form)
+    return render_template(
+        f'main/{current_user.condition_id}.html', 
+        form = form,
+        explain_dic=explain_dic,
+    )
 
 
 @bp.route('/satisfaction', methods=['GET', 'POST'])
