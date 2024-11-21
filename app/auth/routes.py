@@ -53,17 +53,31 @@ def index():
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
+    # already authentified
     if current_user.is_authenticated:
+        if current_app.config['EXPLAIN_TYPE'] is not None:
+            condition_id = current_app.config['EXPLAIN_TYPE']
+            current_user.assign_condition(condition_id)
         return redirect(url_for(current_app.config['MAIN_PAGE']))
+    
+    # new authentification
     form=LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(user_id=form.code.data).first()
-        if user.condition_id is None:
-            condition_id = get_next_condition_id(User, CONDITION_ID_LIST)
-            user.assign_condition(condition_id)
         if user is None :
             flash('Invalid code')
             return redirect(url_for('auth.login'))
+        
+        # assign a condition if
+        if current_app.config['EXPLAIN_TYPE'] is not None:
+            condition_id = current_app.config['EXPLAIN_TYPE']
+            user.assign_condition(condition_id)
+
+        else:
+            if user.condition_id is None:
+                condition_id = get_next_condition_id(User, CONDITION_ID_LIST)
+                user.assign_condition(condition_id)
+
         login_user(user)
         return redirect(url_for(current_app.config['MAIN_PAGE']))
     return render_template('auth/login.html', form=form)

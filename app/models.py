@@ -4,6 +4,7 @@ import sqlalchemy as sa
 import sqlalchemy.orm as so
 from app import db
 from app import login
+import random
 
 from flask_login import UserMixin
 
@@ -65,6 +66,27 @@ class Question(db.Model):
         for answer in answers:
             form.append((answer.answer_id,answer.answer_content))
         return form
+
+    def get_random_answer(self, seed=None):
+        """
+        Get a random answer for the question with the given question_id.
+        
+        :param seed: Seed value for reproducibility (optional).
+        :return: Randomly selected Answer object or None if no answers exist.
+        """
+        # Get all answers related to the question
+        query = self.answers.select()
+        answers = db.session.scalars(query).all()
+
+        if not answers:
+            return None  # No answers available for this question
+
+        # Set the seed if provided
+        if seed is not None:
+            random.seed(seed)
+
+        # Return a random answer
+        return random.choice(answers)
 
 class Answer(db.Model):
     answer_id: so.Mapped[str] = so.mapped_column(sa.String(64), primary_key=True)

@@ -67,3 +67,6 @@ update-deploy:
 
 start-website:
 	poetry run python microapp.py --config=default
+
+debug:
+	poetry run python microapp.py --config=debug

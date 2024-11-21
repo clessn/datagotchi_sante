@@ -35,39 +35,11 @@ def knowledge_before():
     for question in questions:
         questionnaire_dico[(question.question_id, question.question_content, question.form_id)] = question.get_form()
 
-    return render_template('main/knowledge_before.html', questionnaire_dico = questionnaire_dico)
-
-@bp.route('/knowledge_after', methods=["POST"])
-@login_required
-def knowledge_after():
-    # step 1 : extract questions ids for intent
-    questionnaire_dico_responses = {}
-    questions = Question.query.filter(Question.group_id == "intent").all()
-    for question in questions:
-        questionnaire_dico_responses[(question.question_id, question.question_content, question.form_id)] = question.get_form()
-    question_ids = [question_id for question_id, _, _ in questionnaire_dico_responses.keys()]
-    
-    # step 2 : extract and load answer values for intent
-    timestamp = datetime.now(timezone.utc)
-    for question_id in question_ids:
-        answer_id = request.form[question_id]
-        new_log = Log(
-            timestamp=timestamp,
-            user_id=current_user.user_id,
-            question_id=question_id,
-            answer_id=answer_id,
-            phase_id='intent'
-        )
-        db.session.add(new_log)
-    db.session.commit()
-    
-    # step 3 : extract questions for knowledge
-    questionnaire_dico = {}
-    questions = Question.query.filter(Question.group_id == "knowledge").all()
-    for question in questions:
-        questionnaire_dico[(question.question_id, question.question_content, question.form_id)] = question.get_form()
-
-    return render_template('main/knowledge_after.html', questionnaire_dico = questionnaire_dico)
+    return render_template(
+        'main/knowledge_before.html',
+        questionnaire_dico = questionnaire_dico,
+        skip_valid=current_app.config['SKIP_VALID'],
+    )
 
 @bp.route('/lifestyle', methods=['GET', 'POST'])
 @login_required
@@ -84,6 +56,12 @@ def lifestyle():
     timestamp = datetime.now(timezone.utc)
     for question_id in question_ids:
         answer_id = request.form[question_id]
+
+        # chose random value if not answered for debug
+        if not answer_id and current_app.config['SKIP_VALID']:
+            question = db.session.get(Question, question_id)
+            answer_id = question.get_random_answer(seed=42).answer_id
+
         new_log = Log(
             timestamp=timestamp,
             user_id=current_user.user_id,
@@ -100,7 +78,11 @@ def lifestyle():
     for question in questions:
         questionnaire_dico[(question.question_id, question.question_content, question.form_id)] = question.get_form()
 
-    return render_template('main/lifestyle.html', questionnaire_dico = questionnaire_dico)
+    return render_template(
+        'main/lifestyle.html',
+        questionnaire_dico = questionnaire_dico,
+        skip_valid=current_app.config['SKIP_VALID'],
+    )
 
 # Example dictionary
 data = {
@@ -182,6 +164,12 @@ def explain():
                     answer_id = a_id
         else:
             answer_id = request.form[question_id]
+
+        # chose random value if not answered for debug
+        if not answer_id and current_app.config['SKIP_VALID']:
+            question = db.session.get(Question, question_id)
+            answer_id = question.get_random_answer(seed=42).answer_id
+               
         new_log = Log(
             timestamp=timestamp,
             user_id=current_user.user_id,
@@ -216,8 +204,12 @@ def satisfaction():
     questions = Question.query.filter(Question.group_id == "satisfaction").all()
     for question in questions:
         questionnaire_dico[(question.question_id, question.question_content, question.form_id)] = question.get_form()
-        
-    return render_template('main/satisfaction.html', questionnaire_dico = questionnaire_dico)
+
+    return render_template(
+        'main/satisfaction.html',
+        questionnaire_dico = questionnaire_dico,
+        skip_valid=current_app.config['SKIP_VALID'],
+        )
 
 @bp.route('/intent', methods=['GET', 'POST'])
 @login_required
@@ -233,6 +225,12 @@ def intent():
     timestamp = datetime.now(timezone.utc)
     for question_id in question_ids:
         answer_id = request.form[question_id]
+
+        # chose random value if not answered for debug
+        if not answer_id and current_app.config['SKIP_VALID']:
+            question = db.session.get(Question, question_id)
+            answer_id = question.get_random_answer(seed=42).answer_id
+
         new_log = Log(
             timestamp=timestamp,
             user_id=current_user.user_id,
@@ -249,7 +247,55 @@ def intent():
     for question in questions:
         questionnaire_dico[(question.question_id, question.question_content, question.form_id)] = question.get_form()
 
-    return render_template('main/intent.html', questionnaire_dico = questionnaire_dico)
+    return render_template(
+        'main/intent.html',
+        questionnaire_dico = questionnaire_dico,
+        skip_valid=current_app.config['SKIP_VALID'],
+        )
+
+
+@bp.route('/knowledge_after', methods=["POST"])
+@login_required
+def knowledge_after():
+    # step 1 : extract questions ids for intent
+    questionnaire_dico_responses = {}
+    questions = Question.query.filter(Question.group_id == "intent").all()
+    for question in questions:
+        questionnaire_dico_responses[(question.question_id, question.question_content, question.form_id)] = question.get_form()
+    question_ids = [question_id for question_id, _, _ in questionnaire_dico_responses.keys()]
+    
+    # step 2 : extract and load answer values for intent
+    timestamp = datetime.now(timezone.utc)
+    for question_id in question_ids:
+        answer_id = request.form[question_id]
+
+        # chose random value if not answered for debug
+        if not answer_id and current_app.config['SKIP_VALID']:
+            question = db.session.get(Question, question_id)
+            answer_id = question.get_random_answer(seed=42).answer_id
+            
+        new_log = Log(
+            timestamp=timestamp,
+            user_id=current_user.user_id,
+            question_id=question_id,
+            answer_id=answer_id,
+            phase_id='intent'
+        )
+        db.session.add(new_log)
+    db.session.commit()
+    
+    # step 3 : extract questions for knowledge
+    questionnaire_dico = {}
+    questions = Question.query.filter(Question.group_id == "knowledge").all()
+    for question in questions:
+        questionnaire_dico[(question.question_id, question.question_content, question.form_id)] = question.get_form()
+
+    return render_template(
+        'main/knowledge_after.html',
+        questionnaire_dico = questionnaire_dico,
+        skip_valid=current_app.config['SKIP_VALID'],
+    )
+
 
 @bp.route('/essaim', methods=["POST"])
 @login_required
@@ -266,6 +312,12 @@ def essaim():
     timestamp = datetime.now(timezone.utc)
     for question_id in question_ids:
         answer_id = request.form[question_id]
+
+        # chose random value if not answered for debug
+        if not answer_id and current_app.config['SKIP_VALID']:
+            question = db.session.get(Question, question_id)
+            answer_id = question.get_random_answer(seed=42).answer_id
+
         new_log = Log(
             timestamp=timestamp,
             user_id=current_user.user_id,
@@ -282,7 +334,11 @@ def essaim():
     for question in questions:
         questionnaire_dico[(question.question_id, question.question_content, question.form_id)] = question.get_form()
 
-    return render_template('main/essaim.html', questionnaire_dico = questionnaire_dico)
+    return render_template(
+        'main/essaim.html',
+        questionnaire_dico = questionnaire_dico,
+        skip_valid=current_app.config['SKIP_VALID'],
+    )
 
 @bp.route('/merci', methods=["POST"])
 @login_required
