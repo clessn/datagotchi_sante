@@ -17,10 +17,14 @@ class Config(object):
 class DefaultConfig(Config):
     MAIN_PAGE='main.consent'
     SKIP_VALID=False
+    EXPLAIN_TYPE=None
 
 class DebugConfig(Config):
     MAIN_PAGE='main.consent'
     SKIP_VALID=True
+    EXPLAIN_TYPE='explain_visual'  
+    # choose amongts 'explain_baseline', 'explain_visual',
+    # 'explain_textual', 'explain_contextual', 'explain_interactive',
 
 configs = {
   'default'  : DefaultConfig,
