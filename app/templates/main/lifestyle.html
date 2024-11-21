@@ -56,7 +56,7 @@
                     {% for (answer_id, answer_content) in questionnaire_value %}
                         <div>
                             <label>
-                                <input type="checkbox" id={{answer_id}} name={{question_id}} value={{answer_id}} />
+                                <input type="checkbox" id={{answer_id}} name={{question_id}}[] value={{answer_id}} />
                                 {{answer_content}}
                             </label>
                         </div>
