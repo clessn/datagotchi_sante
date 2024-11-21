@@ -50,6 +50,21 @@
                 <br><br>
             {% endif %}
 
+            {% if form_id == "checkbox" %}
+                <h3 style="margin-left: 50px;"><label for={{question_id}}>{{question_content}}</label></h3>
+                <div class="checkbox-group" data-question-id="{{question_id}}" style="margin-left: 50px;">
+                    {% for (answer_id, answer_content) in questionnaire_value %}
+                        <div>
+                            <label>
+                                <input type="checkbox" id={{answer_id}} name={{question_id}} value={{answer_id}} />
+                                {{answer_content}}
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
+                <br><br>
+            {% endif %}
+
         {% endfor %}
         
         <h3 style="color: rgb(89, 108, 71); text-align: right;"><b>Please submit your answers by clicking on this button :</b></h3>
@@ -104,6 +119,27 @@
                 return false;
             }
         }
+
+        // For checkbox questions
+        const checkboxGroups = document.querySelectorAll('.checkbox-group');
+        for (let i = 0; i < checkboxGroups.length; i++) {
+            const checkboxes = checkboxGroups[i].querySelectorAll('input[type="checkbox"]');
+            let isChecked = false;
+
+            // Check if at least one checkbox in the group is checked
+            for (let j = 0; j < checkboxes.length; j++) {
+                console.log(checkboxes[j].checked)
+                if (checkboxes[j].checked) {
+                    isChecked = true;
+                    break; // Exit loop if one is found checked
+                }
+            }
+
+            if (!isChecked) {
+                return false; // If no checkbox is checked in a group, return false
+            }
+        }
+
         return true;
     }
 
