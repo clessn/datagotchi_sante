@@ -16,6 +16,8 @@ import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use('Agg')
 import io
+# Treat multiple answers for checkbox questions
+from werkzeug.datastructures import ImmutableMultiDict
 
 # @bp.before_app_request
 # def before_request():
@@ -138,10 +140,26 @@ def radar_chart():
     # Return the image as a response
     return Response(buf.getvalue(), mimetype='image/png')
 
+# Function to transform MultiDict (due to checkbox questions) of the form to a simple dict
+def form_todict(request_form):
+    form_data = request_form.to_dict(flat=False)
+    cleaned_form_data = {}
+    for key, value in form_data.items():
+        # If [] in the key, it is a checkbox question
+        if "[]" in key:
+            cleaned_form_data[key.rstrip("[]")] = value
+        else:
+            cleaned_form_data[key] = value[0]
+    return cleaned_form_data
+
 
 @bp.route('/explain', methods=["POST"])
 @login_required
 def explain():
+
+    # Convert form from lifestyle with list for questions with multiple answers
+    form_data = form_todict(request.form)
+    print(form_data)
 
     # Dico for prediction
     lifestyle_dico = {}
@@ -155,34 +173,43 @@ def explain():
     # step 2 : extract and load answer values for lifestyle
     timestamp = datetime.now(timezone.utc)
     for (question_id, question_content, form_id), questionnaire_value in questionnaire_dico_responses.items():
-        # For cursor, answer_content is registered instead of answerd_id
-        if form_id=="cursor":
-            answer_content = request.form[question_id]
-            # Find the answer_id associated to this answer_content
-            for a_id, a_content in questionnaire_value:
-                if a_content == answer_content:
-                    answer_id = a_id
-        else:
-            answer_id = request.form[question_id]
+        
+        # For checkbox, result is a list not a value
+        if form_id!="checkbox":
 
-        # chose random value if not answered for debug
-        if not answer_id and current_app.config['SKIP_VALID']:
-            question = db.session.get(Question, question_id)
-            answer_id = question.get_random_answer(seed=42).answer_id
-               
-        new_log = Log(
-            timestamp=timestamp,
-            user_id=current_user.user_id,
-            question_id=question_id,
-            answer_id=answer_id,
-            phase_id='lifestyle'
-        )
-        db.session.add(new_log)
+            # For cursor, answer_content is registered instead of answerd_id
+            if form_id=="cursor":
+                answer_content = form_data[question_id]
+                # Find the answer_id associated to this answer_content
+                for a_id, a_content in questionnaire_value:
+                    if a_content == answer_content:
+                        answer_id = a_id
+            
+            else:
+                answer_id = form_data[question_id]
 
-        # Add save answer in dico for prediction
-        pilote_id = Question.query.filter(Question.question_id == question_id).first().pilote_id
-        answer_weight = Answer.query.filter(Answer.answer_id == answer_id).first().answer_weight
-        lifestyle_dico[pilote_id] = answer_weight
+            # Chose random value if not answered for debug
+            if not answer_id and current_app.config['SKIP_VALID']:
+                question = db.session.get(Question, question_id)
+                answer_id = question.get_random_answer(seed=42).answer_id
+                
+            new_log = Log(
+                timestamp=timestamp,
+                user_id=current_user.user_id,
+                question_id=question_id,
+                answer_id=answer_id,
+                phase_id='lifestyle'
+            )
+            db.session.add(new_log)
+
+            # Add save answer in dico for prediction
+            pilote_id = Question.query.filter(Question.question_id == question_id).first().pilote_id
+            answer_weight = Answer.query.filter(Answer.answer_id == answer_id).first().answer_weight
+            lifestyle_dico[pilote_id] = answer_weight
+
+        # For checkbox, result is a list not a value
+        #else:
+            #print(request.form[question_id])
 
     db.session.commit()
 
