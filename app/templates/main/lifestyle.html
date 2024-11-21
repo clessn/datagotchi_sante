@@ -35,7 +35,7 @@
                         <div class="likert-point" data-value={{answer_id}}><span class="likert-value">{{answer_content}}</span></div>
                     {% endfor %}
                 </div>
-                <input type="hidden" id={{question_id}} name={{question_id}} value="5">
+                <input type="hidden" id={{question_id}} name={{question_id}} value="">
                 <br><br>
             {% endif %}
 
@@ -100,7 +100,7 @@
         // For likert questions
         const hiddenInputs = document.querySelectorAll('input[type="hidden"]');
         for (let i = 0; i < hiddenInputs.length; i++) {
-            if (hiddenInputs[i].value === '5') {
+            if (hiddenInputs[i].value === "") {
                 return false;
             }
         }
