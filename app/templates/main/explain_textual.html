@@ -6,11 +6,31 @@
 <div class ="pagestyle">
     <table class="table table-borderless">
         <tr> 
-            <td ALIGN="CENTER"><h4 class = "pnavbut"> <b>Hello ! Je suis Explain Baseline !!</b></h4> </td>
+            <td ALIGN="CENTER"><h4 class = "pnavbut"> <b>Explanation of our predicted mental health score.</b></h4> </td>
         </tr>
         <tr> 
             <td ALIGN="LEFT">
-                <p>Vous consentez à ce que nous utilisions vos données à des fins scientifiques. Merci !</p>
+                <p>
+                    Your mental health score is {{ explain_dic.predicted_score }}. This score reflects how some of your lifestyle habits influence your overall well-being, based on patterns we've observed in a large group of people. Let me explain this without technical jargon:
+                </p>
+                <p>
+                    We found that <strong>{{ explain_dic.n_informative }}</strong> key questions had the most impact on your mental health score:
+                </p>
+                <ol>
+                    {% for question_id, (question_content, question_data, _) in explain_dic.informative_questions_content_dic.items() %}
+                    <li>
+                        <strong>{{ question_content }}</strong>: {{ question_data }}
+                    </li>
+                    {% endfor %}
+                </ol>
+                <p>
+                    These factors combined explain most of your score. The remaining points come from other areas in your life, such as your daily stress levels, eating habits, or work-life balance. These areas are harder to capture but still contribute to your overall mental health.
+                </p>
+                <p>
+                    The goal of this tool is to help you understand where you might focus your energy to improve your well-being. Based on your responses, small changes in these areas could make a meaningful difference to your mental health.
+                </p>
+                
+
             </td>
         </tr>
     </table>
