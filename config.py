@@ -16,8 +16,13 @@ class Config(object):
 
 class DefaultConfig(Config):
     MAIN_PAGE='main.consent'
+    SKIP_VALID=False
 
+class DebugConfig(Config):
+    MAIN_PAGE='main.consent'
+    SKIP_VALID=True
 
 configs = {
   'default'  : DefaultConfig,
+  'debug'  : DebugConfig,
 }

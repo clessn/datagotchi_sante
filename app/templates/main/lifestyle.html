@@ -107,13 +107,12 @@
         return true;
     }
 
-
+    const skip_valid = {{ skip_valid | tojson }};
     document.querySelector('form').addEventListener('submit', function(event) {
-        if (!validateForm()) {
+        if (!validateForm() && !skip_valid) {
             alert('Please answer all questions before submitting.');
             event.preventDefault();
         } else {
-            alert('Your answers have been successfully submitted!');
             window.location.href = "{{ url_for('main.intent')}}"; // Obsolete due to action ?
         }
     });

@@ -35,7 +35,11 @@ def knowledge_before():
     for question in questions:
         questionnaire_dico[(question.question_id, question.question_content, question.form_id)] = question.get_form()
 
-    return render_template('main/knowledge_before.html', questionnaire_dico = questionnaire_dico)
+    return render_template(
+        'main/knowledge_before.html',
+        questionnaire_dico = questionnaire_dico,
+        skip_valid=current_app.config['SKIP_VALID'],
+    )
 
 @bp.route('/knowledge_after', methods=["POST"])
 @login_required
@@ -84,6 +88,10 @@ def lifestyle():
     timestamp = datetime.now(timezone.utc)
     for question_id in question_ids:
         answer_id = request.form[question_id]
+        # chose random value if not answered for debug
+        if not answer_id and current_app.config['SKIP_VALID']:
+            question = db.session.get(Question, question_id)
+            answer_id = question.get_random_answer(seed=42).answer_id
         new_log = Log(
             timestamp=timestamp,
             user_id=current_user.user_id,
@@ -100,7 +108,11 @@ def lifestyle():
     for question in questions:
         questionnaire_dico[(question.question_id, question.question_content, question.form_id)] = question.get_form()
 
-    return render_template('main/lifestyle.html', questionnaire_dico = questionnaire_dico)
+    return render_template(
+        'main/lifestyle.html',
+        questionnaire_dico = questionnaire_dico,
+        skip_valid=current_app.config['SKIP_VALID'],
+    )
 
 # Example dictionary
 data = {
