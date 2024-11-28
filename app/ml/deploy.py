@@ -3,6 +3,7 @@ import logging
 
 import numpy as np
 import pandas as pd
+from pathlib import Path
 from sklearn.model_selection import GridSearchCV
 
 from app.ml.configs.deploy import DeployConfig as Config
@@ -183,17 +184,31 @@ def create_features_for_example(df_attributes_example, ml_run_path):
 
 
 def predict_for_example(
-    df_attributes_example,
-    ml_run_path= C.ML_PATH / eval(f"C.{Config.RUN_TYPE}")
+    df_example,
+    model_info,
+    is_df_features = False
 ):
-    df_features_example = create_features_for_example(
-        df_attributes_example, ml_run_path
-    )
+    # a path is given to acces the model
+    if isinstance(model_info, Path):
+        ml_run_path = model_info
+        best_model, selected_features = load_best_model(
+            ml_run_path / C.DEPLOY_FOLDER_NAME,
+            C.BEST_MODEL_FILENAME,
+        )
+    # the model tuple is given
+    elif isinstance(model_info, tuple):
+        best_model, selected_features = model_info
+    else:
+        print("Error with model_info given in predict_for_example function")
 
-    best_model, selected_features = load_best_model(
-        ml_run_path / C.DEPLOY_FOLDER_NAME,
-        C.BEST_MODEL_FILENAME,
-    )
+    # if df is attributes, convert it into features
+    if not is_df_features:
+        df_features_example = create_features_for_example(
+            df_example, ml_run_path
+        )
+    else:
+        df_features_example = df_example
+
     assert all(col in df_features_example.columns for col in selected_features)
     X = df_features_example[selected_features].values
     y = best_model.predict(X)
@@ -235,8 +250,8 @@ def deploy(deploy_type):
         
         # Predict
         df_y = predict_for_example(
-            df_attributes_example,
-            ml_run_path,
+            df_example=df_attributes_example,
+            model_info=ml_run_path,
         )
         
         # Save predictions

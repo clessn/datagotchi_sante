@@ -153,8 +153,9 @@ def explain():
     form_data = form_todict(request.form)
 
     # Dico for prediction
-    features = current_app.features
-    lifestyle_dico = {feature: None for feature in features['feature_names']}
+    best_model = current_app.best_model
+    selected_features = current_app.selected_features
+    lifestyle_dico = {feature: 0.0 for feature in selected_features}
 
     # step 1 : extract questions for lifestyle
     questionnaire_dico_responses = {}
@@ -194,11 +195,18 @@ def explain():
             )
             db.session.add(new_log)
 
-            # Add save answer in dico for prediction
+            # Find pilote_id for this question and answer_weight 
             pilote_id = Question.query.filter(Question.question_id == question_id).first().pilote_id
             answer_weight = Answer.query.filter(Answer.answer_id == answer_id).first().answer_weight
-            if pilote_id in lifestyle_dico:
-                lifestyle_dico[pilote_id] = answer_weight
+
+            # if scroll, it is a nominal single variable and we have to one-hot encode it
+            if form_id=="scroll":
+                pilote_id_nominal_single = pilote_id + "_" + str(float(answer_weight))
+                if pilote_id_nominal_single in lifestyle_dico:
+                    lifestyle_dico[pilote_id_nominal_single] = 1.0
+            else:
+                if pilote_id in lifestyle_dico:
+                    lifestyle_dico[pilote_id] = answer_weight
 
         # For checkbox, result is a list not a value
         else:
@@ -218,17 +226,24 @@ def explain():
                 # Add save answer in dico for prediction
                 pilote_id = Question.query.filter(Question.question_id == question_id).first().pilote_id
                 answer_weight = Answer.query.filter(Answer.answer_id == answer_id).first().answer_weight
-                pilote_id_multiple = pilote_id + "_" + str(int(answer_weight))
-                if pilote_id_multiple in lifestyle_dico:
-                    lifestyle_dico[pilote_id_multiple] = '1.0'
+                pilote_id_nominal_multiple = pilote_id + "_" + str(int(answer_weight))
+                if pilote_id_nominal_multiple in lifestyle_dico:
+                    lifestyle_dico[pilote_id_nominal_multiple] = 1.0
 
     db.session.commit()
 
     # Convert to dataframe    
     lifestyle_df = pd.DataFrame([lifestyle_dico])
     print(lifestyle_df)
-    #df_y = predict_for_example(lifestyle_df)
-    #print(df_y)
+
+    # Predict
+    df_y = predict_for_example(
+        df_example = lifestyle_df,
+        model_info = (best_model, selected_features),
+        is_df_features = True
+    )
+    predicted_score = df_y['score_tot_prediction'].iloc[0]
+    print(predicted_score)
 
     informative_questions_content_dic = {
         "q1": (
