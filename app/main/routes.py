@@ -153,7 +153,8 @@ def explain():
     form_data = form_todict(request.form)
 
     # Dico for prediction
-    lifestyle_dico = {}
+    features = current_app.features
+    lifestyle_dico = {feature: None for feature in features['feature_names']}
 
     # step 1 : extract questions for lifestyle
     questionnaire_dico_responses = {}
@@ -196,7 +197,8 @@ def explain():
             # Add save answer in dico for prediction
             pilote_id = Question.query.filter(Question.question_id == question_id).first().pilote_id
             answer_weight = Answer.query.filter(Answer.answer_id == answer_id).first().answer_weight
-            lifestyle_dico[pilote_id] = answer_weight
+            if pilote_id in lifestyle_dico:
+                lifestyle_dico[pilote_id] = answer_weight
 
         # For checkbox, result is a list not a value
         else:
@@ -217,7 +219,8 @@ def explain():
                 pilote_id = Question.query.filter(Question.question_id == question_id).first().pilote_id
                 answer_weight = Answer.query.filter(Answer.answer_id == answer_id).first().answer_weight
                 pilote_id_multiple = pilote_id + "_" + str(int(answer_weight))
-                lifestyle_dico[pilote_id_multiple] = '1.0'
+                if pilote_id_multiple in lifestyle_dico:
+                    lifestyle_dico[pilote_id_multiple] = '1.0'
 
     db.session.commit()
 
