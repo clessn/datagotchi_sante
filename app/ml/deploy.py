@@ -96,6 +96,7 @@ def generate_questionnaire_and_example(ml_run_path, frozen_library_folder_name):
         ml_run_path / C.DEPLOY_FOLDER_NAME,
         C.QUESTIONNAIRE_FILENAME,
         C.EXAMPLE_ANSWERS_FILENAME,
+        C.DEPLOY_FEATURE_NAMES,
     )
 
 

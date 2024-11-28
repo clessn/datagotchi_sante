@@ -219,7 +219,12 @@ def track_results(
 
 
 def write_example(
-    df_questionnaire, df_example, deploy_path, questionnaire_filename, example_filename
+    df_questionnaire,
+    df_example,
+    deploy_path,
+    questionnaire_filename,
+    example_filename,
+    deploy_feature_names_filename,
 ):
     # Create directory if missing
     Path(deploy_path).mkdir(parents=True, exist_ok=True)
@@ -229,6 +234,15 @@ def write_example(
 
     df_example.to_csv(deploy_path / example_filename)
     logger.info("Example saved !")
+
+    df_feature_names = pd.DataFrame(
+        df_example.columns,
+        columns=['feature_names']
+    )
+    df_feature_names.to_csv(
+        deploy_path / deploy_feature_names_filename,
+        index=False,
+    )
 
 
 def write_best_model(

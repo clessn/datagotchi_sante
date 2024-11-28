@@ -43,6 +43,7 @@ class Constants:
     FEATURE_LOOKUP_FILENAME = "feature_lookup.csv"
     QUESTIONNAIRE_FILENAME = "questionnaire.csv"
     EXAMPLE_ANSWERS_FILENAME = "example_answers.csv"
+    DEPLOY_FEATURE_NAMES = "deploy_feature_names.csv"
     BEST_MODEL_FILENAME = "model.pkl"
     BEST_MODEL_COEFFICIENT_FILENAME = "model_coefficients.json"
     BEST_PARAMS_FILENAME = "model_details.json"
