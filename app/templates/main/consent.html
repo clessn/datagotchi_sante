@@ -1,27 +1,38 @@
 {% extends "main/base_navigate.html" %}
 
 {% block app_content %}
-<br>
-<br>
-<div class ="pagestyle">
+<div class="pagestyle" style="margin: 40px auto; max-width: 800px; padding: 20px; border: 1px solid #ccc; border-radius: 10px; background-color: #f9f9f9;">
     <table class="table table-borderless">
-        <tr> 
-            <td ALIGN="CENTER"><h4 class = "pnavbut"> <b>Consent form</b></h4> </td>
-        </tr>
-        <tr> 
-            <td ALIGN="LEFT">
-                <p>You consent to us using your data for scientific purposes. Thank you for your consent!</p>
+        <tr>
+            <td ALIGN="CENTER">
+                <h4 style="font-family: 'Arial', sans-serif; font-size: 1.5em; font-weight: bold;">Consent Form</h4>
             </td>
         </tr>
-
+        <tr>
+            <td ALIGN="LEFT">
+                <p style="font-family: 'Arial', sans-serif; font-size: 1.2em; line-height: 1.5;">
+                    <strong>Consent Form for Participation in a Scientific Experiment</strong><br><br>
+                    <strong>Title of the Study:</strong> Explainability in Mental Health Prediction: Understanding the Role of Lifestyle Variables<br><br>
+                    <strong>Purpose of the Study:</strong> You are invited to participate in a scientific study conducted by researchers at UCLouvain. The purpose of this experiment is to explore how different methods of explaining AI predictions influence understanding, satisfaction, and decision-making in the context of mental health.<br><br>
+                    <strong>What Participation Involves:</strong><br>
+                    If you agree to participate, you will be asked to:<br>
+                    - Provide basic information about your lifestyle (e.g., sleep, exercise, social interactions).<br>
+                    - Interact with an AI model that predicts mental health scores based on lifestyle variables.<br>
+                    - Receive explanations about the predictions in one of several formats (e.g., text, visual, contextual).<br>
+                    - Answer questionnaires before and after the interaction to assess your knowledge, satisfaction, and intent to act on the lifestyle variables.</li>
+                    The entire process will take approximately 30 minutes.<br><br>
+                </p>
+                
+            </td>
+        </tr>
     </table>
-    
+
     <form action="/knowledge_before" method="post">
-        <div style="text-align: right;">
-            <input type="submit" value="Next" class="btn btn-success mb-2 btn-lg">
+        <div style="text-align: left;">
+            <button type="submit" class="custom-btn">
+                Next
+            </button>
         </div>
     </form>
 </div>
 {% endblock %}
-
-

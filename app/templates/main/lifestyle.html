@@ -19,7 +19,7 @@
         {% for (question_id, question_content, form_id), questionnaire_value  in questionnaire_dico.items() %}
 
             {% if form_id == "scroll" %}
-                <h3 style="margin-left: 50px;"><label for={{question_id}}>{{question_content}}</label></h3>
+                <h4 style="margin-left: 50px;"><label for={{question_id}}>{{question_content}}</label></h4>
                 <select id={{question_id}} name={{question_id}} class="large-text" style="margin-left: 50px;">
                     <option value=""></option>
                     {% for (answer_id, answer_content) in questionnaire_value %}
@@ -29,7 +29,7 @@
             {% endif %}
 
             {% if form_id == "likert" %}
-                <h3 style="margin-left: 50px;"><label for={{question_id}}>{{question_content}}</label></h3>
+                <h4 style="margin-left: 50px;"><label for={{question_id}}>{{question_content}}</label></h4>
                 <div class="likert-scale">
                     {% for (answer_id, answer_content) in questionnaire_value %}
                         <div class="likert-point" data-value={{answer_id}}><span class="likert-value">{{answer_content}}</span></div>
@@ -40,18 +40,24 @@
             {% endif %}
 
             {% if form_id == "cursor" %}
-                <h3 style="margin-left: 50px;"><label for={{question_id}}>{{question_content}}</label></h3>
-                <input type="range" id={{question_id}} name={{question_id}} min="1" max="{{ questionnaire_value | length }}" value="1" style="margin-left: 50px; width: calc(50% - 20px);" step="1" list="tickmarks_{{question_id}}">
-                <div class="tickmarks" style="margin-left: 50px; width: calc(50% - 20px); position: absolute; left: 0; right: 0; display: flex; justify-content: space-between; font-size: 12px;">
-                    {% for (answer_id, answer_content) in questionnaire_value %}
-                        <span>{{ answer_content }}</span>
-                    {% endfor %}
+                <h4 style="margin-left: 50px;margin-bottom: 55px;">
+                    <label for="{{question_id}}">{{question_content}}</label>
+                </h4>
+                <div class="range-container" style="margin-left: 50px; width: calc(100% - 100px);">
+                    <input type="range" id="{{question_id}}" name="{{question_id}}" 
+                           min="1" max="{{ questionnaire_value | length }}" value="1" 
+                           style="width: 100%;" step="1" list="tickmarks_{{question_id}}">
+                    <div class="tickmarks" style="position: absolute; left: 0; right: 0; display: flex; justify-content: space-between; font-size: 15px; top: -25px;">
+                        {% for (answer_id, answer_content) in questionnaire_value %}
+                            <span>{{ answer_content }}</span>
+                        {% endfor %}
+                    </div>
                 </div>
                 <br><br>
             {% endif %}
 
             {% if form_id == "checkbox" %}
-                <h3 style="margin-left: 50px;"><label for={{question_id}}>{{question_content}}</label></h3>
+                <h4 style="margin-left: 50px;"><label for={{question_id}}>{{question_content}}</label></h4>
                 <div class="checkbox-group" data-question-id="{{question_id}}" style="margin-left: 50px;">
                     {% for (answer_id, answer_content) in questionnaire_value %}
                         <div>
@@ -67,9 +73,9 @@
 
         {% endfor %}
         
-        <h3 style="color: rgb(89, 108, 71); text-align: right;"><b>Please submit your answers by clicking on this button :</b></h3>
-            <div style="text-align: right;">
-                <input type="submit" value="Next" class="btn btn-success mb-2 btn-lg">
+        <h4 style="color: rgb(89, 108, 71); text-align: left;"><b>Please submit your answers by clicking on this button :</b></h4>
+            <div style="text-align: left;">
+                <input type="submit" value="Next" class="custom-btn">
             </div>
             <h4 style="color: red; text-align: right;">Make sure to fill out all fields before submitting.</h4>
             <br><br>  

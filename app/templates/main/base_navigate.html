@@ -6,43 +6,18 @@
 
 {% block navbar %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}">
-    <nav class = "firstnavbar">
+    <nav class="firstnavbar">
         <div class="container">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="{{ url_for('main.consent') }}"> <img src="{{ url_for('static', filename='img/logo.jpg')}}" height="75px"></a>
-            </div>
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-left">
-                    <li><a href="{{ url_for('main.consent') }}"><h1 class = "pnavbut"> <b>Explainability in mental health</b></h1></a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <nav class="secondnavbar">
-        <div class="container">
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    <li><a href="{{ url_for('main.consent') }}"><p class = "secondnavbut"> Consent</p></a></li>
-                    <li><a href="{{ url_for('main.knowledge_before') }}"><p class = "secondnavbut"> Know. Before</p></a></li>
-                    <li><a href="{{ url_for('main.lifestyle') }}"><p class = "secondnavbut"> Lifestyle</p></a></li>
-                    <li><a href="{{ url_for('main.explain') }}"><p class = "secondnavbut"> Explain</p></a></li>
-                    <li><a href="{{ url_for('main.satisfaction') }}"><p class = "secondnavbut"> Satisfaction</p></a></li>
-                    <li><a href="{{ url_for('main.intent') }}"><p class = "secondnavbut"> Intent</p></a></li>
-                    <li><a href="{{ url_for('main.knowledge_after') }}"><p class = "secondnavbut"> Know. After</p></a></li>
-                    <li><a href="{{ url_for('main.essaim') }}"><p class = "secondnavbut"> ESSAIM</p></a></li>
-                    <li><a href="{{ url_for('main.merci') }}"><p class = "secondnavbut"> Merci</p></a></li>
-                </ul>
+                <a class="navbar-brand" href="{{ url_for('main.consent') }}">
+                    <img src="{{ url_for('static', filename='img/logo.png')}}" height="45px" alt="Logo">
+                </a>
+                <h1 class="site-title">Mental Health Predictor</h1>
             </div>
         </div>
     </nav>
 {% endblock %}
+
 {% block content %}
-        {# application content needs to be provided in the app_content block #}
-        {% block app_content %}{% endblock %}
+    {% block app_content %}{% endblock %}
 {% endblock %}

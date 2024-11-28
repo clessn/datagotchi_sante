@@ -4,24 +4,30 @@
 
         {% for (question_id, question_content, form_id), questionnaire_value  in questionnaire_dico.items() %}
             {% if form_id == "likert" %}
-                <h3 style="margin-left: 50px;"><label for={{question_id}}>{{question_content}}</label></h3>
+                <h4>{{ question_content }}</h4>
                 <div class="likert-scale">
                     {% for (answer_id, answer_content) in questionnaire_value %}
-                        <div class="likert-point" data-value={{answer_id}}><span class="likert-value">{{answer_content}}</span></div>
+                        <div class="likert-point" data-value="{{answer_id}}">
+                            <span class="likert-value">{{answer_content}}</span>
+                        </div>
                     {% endfor %}
-                </div>
-                <input type="hidden" id={{question_id}} name={{question_id}} value="">
-                <br><br>
+            </div>
+            <input type="hidden" id="{{question_id}}" name="{{question_id}}" value="">
+            <br><br>
             {% endif %}
-
+            
         {% endfor %}
+    
+
         <br>
 
-        <h3 style="color: rgb(89, 108, 71); text-align: right;"><b>Please submit your answers by clicking on this button :</b></h3>
-        <div style="text-align: right;">
-            <input type="submit" value="Next" class="btn btn-success mb-2 btn-lg">
+        <p>
+        Please submit your answers by clicking on this button.<br>
+        Make sure to fill out all fields before submitting.
+        </p>
+        <div style="text-align: left;">
+            <input type="submit" value="Next" class="custom-btn">
         </div>
-        <h4 style="color: red; text-align: right;">Make sure to fill out all fields before submitting.</h4>
         <br><br>
 
     </td>

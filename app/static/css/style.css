@@ -1,21 +1,26 @@
 .plabel {
-    color:rgb(64, 65, 63);
-    font-size: 25px
-  }
+  color: rgb(64, 65, 63);
+  font-size: 25px;
+}
+
 .pnavbut {
   color: rgb(64, 65, 63);
-  font-size: 30px
+  font-size: 30px;
 }
+
 .navbar-custom {
-    background-color: rgb(171, 37, 41);
+  background-color: rgb(171, 37, 41);
 }
-body{ 
-  background-color: rgb(237, 245, 213);
+
+body { 
+  background-color: rgb(50, 91, 126);
   border-radius: 25px;
+  font-family: 'Arial', sans-serif; /* Clean and professional font */
 }
-.button{
+
+.button {
   background-color: rgb(109, 110, 109);
-  color:rgb(249, 250, 248);
+  color: rgb(249, 250, 248);
 }
 
 .blocktext {
@@ -23,82 +28,193 @@ body{
   margin-right: auto;
   width: 6em;
 }
+
 .align {
-  text-align : center;
+  text-align: center;
 }
+
 .titlecolor {
-  color:rgb(89, 108, 71)
+  color: rgb(89, 108, 71);
 }
 
 .firstnavbar { 
-  background-color:rgb(255, 255, 255)
+  background-color: rgb(255, 255, 255);
 }
 
 .secondnavbar { 
-  background-color:rgb(66, 62, 62);
+  background-color: rgb(66, 62, 62);
   text-align: center;
 }
 
 .secondnavbut {
   color: rgb(245, 247, 243);
-  font-size: 20px
+  font-size: 20px;
+  text-transform: capitalize; /* Consistent casing for navigation */
+  padding: 10px 15px;
+}
+
+.secondnavbut:hover {
+  color: rgb(171, 37, 41); /* Hover effect for navigation links */
+  text-decoration: none; /* Prevent underline on hover */
 }
 
 .recommendations {
-  background-color:rgb(255, 255, 255);
+  background-color: rgb(255, 255, 255);
   border-radius: 30px;
+  padding: 20px; /* Added padding for content spacing */
 }
 
 .pagestyle {
-  background-color:rgb(255, 255, 255);
+  background-color: rgb(255, 255, 255);
   border-radius: 30px;
+  margin: 40px auto; /* Add margins to center content */
+  max-width: 1100px; /* Limit the width for better readability */
+  padding: 20px; /* Add padding for spacing */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for professional look */
+}
+
+.pagestyle p {
+  font-size: 1.2em; /* Increase font size for better readability */
+  line-height: 1.6; /* Improve line spacing */
+  color: rgb(64, 65, 63); /* Match content text color */
+}
+
+.pagestyle h4 {
+  font-size: 1.3em; /* Larger and bolder header */
+  color: rgb(64, 65, 63);
+  font-weight: bold;
 }
 
 .identtext {
-  text-indent: 14em ;
+  text-indent: 14em;
   color: rgb(245, 247, 243);
   font-size: 25px;
 }
 
-.staridenttext{
-  text-indent: 1em ;
+.staridenttext {
+  text-indent: 1em;
 }
-
 
 .large-text {
   font-size: 20px; 
 }
+
 .likert-scale {
   display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-  margin-left: 300px; 
-  margin-right: 300px; 
+  justify-content: space-between; /* Spread points evenly */
+  margin: 40px auto; /* Add more spacing for clarity */
+  max-width: 1000px; /* Increase the scale width for better clarity */
 }
+
 .likert-point {
   position: relative;
-  width: 30px;
-  height: 30px;
+  width: 50px; /* Larger points for better visibility */
+  height: 50px;
   border-radius: 50%;
   background-color: #ccc;
   cursor: pointer;
+  margin: 0 15px; /* Add more spacing between points */
+  transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
 }
+
 .likert-point:hover {
-  background-color: black;
+  background-color: rgb(50, 91, 126); /* Blue color for hover */
+  transform: scale(1.1); /* Slightly enlarge the point on hover */
 }
+
 .likert-value {
   position: absolute;
-  bottom: -40px; /* Increasing spacing from bottom line */
+  bottom: -45px; /* Adjust vertical position */
   left: 50%;
   transform: translateX(-50%);
-  font-size: 20px; /* Increasing text size for choices */
-  color: green; /* Changing text color */
-  white-space: nowrap; /* Preventing line breaks */
+  font-size: 15px; /* Larger and more readable labels */
+  color: rgb(50, 91, 126); /* Blue color for labels */
+  white-space: nowrap;
+  text-align: center;
+  padding: 0 5px; /* Added padding to avoid text overlap */
+  font-weight: 600; /* Slightly bolder text */
+  font-family: 'Arial', sans-serif; /* Clearer font */
 }
-/* Adding a left margin for the first point and a right margin for the last point */
+
 .likert-point:first-child {
-  margin-left: 20px;
+  margin-left: 30px; /* Extra margin on the left */
 }
+
 .likert-point:last-child {
-  margin-right: 20px;
+  margin-right: 30px; /* Extra margin on the right */
+}
+
+.likert-scale-container {
+  display: flex;
+  justify-content: center; /* Center the scale */
+  align-items: center;
+  flex-wrap: wrap; /* Allow the scale to wrap on smaller screens */
+  gap: 20px; /* Space between the points and labels */
+}
+
+.likert-scale-container h3 {
+  font-size: 1.5em;
+  color: rgb(50, 91, 126);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Button Styling */
+.btn-primary {
+  background-color: rgb(171, 37, 41); /* Red theme for buttons */
+  border: none;
+  color: rgb(245, 247, 243);
+  font-size: 1.2em;
+  padding: 10px 20px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: rgb(109, 110, 109); /* Darker hover effect */
+}
+
+.custom-btn {
+  font-size: 1.2em;
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: #007bff;
+  border: none;
+  color: white; /* Ensures text is visible */
+  cursor: pointer;
+}
+
+.custom-btn:hover {
+  background-color: #0056b3; /* Optional hover effect */
+}
+
+.site-title {
+  white-space: nowrap; /* Prevent wrapping */
+  text-align: center; /* Center the title */
+  font-size: 2em; /* Adjust font size if necessary */
+  margin: 20px 0; /* Add 20px margin on top and bottom, none on sides */
+}
+
+.range-container {
+  position: relative;
+  width: 100%; /* Ensures it uses the available width */
+  max-width: 100%; /* Prevents overflow */
+}
+
+input[type="range"] {
+  width: 100%; /* Makes the range input take up the full width of the container */
+  margin: 0; /* Removes any extra margin */
+}
+
+.tickmarks {
+  width: 100%; /* Ensures the tickmarks are aligned with the range input */
+  position: absolute;
+  top: -25px; /* Adjust to place the tickmarks just above the range input */
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+.checkbox-group label {
+  font-weight: normal; /* Remove bold styling */
 }
