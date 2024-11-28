@@ -4,10 +4,10 @@ import numpy as np
 import pandas as pd
 import plotly.express as px
 import streamlit as st
-from configs.visuals import VisualsConfig as Config
-from constants import Constants as C
-from loaders import load_config, load_hp, load_results_metrics
-from visuals import menu
+from app.ml.configs.visuals import VisualsConfig as Config
+from app.ml.constants import Constants as C
+from app.ml.loaders import load_config, load_hp, load_results_metrics
+from app.ml.visuals import menu
 
 ###################### Functions  ########################
 

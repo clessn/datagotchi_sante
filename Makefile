@@ -27,7 +27,7 @@ run-crossval:
 	poetry run python -c "from app.ml.crossval import run_crossval; run_crossval()"
 
 launch-visuals:
-	poetry run streamlit run --client.showSidebarNavigation=False app$(SEP)ml$(SEP)visuals.py
+	PYTHONPATH=$(pwd):$PYTHONPATH poetry run streamlit run --client.showSidebarNavigation=False app$(SEP)ml$(SEP)visuals.py
 
 train-best-model:
 	poetry run python -c "from app.ml.deploy import deploy; deploy('train_best_model')"

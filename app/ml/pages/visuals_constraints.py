@@ -1,8 +1,8 @@
 import streamlit as st
-from configs.visuals import VisualsConfig as Config
-from constants import Constants as C
-from loaders import load_codebook
-from visuals import menu
+from app.ml.configs.visuals import VisualsConfig as Config
+from app.ml.constants import Constants as C
+from app.ml.loaders import load_codebook
+from app.ml.visuals import menu
 
 ###################### Functions  ########################
 
