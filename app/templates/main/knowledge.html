@@ -4,7 +4,7 @@
 
         {% for (question_id, question_content, form_id), questionnaire_value  in questionnaire_dico.items() %}
             {% if form_id == "likert" %}
-                <h3>{{ question_content }}</h3>
+                <h4>{{ question_content }}</h4>
                 <div class="likert-scale">
                     {% for (answer_id, answer_content) in questionnaire_value %}
                         <div class="likert-point" data-value="{{answer_id}}">

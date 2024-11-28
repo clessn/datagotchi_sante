@@ -68,7 +68,7 @@ body {
   background-color: rgb(255, 255, 255);
   border-radius: 30px;
   margin: 40px auto; /* Add margins to center content */
-  max-width: 800px; /* Limit the width for better readability */
+  max-width: 1100px; /* Limit the width for better readability */
   padding: 20px; /* Add padding for spacing */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for professional look */
 }
@@ -80,7 +80,7 @@ body {
 }
 
 .pagestyle h4 {
-  font-size: 1.8em; /* Larger and bolder header */
+  font-size: 1.3em; /* Larger and bolder header */
   color: rgb(64, 65, 63);
   font-weight: bold;
 }
@@ -103,7 +103,7 @@ body {
   display: flex;
   justify-content: space-between; /* Spread points evenly */
   margin: 40px auto; /* Add more spacing for clarity */
-  max-width: 700px; /* Increase the scale width for better clarity */
+  max-width: 1000px; /* Increase the scale width for better clarity */
 }
 
 .likert-point {
@@ -213,4 +213,8 @@ input[type="range"] {
   display: flex;
   justify-content: space-between;
   font-size: 12px;
+}
+
+.checkbox-group label {
+  font-weight: normal; /* Remove bold styling */
 }
