@@ -154,7 +154,7 @@ def explain():
 
     # Dico for prediction
     features = current_app.features
-    lifestyle_dico = {feature: None for feature in features['feature_names']}
+    lifestyle_dico = {feature: np.nan for feature in features['feature_names']}
 
     # step 1 : extract questions for lifestyle
     questionnaire_dico_responses = {}
@@ -220,15 +220,17 @@ def explain():
                 answer_weight = Answer.query.filter(Answer.answer_id == answer_id).first().answer_weight
                 pilote_id_multiple = pilote_id + "_" + str(int(answer_weight))
                 if pilote_id_multiple in lifestyle_dico:
-                    lifestyle_dico[pilote_id_multiple] = '1.0'
+                    lifestyle_dico[pilote_id_multiple] = 1.0
 
     db.session.commit()
 
     # Convert to dataframe    
     lifestyle_df = pd.DataFrame([lifestyle_dico])
     print(lifestyle_df)
-    #df_y = predict_for_example(lifestyle_df)
-    #print(df_y)
+
+    # Predict
+    df_y = predict_for_example(lifestyle_df)
+    print(df_y)
 
     informative_questions_content_dic = {
         "q1": (
