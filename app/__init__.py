@@ -16,7 +16,7 @@ login.login_view = 'auth.login'
 bootstrap = Bootstrap()
 
 # model for prediction
-MODEL_FILENAME = "model.pkl"
+MODEL_FILENAME = "model_v2.pkl"
 APP_DATA_PATH = Path(os.getcwd()) / "app" / "static" / "data"
 
 def create_app(config_class=Config):
