@@ -237,8 +237,12 @@ def explain():
     print(lifestyle_df)
 
     # Predict
-    #df_y = predict_for_example(lifestyle_df)
-    #print(df_y)
+    df_y = predict_for_example(
+        df_example = lifestyle_df,
+        model_info = (best_model, selected_features),
+        is_df_features = True
+    )
+    print(df_y)
 
     informative_questions_content_dic = {
         "q1": (
