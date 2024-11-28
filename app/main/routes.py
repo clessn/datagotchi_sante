@@ -242,7 +242,8 @@ def explain():
         model_info = (best_model, selected_features),
         is_df_features = True
     )
-    print(df_y)
+    predicted_score = df_y['score_tot_prediction'].iloc[0]
+    print(predicted_score)
 
     informative_questions_content_dic = {
         "q1": (
