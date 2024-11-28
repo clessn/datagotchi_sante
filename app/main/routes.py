@@ -243,7 +243,58 @@ def explain():
         is_df_features = True
     )
     predicted_score = df_y['score_tot_prediction'].iloc[0]
-    print(predicted_score)
+
+    # Extract additional info
+    ## 1 - regression coefficient
+    coefficients = best_model.named_steps["regressor"].coef_
+    feature_coeff_dict = dict(zip(selected_features, coefficients))
+    sorted_feature_coeff_dict = dict(sorted(feature_coeff_dict.items(), key=lambda item: item[1], reverse=True))
+
+    ## 2 - values after scaler steps
+    X = lifestyle_df[selected_features].values
+    scaler = best_model.named_steps['scaler']
+    X_scaled = scaler.transform(best_model.named_steps['imputer'].transform(X))
+    values = X_scaled[0]
+    values_coeff_dict = dict(zip(selected_features, values))
+    sorted_values_coeff_dict = dict(sorted(values_coeff_dict.items(), key=lambda item: item[1], reverse=True))
+
+    ## 3 - double check model prediction
+    predicted_score_bis = sum(coef * val for coef, val in zip(coefficients, values))
+    predicted_score_bis += best_model.named_steps["regressor"].intercept_ 
+
+    ## 4 - information about features
+    feature_content_dic = {
+        'sommeil_1': [
+            'Sleep quality',
+            'During the past seven days, how would you rate your sleep quality overall?',
+            "Sleep quality is a critical factor influencing mental health. Poor sleep can contribute to increased stress, anxiety, and depression, while good sleep supports emotional regulation and cognitive function. Over a seven-day period, tracking sleep quality provides insights into an individual’s ability to recover and manage daily challenges. Since sleep disturbances often correlate with mental health challenges, incorporating this variable into a mental health prediction model improves the model's ability to identify patterns and make accurate predictions, ultimately supporting more personalized and actionable feedback.",
+            ],
+        'autogestion_9': [
+            'Healthy diet',
+            'Indicate how often you have used a healthy diet it in the past month.',
+            "Diet plays a vital role in mental health, as a nutritious diet supports brain function, reduces inflammation, and stabilizes mood. Frequent consumption of healthy foods is linked to lower risks of depression and anxiety, while poor dietary habits can exacerbate mental health challenges. By asking about the frequency of healthy diet use over the past month, the model can identify patterns between diet consistency and mental health outcomes. This information enhances the ability to provide accurate predictions and tailored feedback to support individuals in improving their overall well-being.",
+            ],
+        'act_friends': [
+            'Social activities',
+            'How often do you do activities with one or more friend(s)?',
+            "Social interactions are closely tied to mental health, as spending time with friends provides emotional support, reduces feelings of loneliness, and fosters a sense of belonging. Regular social activities help buffer stress, improve mood, and promote resilience against mental health challenges. By assessing the frequency of activities with friends, the model can capture the impact of social connections on mental health, leading to more accurate predictions and meaningful feedback to help individuals enhance their social well-being.",
+            ],
+        'quartier_domicile_3': [
+            'Friendly neighborhood',
+            'Do you perceive your neighborhood as friendly ?',
+            "Perceptions of neighborhood friendliness significantly influence mental health. A friendly neighborhood fosters a sense of safety, social support, and community, which can reduce stress and feelings of isolation. Positive social environments promote well-being by encouraging interactions and creating a buffer against mental health challenges. Including this variable allows the model to capture the impact of local social dynamics on mental health, enabling more accurate predictions and actionable insights to enhance community-based interventions.",
+            ],
+        'act_volunteer': [
+            'Volunteering',
+            'How often do you volunteer or involve yourself in a cause?',
+            "Volunteering and involvement in a cause are strongly associated with improved mental health. Engaging in altruistic activities provides a sense of purpose, boosts self-esteem, and fosters social connections, all of which contribute to emotional well-being. Such activities also encourage positive thinking and reduce stress by shifting focus away from personal challenges. By evaluating the frequency of volunteering, the model can better understand the relationship between community engagement and mental health, enhancing the accuracy of predictions and the relevance of feedback.",
+            ],
+    }
+    for displayed_feature in feature_content_dic:
+        feature_content_dic[displayed_feature].append(feature_coeff_dict[displayed_feature])
+        feature_content_dic[displayed_feature].append(values_coeff_dict[displayed_feature])
+
+    print(feature_content_dic)
 
     informative_questions_content_dic = {
         "q1": (
@@ -263,7 +314,7 @@ def explain():
             ),
     }
     explain_dic = {
-        "predicted_score": 45,
+        "predicted_score": round(predicted_score),
         "intermediate_predicted_score": 38,
         "n_informative": len(informative_questions_content_dic),
         "informative_questions_content_dic": informative_questions_content_dic,
