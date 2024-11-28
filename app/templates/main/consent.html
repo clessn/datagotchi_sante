@@ -1,27 +1,28 @@
 {% extends "main/base_navigate.html" %}
 
 {% block app_content %}
-<br>
-<br>
-<div class ="pagestyle">
+<div class="pagestyle" style="margin: 40px auto; max-width: 800px; padding: 20px; border: 1px solid #ccc; border-radius: 10px; background-color: #f9f9f9;">
     <table class="table table-borderless">
-        <tr> 
-            <td ALIGN="CENTER"><h4 class = "pnavbut"> <b>Consent form</b></h4> </td>
-        </tr>
-        <tr> 
-            <td ALIGN="LEFT">
-                <p>You consent to us using your data for scientific purposes. Thank you for your consent!</p>
+        <tr>
+            <td ALIGN="CENTER">
+                <h4 style="font-family: 'Arial', sans-serif; font-size: 1.5em; font-weight: bold;">Consent Form</h4>
             </td>
         </tr>
-
+        <tr>
+            <td ALIGN="LEFT">
+                <p style="font-family: 'Arial', sans-serif; font-size: 1.2em; line-height: 1.5;">
+                    You consent to us using your data for scientific purposes. Thank you for your consent!
+                </p>
+            </td>
+        </tr>
     </table>
-    
+
     <form action="/knowledge_before" method="post">
-        <div style="text-align: right;">
-            <input type="submit" value="Next" class="btn btn-success mb-2 btn-lg">
+        <div style="text-align: left;">
+            <button type="submit" class="btn btn-primary" style="font-size: 1.2em; padding: 10px 20px; border-radius: 5px; background-color: #007bff; border: none;">
+                Next
+            </button>
         </div>
     </form>
 </div>
 {% endblock %}
-
-
