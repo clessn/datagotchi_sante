@@ -10,25 +10,10 @@
         <div class="container">
             <div class="navbar-header">
                 <a class="navbar-brand" href="{{ url_for('main.consent') }}">
-                    <img src="{{ url_for('static', filename='img/logo.jpg')}}" height="75px" alt="Logo">
+                    <img src="{{ url_for('static', filename='img/logo.png')}}" height="45px" alt="Logo">
                 </a>
-                <h1 class="site-title">Explainability in Mental Health</h1>
+                <h1 class="site-title">Mental Health Predictor</h1>
             </div>
-        </div>
-    </nav>
-    <nav class="secondnavbar">
-        <div class="container">
-            <ul class="nav navbar-nav">
-                <li><a href="{{ url_for('main.consent') }}" class="secondnavbut">Consent</a></li>
-                <li><a href="{{ url_for('main.knowledge_before') }}" class="secondnavbut">Knowledge Before</a></li>
-                <li><a href="{{ url_for('main.lifestyle') }}" class="secondnavbut">Lifestyle</a></li>
-                <li><a href="{{ url_for('main.explain') }}" class="secondnavbut">Explain</a></li>
-                <li><a href="{{ url_for('main.satisfaction') }}" class="secondnavbut">Satisfaction</a></li>
-                <li><a href="{{ url_for('main.intent') }}" class="secondnavbut">Intent</a></li>
-                <li><a href="{{ url_for('main.knowledge_after') }}" class="secondnavbut">Knowledge After</a></li>
-                <li><a href="{{ url_for('main.essaim') }}" class="secondnavbut">ESSAIM</a></li>
-                <li><a href="{{ url_for('main.merci') }}" class="secondnavbut">Merci</a></li>
-            </ul>
         </div>
     </nav>
 {% endblock %}

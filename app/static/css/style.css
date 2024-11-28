@@ -13,7 +13,7 @@
 }
 
 body { 
-  background-color: rgb(237, 245, 213);
+  background-color: rgb(50, 91, 126);
   border-radius: 25px;
   font-family: 'Arial', sans-serif; /* Clean and professional font */
 }
@@ -152,4 +152,25 @@ body {
 
 .btn-primary:hover {
   background-color: rgb(109, 110, 109); /* Darker hover effect */
+}
+
+.custom-btn {
+  font-size: 1.2em;
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: #007bff;
+  border: none;
+  color: white; /* Ensures text is visible */
+  cursor: pointer;
+}
+
+.custom-btn:hover {
+  background-color: #0056b3; /* Optional hover effect */
+}
+
+.site-title {
+  white-space: nowrap; /* Prevent wrapping */
+  text-align: center; /* Center the title */
+  font-size: 2em; /* Adjust font size if necessary */
+  margin: 20px 0; /* Add 20px margin on top and bottom, none on sides */
 }
