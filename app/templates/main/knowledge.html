@@ -2,36 +2,49 @@
     <td ALIGN="LEFT">
         <p>Here are ten statements about things that may be important for good mental health. On a scale of 1 to 5, how accurate is each statement?</p>
 
-        {% for (question_id, question_content, form_id), questionnaire_value  in questionnaire_dico.items() %}
+        {% for (question_id, question_content, form_id), questionnaire_value in questionnaire_dico.items() %}
             {% if form_id == "likert" %}
                 <h4>{{ question_content }}</h4>
-                <div class="likert-scale">
-                    {% for (answer_id, answer_content) in questionnaire_value %}
-                        <div class="likert-point" data-value="{{answer_id}}">
-                            <span class="likert-value">{{answer_content}}</span>
-                        </div>
-                    {% endfor %}
-            </div>
-            <input type="hidden" id="{{question_id}}" name="{{question_id}}" value="">
-            <br><br>
+                <div class="table-container">
+                    <table class="table table-bordered table-striped likert-table">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Question</th>
+                                <th>Strongly Disagree</th>
+                                <th>Disagree</th>
+                                <th>Neutral</th>
+                                <th>Agree</th>
+                                <th>Strongly Agree</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="question-cell">{{ question_content }}</td>
+                                {% for (answer_id, answer_content) in questionnaire_value %}
+                                    <td>
+                                        <input type="radio" 
+                                               name="{{ question_id }}" 
+                                               value="{{ answer_id }}" 
+                                               required>
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             {% endif %}
-            
         {% endfor %}
-    
-
-        <br>
 
         <p>
         Please submit your answers by clicking on this button.<br>
         Make sure to fill out all fields before submitting.
         </p>
         <div style="text-align: left;">
-            <input type="submit" value="Next" class="custom-btn">
+            <input type="submit" value="Next" class="btn btn-primary btn-submit">
         </div>
-        <br><br>
-
     </td>
 </tr>
+
 
 <script>    
     const likertScales = document.querySelectorAll('.likert-scale');
