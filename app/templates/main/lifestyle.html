@@ -26,7 +26,7 @@
                 {% if grouped_questions.get(answers_key_str) is none %}
                     {% set _ = grouped_questions.update({answers_key_str: []}) %}
                 {% endif %}
-                {% set _ = grouped_questions[answers_key_str].append((question_id, question_content)) %}
+                {% set _ = grouped_questions[answers_key_str].append((question_id, question_content, questionnaire_value)) %}
             {% else %}
                 {% set _ = all_other_questions.append((form_id, question_id, question_content, questionnaire_value)) %}
             {% endif %}
@@ -91,10 +91,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for question_id, question_content in questions %}
+                        {% for question_id, question_content, questionnaire_value in questions %}
                             <tr>
                                 <td class="question-cell">{{ question_content }}</td>
-                                {% for answer_id in range(1, answer_labels | length + 1) %}
+                                {% for (answer_id, answer_content) in questionnaire_value %}
                                     <td>
                                         <input type="radio" 
                                                name="{{ question_id }}" 
