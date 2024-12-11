@@ -10,11 +10,9 @@
                         <thead class="table-light">
                             <tr>
                                 <th>Question</th>
-                                <th>Strongly Disagree</th>
-                                <th>Disagree</th>
-                                <th>Neutral</th>
-                                <th>Agree</th>
-                                <th>Strongly Agree</th>
+                                {% for (answer_id, answer_content) in questionnaire_value %}
+                                    <th>{{ answer_content }}</th>
+                                {% endfor %}
                             </tr>
                         </thead>
                         <tbody>
@@ -44,6 +42,7 @@
         </div>
     </td>
 </tr>
+
 
 
 <script>    
