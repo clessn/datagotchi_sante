@@ -2,23 +2,35 @@
     <td ALIGN="LEFT">
         <p>Here are ten statements about things that may be important for good mental health. On a scale of 1 to 5, how accurate is each statement?</p>
 
+        {% set grouped_questions = {} %}
         {% for (question_id, question_content, form_id), questionnaire_value in questionnaire_dico.items() %}
             {% if form_id == "likert" %}
-                <h4>{{ question_content }}</h4>
-                <div class="table-container">
-                    <table class="table table-bordered table-striped likert-table">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Question</th>
-                                {% for (answer_id, answer_content) in questionnaire_value %}
-                                    <th>{{ answer_content }}</th>
-                                {% endfor %}
-                            </tr>
-                        </thead>
-                        <tbody>
+                {% set answers_key = questionnaire_value | map(attribute=1) | list %}
+                {% set answers_key_str = answers_key | join(',') %}
+                {% if grouped_questions.get(answers_key_str) is none %}
+                    {% set _ = grouped_questions.update({answers_key_str: []}) %}
+                {% endif %}
+                {% set _ = grouped_questions[answers_key_str].append((question_id, question_content)) %}
+            {% endif %}
+        {% endfor %}
+
+        <div class="table-container">
+            {% for answers_key_str, questions in grouped_questions.items() %}
+                <table class="table table-bordered table-striped likert-table">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Question</th>
+                            {% set answer_labels = answers_key_str.split(',') %}
+                            {% for answer_content in answer_labels %}
+                                <th>{{ answer_content }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for question_id, question_content in questions %}
                             <tr>
                                 <td class="question-cell">{{ question_content }}</td>
-                                {% for (answer_id, answer_content) in questionnaire_value %}
+                                {% for answer_id in range(1, answer_labels | length + 1) %}
                                     <td>
                                         <input type="radio" 
                                                name="{{ question_id }}" 
@@ -27,11 +39,12 @@
                                     </td>
                                 {% endfor %}
                             </tr>
-                        </tbody>
-                    </table>
-                </div>
-            {% endif %}
-        {% endfor %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <br>
+            {% endfor %}
+        </div>
 
         <p>
         Please submit your answers by clicking on this button.<br>
