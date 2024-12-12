@@ -109,6 +109,9 @@ def radar_chart():
     ax.fill(angles, values, color='b', alpha=0.25)
     ax.plot(angles, values, color='b', linewidth=2)
 
+    # Fix radial axis limits to [0, 1]
+    ax.set_ylim(0, 1)
+
     # Adjust labels and styling
     ax.set_yticklabels([])  # Remove radial labels for a cleaner look
     ax.set_xticks(angles[:-1])
