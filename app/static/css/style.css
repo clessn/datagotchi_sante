@@ -219,3 +219,15 @@ input[type="range"] {
 .checkbox-group label {
   font-weight: normal; /* Remove bold styling */
 }
+
+.chart-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0; /* Optional: Add spacing above and below the image */
+}
+
+.chart-container img {
+  max-width: 100%; /* Ensures the image scales appropriately */
+  height: auto;    /* Maintains the aspect ratio */
+}

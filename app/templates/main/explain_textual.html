@@ -17,9 +17,9 @@
                     We found that <strong>{{ explain_dic.n_informative }}</strong> key questions had the most impact on your mental health score:
                 </p>
                 <ol>
-                    {% for question_id, (question_content, question_data, _) in explain_dic.informative_questions_content_dic.items() %}
+                    {% for question_id, (question_label, question_content, question_description, _, _) in explain_dic.feature_content_dic.items() %}
                     <li>
-                        <strong>{{ question_content }}</strong>: {{ question_data }}
+                        <strong>{{ question_content }}</strong>: {{ question_description }}
                     </li>
                     {% endfor %}
                 </ol>
