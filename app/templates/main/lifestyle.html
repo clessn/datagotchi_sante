@@ -98,10 +98,13 @@
                                     <td>
                                         <input type="radio" 
                                                name="{{ question_id }}" 
-                                               value="{{ answer_id }}" 
-                                               required>
+                                               value="{{ answer_id }}"
+                                               {% if not skip_valid %} required {% endif %}
+                                        >
                                     </td>
                                 {% endfor %}
+                                <!-- Hidden input to send default value if no option is selected -->
+                                <input type="hidden" name="{{ question_id }}" value="">
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -122,28 +125,6 @@
 
 {% block scripts %}
 <script>    
-    const likertScales = document.querySelectorAll('.likert-scale');
-
-    likertScales.forEach(scale => {
-        const hiddenInput = scale.nextElementSibling;
-        const likertPoints = scale.querySelectorAll('.likert-point');
-
-        likertPoints.forEach(point => {
-            point.addEventListener('click', () => {
-                const value = point.dataset.value;
-
-                hiddenInput.value = value;
-                // Change color of points to indicate selection
-                likertPoints.forEach(p => {
-                    if (p === point) {
-                        p.style.backgroundColor = 'rgb(89, 108, 71)';
-                    } else {
-                        p.style.backgroundColor = '#ccc';
-                    }
-                });
-            });
-        });
-    });
 
     function validateForm() {
 
@@ -151,14 +132,6 @@
         const scrollQuestions = document.querySelectorAll('select');
         for (let i = 0; i < scrollQuestions.length; i++) {
             if (scrollQuestions[i].value === "") {
-                return false;
-            }
-        }
-
-        // For likert questions
-        const hiddenInputs = document.querySelectorAll('input[type="hidden"]');
-        for (let i = 0; i < hiddenInputs.length; i++) {
-            if (hiddenInputs[i].value === "") {
                 return false;
             }
         }

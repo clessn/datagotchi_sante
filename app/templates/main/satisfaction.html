@@ -16,75 +16,14 @@
     </table>
 
 
-    <br>
     <form action="/intent" method="post">
-        {% for (question_id, question_content, form_id), questionnaire_value  in questionnaire_dico.items() %}
-            {% if form_id == "likert" %}
-                <h3 style="margin-left: 50px;"><label for={{question_id}}>{{question_content}}</label></h3>
-                <div class="likert-scale">
-                    {% for (answer_id, answer_content) in questionnaire_value %}
-                        <div class="likert-point" data-value={{answer_id}}><span class="likert-value">{{answer_content}}</span></div>
-                    {% endfor %}
-                </div>
-                <input type="hidden" id={{question_id}} name={{question_id}} value="">
-                <br><br>
-            {% endif %}
-
-        {% endfor %}
-        <br>
-
-        <h3 style="color: rgb(89, 108, 71); text-align: left;">Please submit your answers by clicking on this button :</h3>
-        <div style="text-align: left;">
-            <input type="submit" value="Next" class="custom-btn">
-        </div>
-        <h4 style="text-align: right; color: red;">Make sure to answer all the questions before submitting.</h4>
-        <br><br>
+        <tr> 
+            <td ALIGN="LEFT">
+                {% include 'main/likert_table.html' %}
+            </td>
+        </tr>
     </form>
 </div>
-<script>    
-    const likertScales = document.querySelectorAll('.likert-scale');
-
-    likertScales.forEach(scale => {
-        const hiddenInput = scale.nextElementSibling;
-        const likertPoints = scale.querySelectorAll('.likert-point');
-
-        likertPoints.forEach(point => {
-            point.addEventListener('click', () => {
-                const value = point.dataset.value;
-
-                hiddenInput.value = value;
-                // Change color of points to indicate selection
-                likertPoints.forEach(p => {
-                    if (p === point) {
-                        p.style.backgroundColor = 'rgb(89, 108, 71)';
-                    } else {
-                        p.style.backgroundColor = '#ccc';
-                    }
-                });
-            });
-        });
-    });
-
-    function validateForm() {
-        const hiddenInputs = document.querySelectorAll('input[type="hidden"]');
-        for (let i = 0; i < hiddenInputs.length; i++) {
-            if (hiddenInputs[i].value === "") {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    const skip_valid = {{ skip_valid | tojson }};
-    document.querySelector('form').addEventListener('submit', function(event) {
-        if (!validateForm() && !skip_valid) {
-            alert('Please answer all questions before submitting.');
-            event.preventDefault();
-        } else {
-            window.location.href = "{{ url_for('main.intent')}}"; // Obsolete due to action ?
-        }
-    });
-</script> 
 {% endblock %}
 
 
