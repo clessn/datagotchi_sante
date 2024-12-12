@@ -98,7 +98,6 @@ data = {
 
 @bp.route('/radar_chart', methods=["GET"])
 def radar_chart():
-
     labels = request.args.get('labels').split(',')
     values = [float(value) for value in request.args.get('values').split(',')]
 
@@ -113,24 +112,28 @@ def radar_chart():
     angles += angles[:1]
 
     # Initialize the radar chart
-    fig, ax = plt.subplots(figsize=(3, 3), subplot_kw=dict(polar=True))
+    fig, ax = plt.subplots(figsize=(5, 5), subplot_kw=dict(polar=True))  # Increased size for better visibility
 
     # Plot the data
     ax.fill(angles, values, color='b', alpha=0.25)
     ax.plot(angles, values, color='b', linewidth=2)
 
-    # Labels and styling
-    ax.set_yticklabels([])
+    # Adjust labels and styling
+    ax.set_yticklabels([])  # Remove radial labels for a cleaner look
     ax.set_xticks(angles[:-1])
-    ax.set_xticklabels(labels)
+    ax.set_xticklabels(labels, fontsize=10, ha='center')  # Adjust font size and alignment
+
+    # Improve layout to avoid cutting text
+    fig.tight_layout(pad=2)
 
     # Save the figure to a bytes buffer
     buf = io.BytesIO()
-    fig.savefig(buf, format='png')
+    fig.savefig(buf, format='png', bbox_inches='tight', dpi=100)  # Increased DPI for better quality
     buf.seek(0)
-    
+
     # Return the image as a response
     return Response(buf.getvalue(), mimetype='image/png')
+    
 
 # Function to transform MultiDict (due to checkbox questions) of the form to a simple dict
 def form_todict(request_form):
@@ -294,7 +297,10 @@ def explain():
         feature_content_dic[displayed_feature].append(feature_coeff_dict[displayed_feature])
         feature_content_dic[displayed_feature].append(values_coeff_dict[displayed_feature])
 
+    # feature_content_dic : label, question, description, coefficients, feature_values
     print(feature_content_dic)
+    print(feature_coeff_dict)
+    print(values_coeff_dict)
 
     informative_questions_content_dic = {
         "q1": (
@@ -316,8 +322,8 @@ def explain():
     explain_dic = {
         "predicted_score": round(predicted_score),
         "intermediate_predicted_score": 38,
-        "n_informative": len(informative_questions_content_dic),
-        "informative_questions_content_dic": informative_questions_content_dic,
+        "n_informative": len(feature_content_dic),
+        "feature_content_dic": feature_content_dic,
     }
     form = PurchaseForm()
     return render_template(
