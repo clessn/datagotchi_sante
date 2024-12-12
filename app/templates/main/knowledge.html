@@ -1,6 +1,5 @@
 <tr> 
     <td ALIGN="LEFT">
-        <p>Here are ten statements about things that may be important for good mental health. On a scale of 1 to 5, how accurate is each statement?</p>
 
         {% for (question_id, question_content, form_id), questionnaire_value  in questionnaire_dico.items() %}
             {% if form_id == "likert" %}
