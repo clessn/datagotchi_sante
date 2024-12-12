@@ -46,7 +46,7 @@ This is injected via a dictionary variable explain_dic with the following corres
 
 ### 2. explain_textual
 
-#### 1.1) LLM - interaction 1
+#### 2.1) LLM - interaction 1
 
 I need to provide an high-quality explanation for users using a tool that aims to predict their mental health based on their answer on lifestyle questions.
 
@@ -71,7 +71,7 @@ Given that the user's responses are x1 = 0.5, x2 = 0.1, and x3 = 0.2, there are 
 
 In the context of explainable AI, please provide to the user (who is not an expert in AI) an explanation about why his score is 45.
 
-#### 1.2) LLM - interaction 2
+#### 2.2) LLM - interaction 2
 
 I now want the same text, to be pasted in a html file between paragraph quotes (<p>, </p>), where some of the values will be replaced by variables send by a "render_template" command in a routes.py file. A variable can be injected with the syntax {{ my_variable }}. 
 
@@ -87,10 +87,16 @@ This is injected via a dictionary variable explain_dic with the following corres
 - "n_informative" (int)
 - "informative_questions_content_dic" (dictionary mapping question ids to a tuple (question_content, question_details, question_coefficient)). The variable question_coefficient should not be used here and is kept for a quantitative-based information later on.
 
+#### 2.3) LLM - interaction 3
+
+In my application, I am asking the following question : 
+            'During the past seven days, how would you rate your sleep quality overall?'
+
+Please explain me in a short paragraph why this information is relevant to predict my mental health score, in .txt format
 
 ### 3. explain_visual
 
-#### 1.1) LLM - interaction 1
+#### 3.1) LLM - interaction 1
 
 I need to provide an high-quality explanation for users using a tool that aims to predict their mental health based on their answer on lifestyle questions.
 
@@ -116,4 +122,6 @@ The radarchart is displaying the value of x1, x2 and x3.
 
 In the context of explainable AI, please provide to the user (who is not an expert in AI) an explanation about why his score is 45.
 
-#### 1.1) LLM - interaction 2
+#### 3.2) LLM - interaction 2
+
+

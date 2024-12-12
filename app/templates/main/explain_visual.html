@@ -3,25 +3,30 @@
 {% block app_content %}
 <br>
 <br>
-<div class ="pagestyle">
+<div class="pagestyle">
     <table class="table table-borderless">
-        <tr> 
-            <td ALIGN="CENTER"><h4 class = "pnavbut"> <b>Explanation of our predicted mental health score.</b></h4> </td>
+        <tr>
+            <td ALIGN="CENTER">
+                <h4 class="pnavbut"><b>Explanation of our predicted mental health score.</b></h4>
+            </td>
         </tr>
-        <tr> 
+        <tr>
             <td ALIGN="LEFT">
                 <p>
                     Your mental health score is <strong>{{ explain_dic.predicted_score }}</strong>. The radar chart highlights 
                     <strong>{{ explain_dic.n_informative }}</strong> key aspects of your lifestyle that significantly influence this score. Let me explain how these factors contribute to your overall well-being:
                 </p>
 
-                <img src="{{ url_for('main.radar_chart',
-                    labels=explain_dic.informative_questions_content_dic.values() | map(attribute=0) | join(','),
-                    values=explain_dic.informative_questions_content_dic.values() | map(attribute=2) | join(',')
-                    )
-                 }}" alt="Radar Chart">
+                <div class="chart-container">
+                    <img src="{{ url_for('main.radar_chart',
+                        labels=explain_dic.feature_content_dic.values() | map(attribute=0) | join(','),
+                        values=explain_dic.feature_content_dic.values() | map(attribute=4) | join(',')
+                        ) }}"
+                        alt="Radar Chart">
+                </div>
+
                 <ol>
-                    {% for question_id, question_data in explain_dic.informative_questions_content_dic.items() %}
+                    {% for question_id, question_data in explain_dic.feature_content_dic.items() %}
                     <li>
                         <strong>{{ question_data[0] }}</strong>: {{ question_data[1] }}
                     </li>
@@ -36,7 +41,6 @@
                 <p>
                     This tool aims to help you identify which aspects of your lifestyle have the most influence on your mental health and where you might want to focus your attention to feel better overall. Small, consistent changes in these areas could make a meaningful difference.
                 </p>
-                
             </td>
         </tr>
     </table>
@@ -49,5 +53,3 @@
     <br>
 </div>
 {% endblock %}
-
-

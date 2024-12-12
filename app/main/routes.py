@@ -98,7 +98,6 @@ data = {
 
 @bp.route('/radar_chart', methods=["GET"])
 def radar_chart():
-
     labels = request.args.get('labels').split(',')
     values = [float(value) for value in request.args.get('values').split(',')]
 
@@ -113,24 +112,28 @@ def radar_chart():
     angles += angles[:1]
 
     # Initialize the radar chart
-    fig, ax = plt.subplots(figsize=(3, 3), subplot_kw=dict(polar=True))
+    fig, ax = plt.subplots(figsize=(5, 5), subplot_kw=dict(polar=True))  # Increased size for better visibility
 
     # Plot the data
     ax.fill(angles, values, color='b', alpha=0.25)
     ax.plot(angles, values, color='b', linewidth=2)
 
-    # Labels and styling
-    ax.set_yticklabels([])
+    # Adjust labels and styling
+    ax.set_yticklabels([])  # Remove radial labels for a cleaner look
     ax.set_xticks(angles[:-1])
-    ax.set_xticklabels(labels)
+    ax.set_xticklabels(labels, fontsize=10, ha='center')  # Adjust font size and alignment
+
+    # Improve layout to avoid cutting text
+    fig.tight_layout(pad=2)
 
     # Save the figure to a bytes buffer
     buf = io.BytesIO()
-    fig.savefig(buf, format='png')
+    fig.savefig(buf, format='png', bbox_inches='tight', dpi=100)  # Increased DPI for better quality
     buf.seek(0)
-    
+
     # Return the image as a response
     return Response(buf.getvalue(), mimetype='image/png')
+    
 
 # Function to transform MultiDict (due to checkbox questions) of the form to a simple dict
 def form_todict(request_form):
@@ -243,30 +246,71 @@ def explain():
         is_df_features = True
     )
     predicted_score = df_y['score_tot_prediction'].iloc[0]
-    print(predicted_score)
 
-    informative_questions_content_dic = {
-        "q1": (
-                "How many friends do you have?", 
-                "Social connections often provide emotional support and a sense of belonging.",
-                50
-            ),
-        "q2": (
-                "How many hours of sleep do you get?",
-                "Sleep helps recharge your mind and body, impacting your well-being.",
-                30
-            ),
-        "q3": (
-                "How often do you exercise?",
-                "Regular exercise reduces stress and boosts your mood.",
-                20,
-            ),
+    # Extract additional info
+    ## 1 - regression coefficient
+    coefficients = best_model.named_steps["regressor"].coef_
+    feature_coeff_dict = dict(zip(selected_features, coefficients))
+    sorted_feature_coeff_dict = dict(sorted(feature_coeff_dict.items(), key=lambda item: item[1], reverse=True))
+
+    ## 2 - values after scaler steps
+    X = lifestyle_df[selected_features].values
+    scaler = best_model.named_steps['scaler']
+    X_scaled = scaler.transform(best_model.named_steps['imputer'].transform(X))
+    values = X_scaled[0]
+    values_coeff_dict = dict(zip(selected_features, values))
+    sorted_values_coeff_dict = dict(sorted(values_coeff_dict.items(), key=lambda item: item[1], reverse=True))
+
+    ## 3 - double check model prediction
+    predicted_score_bis = sum(coef * val for coef, val in zip(coefficients, values))
+    predicted_score_bis += best_model.named_steps["regressor"].intercept_ 
+
+    ## 4 - information about features
+    feature_content_dic = {
+        'sommeil_1': [
+            'Sleep quality',
+            'During the past seven days, how would you rate your sleep quality overall?',
+            "Sleep quality is a critical factor influencing mental health. Poor sleep can contribute to increased stress, anxiety, and depression, while good sleep supports emotional regulation and cognitive function. Over a seven-day period, tracking sleep quality provides insights into an individual’s ability to recover and manage daily challenges. Since sleep disturbances often correlate with mental health challenges, incorporating this variable into a mental health prediction model improves the model's ability to identify patterns and make accurate predictions, ultimately supporting more personalized and actionable feedback.",
+            ],
+        'autogestion_9': [
+            'Healthy diet',
+            'Indicate how often you have used a healthy diet it in the past month.',
+            "Diet plays a vital role in mental health, as a nutritious diet supports brain function, reduces inflammation, and stabilizes mood. Frequent consumption of healthy foods is linked to lower risks of depression and anxiety, while poor dietary habits can exacerbate mental health challenges. By asking about the frequency of healthy diet use over the past month, the model can identify patterns between diet consistency and mental health outcomes. This information enhances the ability to provide accurate predictions and tailored feedback to support individuals in improving their overall well-being.",
+            ],
+        'act_friends': [
+            'Social activities',
+            'How often do you do activities with one or more friend(s)?',
+            "Social interactions are closely tied to mental health, as spending time with friends provides emotional support, reduces feelings of loneliness, and fosters a sense of belonging. Regular social activities help buffer stress, improve mood, and promote resilience against mental health challenges. By assessing the frequency of activities with friends, the model can capture the impact of social connections on mental health, leading to more accurate predictions and meaningful feedback to help individuals enhance their social well-being.",
+            ],
+        'quartier_domicile_3': [
+            'Friendly neighborhood',
+            'Do you perceive your neighborhood as friendly ?',
+            "Perceptions of neighborhood friendliness significantly influence mental health. A friendly neighborhood fosters a sense of safety, social support, and community, which can reduce stress and feelings of isolation. Positive social environments promote well-being by encouraging interactions and creating a buffer against mental health challenges. Including this variable allows the model to capture the impact of local social dynamics on mental health, enabling more accurate predictions and actionable insights to enhance community-based interventions.",
+            ],
+        'act_volunteer': [
+            'Volunteering',
+            'How often do you volunteer or involve yourself in a cause?',
+            "Volunteering and involvement in a cause are strongly associated with improved mental health. Engaging in altruistic activities provides a sense of purpose, boosts self-esteem, and fosters social connections, all of which contribute to emotional well-being. Such activities also encourage positive thinking and reduce stress by shifting focus away from personal challenges. By evaluating the frequency of volunteering, the model can better understand the relationship between community engagement and mental health, enhancing the accuracy of predictions and the relevance of feedback.",
+            ],
     }
+    intermediate_predicted_score = 0
+    for displayed_feature in feature_content_dic:
+        feature_coeff = feature_coeff_dict[displayed_feature]
+        value_coeff = values_coeff_dict[displayed_feature]
+        feature_content_dic[displayed_feature].append(feature_coeff_dict[displayed_feature])
+        feature_content_dic[displayed_feature].append(values_coeff_dict[displayed_feature])
+        intermediate_predicted_score += feature_coeff * value_coeff
+    # feature_content_dic : label, question, description, coefficients, feature_values
+    print(feature_content_dic)
+    print(feature_coeff_dict)
+    print(values_coeff_dict)
+
+
     explain_dic = {
-        "predicted_score": 45,
-        "intermediate_predicted_score": 38,
-        "n_informative": len(informative_questions_content_dic),
-        "informative_questions_content_dic": informative_questions_content_dic,
+        "predicted_score": round(predicted_score),
+        "intermediate_predicted_score": round(intermediate_predicted_score),
+        "n_informative": len(feature_content_dic),
+        "feature_content_dic": feature_content_dic,
     }
     form = PurchaseForm()
     return render_template(
