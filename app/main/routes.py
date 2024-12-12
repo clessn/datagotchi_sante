@@ -56,13 +56,13 @@ def lifestyle():
     
     # step 2 : extract and load answer values for knowledge before
     timestamp = datetime.now(timezone.utc)
-    for question_id in question_ids:
+    for seed, question_id in enumerate(question_ids):
         answer_id = request.form[question_id]
 
         # chose random value if not answered for debug
         if not answer_id and current_app.config['SKIP_VALID']:
             question = db.session.get(Question, question_id)
-            answer_id = question.get_random_answer(seed=42).answer_id
+            answer_id = question.get_random_answer(seed=seed).answer_id
 
         new_log = Log(
             timestamp=timestamp,
@@ -86,15 +86,6 @@ def lifestyle():
         skip_valid=current_app.config['SKIP_VALID'],
     )
 
-# Example dictionary
-data = {
-    'Key1': 0.7,
-    'Key2': 0.4,
-    'Key3': 0.9,
-    'Key4': 0.6,
-    'Key5': 0.8,
-    'Key6': 0.5
-}
 
 @bp.route('/radar_chart', methods=["GET"])
 def radar_chart():
@@ -168,6 +159,7 @@ def explain():
     
     # step 2 : extract and load answer values for lifestyle
     timestamp = datetime.now(timezone.utc)
+    seed = 0
     for (question_id, question_content, form_id), questionnaire_value in questionnaire_dico_responses.items():
         
         # For checkbox, result is a list not a value
@@ -187,7 +179,7 @@ def explain():
             # Chose random value if not answered for debug
             if not answer_id and current_app.config['SKIP_VALID']:
                 question = db.session.get(Question, question_id)
-                answer_id = question.get_random_answer(seed=42).answer_id
+                answer_id = question.get_random_answer(seed=seed).answer_id
                 
             new_log = Log(
                 timestamp=timestamp,
@@ -213,7 +205,13 @@ def explain():
 
         # For checkbox, result is a list not a value
         else:
-            answers = form_data[question_id]
+            if question_id not in form_data:
+                question = db.session.get(Question, question_id)
+                answer_id = question.get_random_answer(seed=seed).answer_id
+                answers = [answer_id]
+            else:
+                answers = form_data[question_id]
+                
             for answer_id in answers:
                 
                 # New log
@@ -233,11 +231,11 @@ def explain():
                 if pilote_id_nominal_multiple in lifestyle_dico:
                     lifestyle_dico[pilote_id_nominal_multiple] = 1.0
 
+        seed += 1
     db.session.commit()
 
     # Convert to dataframe    
     lifestyle_df = pd.DataFrame([lifestyle_dico])
-    print(lifestyle_df)
 
     # Predict
     df_y = predict_for_example(
@@ -440,7 +438,7 @@ def essaim():
         # chose random value if not answered for debug
         if not answer_id and current_app.config['SKIP_VALID']:
             question = db.session.get(Question, question_id)
-            answer_id = question.get_random_answer(seed=42).answer_id
+            answer_id = question.get_random_answer().answer_id
 
         new_log = Log(
             timestamp=timestamp,
