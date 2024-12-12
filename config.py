@@ -24,7 +24,7 @@ class DebugConfig(Config):
     SKIP_VALID=True
     EXPLAIN_TYPE='explain_visual'  
     # choose amongts 'explain_baseline', 'explain_visual',
-    # 'explain_textual', 'explain_contextual', 'explain_interactive',
+    # 'explain_textual', 'explain_quantitative', 'explain_interactive',
 
 configs = {
   'default'  : DefaultConfig,

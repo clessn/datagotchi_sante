@@ -293,35 +293,22 @@ def explain():
             "Volunteering and involvement in a cause are strongly associated with improved mental health. Engaging in altruistic activities provides a sense of purpose, boosts self-esteem, and fosters social connections, all of which contribute to emotional well-being. Such activities also encourage positive thinking and reduce stress by shifting focus away from personal challenges. By evaluating the frequency of volunteering, the model can better understand the relationship between community engagement and mental health, enhancing the accuracy of predictions and the relevance of feedback.",
             ],
     }
+    intermediate_predicted_score = 0
     for displayed_feature in feature_content_dic:
+        feature_coeff = feature_coeff_dict[displayed_feature]
+        value_coeff = values_coeff_dict[displayed_feature]
         feature_content_dic[displayed_feature].append(feature_coeff_dict[displayed_feature])
         feature_content_dic[displayed_feature].append(values_coeff_dict[displayed_feature])
-
+        intermediate_predicted_score += feature_coeff * value_coeff
     # feature_content_dic : label, question, description, coefficients, feature_values
     print(feature_content_dic)
     print(feature_coeff_dict)
     print(values_coeff_dict)
 
-    informative_questions_content_dic = {
-        "q1": (
-                "How many friends do you have?", 
-                "Social connections often provide emotional support and a sense of belonging.",
-                50
-            ),
-        "q2": (
-                "How many hours of sleep do you get?",
-                "Sleep helps recharge your mind and body, impacting your well-being.",
-                30
-            ),
-        "q3": (
-                "How often do you exercise?",
-                "Regular exercise reduces stress and boosts your mood.",
-                20,
-            ),
-    }
+
     explain_dic = {
         "predicted_score": round(predicted_score),
-        "intermediate_predicted_score": 38,
+        "intermediate_predicted_score": round(intermediate_predicted_score),
         "n_informative": len(feature_content_dic),
         "feature_content_dic": feature_content_dic,
     }
