@@ -302,9 +302,9 @@ def explain():
         feature_content_dic[displayed_feature].append(values_coeff_dict[displayed_feature])
         intermediate_predicted_score += feature_coeff * value_coeff
     # feature_content_dic : label, question, description, coefficients, feature_values
-    print(feature_content_dic)
-    print(feature_coeff_dict)
-    print(values_coeff_dict)
+    #print(feature_content_dic)
+    #print(feature_coeff_dict)
+    #print(values_coeff_dict)
 
 
     explain_dic = {
