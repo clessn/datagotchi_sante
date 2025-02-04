@@ -19,7 +19,7 @@
         {% set grouped_questions = {} %}
         {% set all_other_questions = [] %}
 
-        {% for (question_id, question_content, question_info, form_id), questionnaire_value in questionnaire_dico.items() %}
+        {% for question_id, (question_content, question_info_list, form_id, questionnaire_value) in questionnaire_dico.items() %}
             {% if form_id == "likert" %}
                 {% set answers_key = questionnaire_value | map(attribute=1) | list %}
                 {% set answers_key_str = answers_key | join(',') %}
@@ -28,15 +28,18 @@
                 {% endif %}
                 {% set _ = grouped_questions[answers_key_str].append((question_id, question_content, questionnaire_value)) %}
             {% else %}
-                {% set _ = all_other_questions.append((form_id, question_id, question_content, questionnaire_value)) %}
+                {% set _ = all_other_questions.append((form_id, question_id, question_content, question_info_list, questionnaire_value)) %}
             {% endif %}
         {% endfor %}
 
         <div class="table-container">
             <!-- Render Non-Likert Questions First -->
-            {% for form_id, question_id, question_content, questionnaire_value in all_other_questions %}
+            {% for form_id, question_id, question_content, question_info_list, questionnaire_value in all_other_questions %}
                 {% if form_id == "scroll" %}
                     <h4 style="margin-left: 50px;"><label for={{question_id}}>{{question_content}}</label></h4>
+                    {% for question_info in question_info_list %}
+                        <p style="margin-left: 50px;">{{question_info}}</p>
+                    {% endfor %}
                     <select id={{question_id}} name={{question_id}} class="large-text" style="margin-left: 50px;">
                         <option value=""></option>
                         {% for (answer_id, answer_content) in questionnaire_value %}
@@ -49,6 +52,9 @@
                     <h4 style="margin-left: 50px;margin-bottom: 55px;">
                         <label for="{{question_id}}">{{question_content}}</label>
                     </h4>
+                    {% for question_info in question_info_list %}
+                        <p style="margin-left: 50px;">{{question_info}}</p>
+                    {% endfor %}
                     <div class="range-container" style="margin-left: 50px; width: calc(100% - 100px);">
                         <input type="range" id="{{question_id}}" name="{{question_id}}" 
                                min="1" max="{{ questionnaire_value | length }}" value="1" 
@@ -64,6 +70,9 @@
 
                 {% if form_id == "checkbox" %}
                     <h4 style="margin-left: 50px;"><label for={{question_id}}>{{question_content}}</label></h4>
+                    {% for question_info in question_info_list %}
+                        <p style="margin-left: 50px;">{{question_info}}</p>
+                    {% endfor %}
                     <div class="checkbox-group" data-question-id="{{question_id}}" style="margin-left: 50px;">
                         {% for (answer_id, answer_content) in questionnaire_value %}
                             <div>
