@@ -49,12 +49,13 @@
                 {% endif %}
 
                 {% if form_id == "cursor" %}
-                    <h4 style="margin-left: 50px;margin-bottom: 55px;">
+                    <h4 style="margin-left: 50px;">
                         <label for="{{question_id}}">{{question_content}}</label>
                     </h4>
                     {% for question_info in question_info_list %}
                         <p style="margin-left: 50px;">{{question_info}}</p>
                     {% endfor %}
+                    <p style="margin-left: 50px;margin-bottom: 55px;"></p>
                     <div class="range-container" style="margin-left: 50px; width: calc(100% - 100px);">
                         <input type="range" id="{{question_id}}" name="{{question_id}}" 
                                min="1" max="{{ questionnaire_value | length }}" value="1" 
