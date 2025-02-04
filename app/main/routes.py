@@ -43,7 +43,8 @@ def get_most_recent_answers(user_id, question_list):
 
         # Map the question_id to the corresponding answer if a log is found
         if recent_log:
-            recent_answers[question.question_id] = recent_log.answer
+            recent_answers[question.question_id] = \
+                (recent_log.answer.answer_id, recent_log.answer.answer_content, recent_log.answer.answer_weight)
         else:
             recent_answers[question.question_id] = None  # No answer recorded
 
@@ -346,8 +347,9 @@ def explain():
 
     # 2) extract most recent answers (logs) from the 5 lifestyle features
     most_recent_answers = get_most_recent_answers(current_user.user_id, questions)
+    print(questions)
     print(most_recent_answers)
-
+    
     explain_dic = {
         "predicted_score": round(predicted_score),
         "intermediate_predicted_score": round(intermediate_predicted_score),
@@ -360,6 +362,7 @@ def explain():
         form = form,
         explain_dic=explain_dic,
         questionnaire_dico=questionnaire_dico,
+        most_recent_answers=most_recent_answers,
     )
 
 

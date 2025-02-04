@@ -51,7 +51,7 @@
                                 </h4>
                                 <div class="range-container" style="margin-left: 50px; width: calc(100% - 100px);">
                                     <input type="range" id="{{question_id}}" name="{{question_id}}" 
-                                           min="1" max="{{ questionnaire_value | length }}" value="1" 
+                                           min="1" max="{{ questionnaire_value | length }}" value="{{ most_recent_answers[question_id][2] | int }}" 
                                            style="width: 100%;" step="1" list="tickmarks_{{question_id}}">
                                     <div class="tickmarks" style="position: absolute; left: 0; right: 0; display: flex; justify-content: space-between; font-size: 15px; top: -25px;">
                                         {% for (answer_id, answer_content) in questionnaire_value %}
@@ -99,6 +99,9 @@
                                                     <input type="radio" 
                                                            name="{{ question_id }}" 
                                                            value="{{ answer_id }}"
+                                                           {% if most_recent_answers[question_id][0] == answer_id %}
+                                                           checked
+                                                           {% endif %}
                                                            {% if not skip_valid %} required {% endif %}
                                                     >
                                                 </td>
