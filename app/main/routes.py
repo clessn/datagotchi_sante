@@ -19,6 +19,47 @@ import io
 # Treat multiple answers for checkbox questions
 from werkzeug.datastructures import ImmutableMultiDict
 
+
+#####################################
+############# Functions #############
+#####################################
+
+# Function to transform MultiDict (due to checkbox questions) of the form to a simple dict
+def form_todict(request_form):
+    form_data = request_form.to_dict(flat=False)
+    cleaned_form_data = {}
+    for key, value in form_data.items():
+        # If [] in the key, it is a checkbox question
+        if "[]" in key:
+            cleaned_form_data[key.rstrip("[]")] = value
+        else:
+            cleaned_form_data[key] = value[0]
+    return cleaned_form_data
+
+# Function to transform a list of questions into a dictionnary where a key is question_id and a value is a tuple of:
+# question.question_content: content of the question
+# question_info_list: list of additionnal info for this question, may be empty
+# question.form_id: form_id of the question, for example scroll
+# question.get_form(): list of answers of the question where each element of the list is a tuple (answer_id,answer_content)
+def questionnaire(questions):
+    questionnaire_dico = {}
+    for question in questions:
+        if question.question_info==None:
+            question_info_list = []
+        else:
+            question_info_list = question.question_info.split(";")
+        questionnaire_dico[question.question_id] = (question.question_content, question_info_list, question.form_id, question.get_form())
+    return questionnaire_dico
+
+# Function to get a list of ids of questions
+def get_question_ids(questions):
+    question_ids = [question.question_id for question in questions]
+    return question_ids
+
+#####################################
+############## Routes ###############
+#####################################
+
 # @bp.before_app_request
 # def before_request():
 #     pass
@@ -32,10 +73,8 @@ def consent():
 @login_required
 def knowledge_before():
      # step 1 : extract questions for knowledge
-    questionnaire_dico = {}
     questions = Question.query.filter(Question.group_id == "knowledge").all()
-    for question in questions:
-        questionnaire_dico[(question.question_id, question.question_content, question.form_id)] = question.get_form()
+    questionnaire_dico = questionnaire(questions)
 
     return render_template(
         'main/knowledge_before.html',
@@ -48,11 +87,8 @@ def knowledge_before():
 def lifestyle():
 
     # step 1 : extract questions ids for knowledge before
-    questionnaire_dico_responses = {}
     questions = Question.query.filter(Question.group_id == "knowledge").all()
-    for question in questions:
-        questionnaire_dico_responses[(question.question_id, question.question_content, question.form_id)] = question.get_form()
-    question_ids = [question_id for question_id, _, _ in questionnaire_dico_responses.keys()]
+    question_ids = get_question_ids(questions)
     
     # step 2 : extract and load answer values for knowledge before
     timestamp = datetime.now(timezone.utc)
@@ -75,10 +111,8 @@ def lifestyle():
     db.session.commit()
 
     # step 3 : extract questions for lifestyle
-    questionnaire_dico = {}
     questions = Question.query.filter(Question.group_id == "lifestyle").all()
-    for question in questions:
-        questionnaire_dico[(question.question_id, question.question_content, question.form_id)] = question.get_form()
+    questionnaire_dico = questionnaire(questions)
 
     return render_template(
         'main/lifestyle.html',
@@ -127,19 +161,6 @@ def radar_chart():
 
     # Return the image as a response
     return Response(buf.getvalue(), mimetype='image/png')
-    
-
-# Function to transform MultiDict (due to checkbox questions) of the form to a simple dict
-def form_todict(request_form):
-    form_data = request_form.to_dict(flat=False)
-    cleaned_form_data = {}
-    for key, value in form_data.items():
-        # If [] in the key, it is a checkbox question
-        if "[]" in key:
-            cleaned_form_data[key.rstrip("[]")] = value
-        else:
-            cleaned_form_data[key] = value[0]
-    return cleaned_form_data
 
 
 @bp.route('/explain', methods=["POST"])
@@ -155,15 +176,13 @@ def explain():
     lifestyle_dico = {feature: 0.0 for feature in selected_features}
 
     # step 1 : extract questions for lifestyle
-    questionnaire_dico_responses = {}
     questions = Question.query.filter(Question.group_id == "lifestyle").all()
-    for question in questions:
-        questionnaire_dico_responses[(question.question_id, question.question_content, question.form_id)] = question.get_form()
+    questionnaire_dico_responses = questionnaire(questions)
     
     # step 2 : extract and load answer values for lifestyle
     timestamp = datetime.now(timezone.utc)
     seed = 0
-    for (question_id, question_content, form_id), questionnaire_value in questionnaire_dico_responses.items():
+    for question_id, (_,_, form_id, questionnaire_value) in questionnaire_dico_responses.items():
         
         # For checkbox, result is a list not a value
         if form_id!="checkbox":
@@ -325,10 +344,8 @@ def explain():
 @login_required
 def satisfaction():
     # step 1 : extract questions for satisfaction
-    questionnaire_dico = {}
     questions = Question.query.filter(Question.group_id == "satisfaction").all()
-    for question in questions:
-        questionnaire_dico[(question.question_id, question.question_content, question.form_id)] = question.get_form()
+    questionnaire_dico = questionnaire(questions)
 
     return render_template(
         'main/satisfaction.html',
@@ -340,11 +357,8 @@ def satisfaction():
 @login_required
 def intent():
     # step 1 : extract questions ids for satisfaction
-    questionnaire_dico_responses = {}
     questions = Question.query.filter(Question.group_id == "satisfaction").all()
-    for question in questions:
-        questionnaire_dico_responses[(question.question_id, question.question_content, question.form_id)] = question.get_form()
-    question_ids = [question_id for question_id, _, _ in questionnaire_dico_responses.keys()]
+    question_ids = get_question_ids(questions)
     
     # step 2 : extract and load answer values for satisfaction
     timestamp = datetime.now(timezone.utc)
@@ -367,10 +381,8 @@ def intent():
     db.session.commit()
 
     # step 3 : extract questions for intent
-    questionnaire_dico = {}
     questions = Question.query.filter(Question.group_id == "intent").all()
-    for question in questions:
-        questionnaire_dico[(question.question_id, question.question_content, question.form_id)] = question.get_form()
+    questionnaire_dico = questionnaire(questions)
 
     return render_template(
         'main/intent.html',
@@ -383,11 +395,8 @@ def intent():
 @login_required
 def knowledge_after():
     # step 1 : extract questions ids for intent
-    questionnaire_dico_responses = {}
     questions = Question.query.filter(Question.group_id == "intent").all()
-    for question in questions:
-        questionnaire_dico_responses[(question.question_id, question.question_content, question.form_id)] = question.get_form()
-    question_ids = [question_id for question_id, _, _ in questionnaire_dico_responses.keys()]
+    question_ids = get_question_ids(questions)
     
     # step 2 : extract and load answer values for intent
     timestamp = datetime.now(timezone.utc)
@@ -410,10 +419,8 @@ def knowledge_after():
     db.session.commit()
     
     # step 3 : extract questions for knowledge
-    questionnaire_dico = {}
     questions = Question.query.filter(Question.group_id == "knowledge").all()
-    for question in questions:
-        questionnaire_dico[(question.question_id, question.question_content, question.form_id)] = question.get_form()
+    questionnaire_dico = questionnaire(questions)
 
     return render_template(
         'main/knowledge_after.html',
@@ -427,11 +434,8 @@ def knowledge_after():
 def essaim():
 
     # step 1 : extract questions ids for knowledge after
-    questionnaire_dico_responses = {}
     questions = Question.query.filter(Question.group_id == "knowledge").all()
-    for question in questions:
-        questionnaire_dico_responses[(question.question_id, question.question_content, question.form_id)] = question.get_form()
-    question_ids = [question_id for question_id, _, _ in questionnaire_dico_responses.keys()]
+    question_ids = get_question_ids(questions)
     
     # step 2 : extract and load answer values for knowledge after
     timestamp = datetime.now(timezone.utc)
@@ -454,10 +458,8 @@ def essaim():
     db.session.commit()
 
     # step 3 : extract questions for essaim
-    questionnaire_dico = {}
     questions = Question.query.filter(Question.group_id == "essaim").all()
-    for question in questions:
-        questionnaire_dico[(question.question_id, question.question_content, question.form_id)] = question.get_form()
+    questionnaire_dico = questionnaire(questions)
 
     return render_template(
         'main/essaim.html',
@@ -470,11 +472,8 @@ def essaim():
 def merci():
 
     # step 1 : extract questions ids for essaim
-    questionnaire_dico_responses = {}
     questions = Question.query.filter(Question.group_id == "essaim").all()
-    for question in questions:
-        questionnaire_dico_responses[(question.question_id, question.question_content, question.form_id)] = question.get_form()
-    question_ids = [question_id for question_id, _, _ in questionnaire_dico_responses.keys()]
+    question_ids = get_question_ids(questions)
     
     # step 2 : extract and load answer values for essaim
     timestamp = datetime.now(timezone.utc)
