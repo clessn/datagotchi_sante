@@ -19,7 +19,7 @@
         {% set grouped_questions = {} %}
         {% set all_other_questions = [] %}
 
-        {% for (question_id, question_content, form_id), questionnaire_value in questionnaire_dico.items() %}
+        {% for (question_id, question_content, question_info, form_id), questionnaire_value in questionnaire_dico.items() %}
             {% if form_id == "likert" %}
                 {% set answers_key = questionnaire_value | map(attribute=1) | list %}
                 {% set answers_key_str = answers_key | join(',') %}
