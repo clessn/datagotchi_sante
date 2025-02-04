@@ -347,9 +347,7 @@ def explain():
 
     # 2) extract most recent answers (logs) from the 5 lifestyle features
     most_recent_answers = get_most_recent_answers(current_user.user_id, questions)
-    print(questions)
-    print(most_recent_answers)
-    
+
     explain_dic = {
         "predicted_score": round(predicted_score),
         "intermediate_predicted_score": round(intermediate_predicted_score),
