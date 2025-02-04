@@ -40,7 +40,8 @@ def form_todict(request_form):
 def questionnaire(questions):
     questionnaire_dico = {}
     for question in questions:
-        questionnaire_dico[(question.question_id, question.question_content, question.question_info, question.form_id)] = question.get_form()
+        question_info_list = question.question_info.split(";")
+        questionnaire_dico[(question.question_id, question.question_content, question_info_list, question.form_id)] = question.get_form()
     return questionnaire_dico
 
 # Function to get a list of ids of questions
