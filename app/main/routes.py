@@ -80,7 +80,6 @@ def lifestyle():
 
     # step 1 : extract questions ids for knowledge before
     questions = Question.query.filter(Question.group_id == "knowledge").all()
-    questionnaire_dico_responses = questionnaire(questions)
     question_ids = get_question_ids(questions)
     
     # step 2 : extract and load answer values for knowledge before
@@ -351,7 +350,6 @@ def satisfaction():
 def intent():
     # step 1 : extract questions ids for satisfaction
     questions = Question.query.filter(Question.group_id == "satisfaction").all()
-    questionnaire_dico_responses = questionnaire(questions)
     question_ids = get_question_ids(questions)
     
     # step 2 : extract and load answer values for satisfaction
@@ -390,7 +388,6 @@ def intent():
 def knowledge_after():
     # step 1 : extract questions ids for intent
     questions = Question.query.filter(Question.group_id == "intent").all()
-    questionnaire_dico_responses = questionnaire(questions)
     question_ids = get_question_ids(questions)
     
     # step 2 : extract and load answer values for intent
@@ -430,7 +427,6 @@ def essaim():
 
     # step 1 : extract questions ids for knowledge after
     questions = Question.query.filter(Question.group_id == "knowledge").all()
-    questionnaire_dico_responses = questionnaire(questions)
     question_ids = get_question_ids(questions)
     
     # step 2 : extract and load answer values for knowledge after
@@ -469,7 +465,6 @@ def merci():
 
     # step 1 : extract questions ids for essaim
     questions = Question.query.filter(Question.group_id == "essaim").all()
-    questionnaire_dico_responses = questionnaire(questions)
     question_ids = get_question_ids(questions)
     
     # step 2 : extract and load answer values for essaim
