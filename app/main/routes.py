@@ -40,7 +40,7 @@ def form_todict(request_form):
 def questionnaire(questions):
     questionnaire_dico = {}
     for question in questions:
-        questionnaire_dico[(question.question_id, question.question_content, question.form_id)] = question.get_form()
+        questionnaire_dico[(question.question_id, question.question_content, question.question_info, question.form_id)] = question.get_form()
     return questionnaire_dico
 
 # Function to get a list of ids of questions
@@ -174,7 +174,7 @@ def explain():
     # step 2 : extract and load answer values for lifestyle
     timestamp = datetime.now(timezone.utc)
     seed = 0
-    for (question_id, question_content, form_id), questionnaire_value in questionnaire_dico_responses.items():
+    for (question_id, _, _, form_id), questionnaire_value in questionnaire_dico_responses.items():
         
         # For checkbox, result is a list not a value
         if form_id!="checkbox":
