@@ -36,7 +36,11 @@ def form_todict(request_form):
             cleaned_form_data[key] = value[0]
     return cleaned_form_data
 
-# Function to transform a list of questions into a dictionnary where a key is a tuple for the question (question_id, question_content, form_id) and a value is a list of answers of the question [(answer_id,answer_content)]
+# Function to transform a list of questions into a dictionnary where a key is question_id and a value is a tuple of:
+# question.question_content: content of the question
+# question_info_list: list of additionnal info for this question, may be empty
+# question.form_id: form_id of the question, for example scroll
+# question.get_form(): list of answers of the question where each element of the list is a tuple (answer_id,answer_content)
 def questionnaire(questions):
     questionnaire_dico = {}
     for question in questions:
@@ -44,7 +48,7 @@ def questionnaire(questions):
             question_info_list = []
         else:
             question_info_list = question.question_info.split(";")
-        questionnaire_dico[(question.question_id, question.question_content, question_info_list, question.form_id)] = question.get_form()
+        questionnaire_dico[question.question_id] = (question.question_content, question_info_list, question.form_id, question.get_form())
     return questionnaire_dico
 
 # Function to get a list of ids of questions
@@ -178,7 +182,7 @@ def explain():
     # step 2 : extract and load answer values for lifestyle
     timestamp = datetime.now(timezone.utc)
     seed = 0
-    for (question_id, _, _, form_id), questionnaire_value in questionnaire_dico_responses.items():
+    for question_id, (_,_, form_id, questionnaire_value) in questionnaire_dico_responses.items():
         
         # For checkbox, result is a list not a value
         if form_id!="checkbox":
