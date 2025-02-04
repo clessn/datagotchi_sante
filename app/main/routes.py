@@ -43,6 +43,11 @@ def questionnaire(questions):
         questionnaire_dico[(question.question_id, question.question_content, question.form_id)] = question.get_form()
     return questionnaire_dico
 
+# Function to get a list of ids of questions
+def get_question_ids(questions):
+    question_ids = [question.question_id for question in questions]
+    return question_ids
+
 #####################################
 ############## Routes ###############
 #####################################
@@ -76,7 +81,7 @@ def lifestyle():
     # step 1 : extract questions ids for knowledge before
     questions = Question.query.filter(Question.group_id == "knowledge").all()
     questionnaire_dico_responses = questionnaire(questions)
-    question_ids = [question_id for question_id, _, _ in questionnaire_dico_responses.keys()]
+    question_ids = get_question_ids(questions)
     
     # step 2 : extract and load answer values for knowledge before
     timestamp = datetime.now(timezone.utc)
@@ -347,7 +352,7 @@ def intent():
     # step 1 : extract questions ids for satisfaction
     questions = Question.query.filter(Question.group_id == "satisfaction").all()
     questionnaire_dico_responses = questionnaire(questions)
-    question_ids = [question_id for question_id, _, _ in questionnaire_dico_responses.keys()]
+    question_ids = get_question_ids(questions)
     
     # step 2 : extract and load answer values for satisfaction
     timestamp = datetime.now(timezone.utc)
@@ -386,7 +391,7 @@ def knowledge_after():
     # step 1 : extract questions ids for intent
     questions = Question.query.filter(Question.group_id == "intent").all()
     questionnaire_dico_responses = questionnaire(questions)
-    question_ids = [question_id for question_id, _, _ in questionnaire_dico_responses.keys()]
+    question_ids = get_question_ids(questions)
     
     # step 2 : extract and load answer values for intent
     timestamp = datetime.now(timezone.utc)
@@ -426,7 +431,7 @@ def essaim():
     # step 1 : extract questions ids for knowledge after
     questions = Question.query.filter(Question.group_id == "knowledge").all()
     questionnaire_dico_responses = questionnaire(questions)
-    question_ids = [question_id for question_id, _, _ in questionnaire_dico_responses.keys()]
+    question_ids = get_question_ids(questions)
     
     # step 2 : extract and load answer values for knowledge after
     timestamp = datetime.now(timezone.utc)
@@ -465,7 +470,7 @@ def merci():
     # step 1 : extract questions ids for essaim
     questions = Question.query.filter(Question.group_id == "essaim").all()
     questionnaire_dico_responses = questionnaire(questions)
-    question_ids = [question_id for question_id, _, _ in questionnaire_dico_responses.keys()]
+    question_ids = get_question_ids(questions)
     
     # step 2 : extract and load answer values for essaim
     timestamp = datetime.now(timezone.utc)
