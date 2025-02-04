@@ -16,8 +16,39 @@ import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use('Agg')
 import io
+from sqlalchemy import desc
 # Treat multiple answers for checkbox questions
 from werkzeug.datastructures import ImmutableMultiDict
+
+
+
+def get_most_recent_answers(user_id, question_list):
+    """
+    Retrieves the most recent answer for each question in the question_list for the specified user_id.
+
+    :param user_id: The ID of the user.
+    :param question_list: A list of Question instances.
+    :return: A dictionary mapping question_id to the most recent Answer instance.
+    """
+    recent_answers = {}
+
+    for question in question_list:
+        # Query the most recent log for the given user and question
+        recent_log = (
+            db.session.query(Log)
+            .filter_by(user_id=user_id, question_id=question.question_id)
+            .order_by(desc(Log.timestamp))
+            .first()
+        )
+
+        # Map the question_id to the corresponding answer if a log is found
+        if recent_log:
+            recent_answers[question.question_id] = recent_log.answer
+        else:
+            recent_answers[question.question_id] = None  # No answer recorded
+
+    return recent_answers
+
 
 # @bp.before_app_request
 # def before_request():
@@ -295,17 +326,27 @@ def explain():
             ],
     }
     intermediate_predicted_score = 0
-    for displayed_feature in feature_content_dic:
+    displayed_feature_list = list(feature_content_dic.keys())
+    for displayed_feature in displayed_feature_list:
         feature_coeff = feature_coeff_dict[displayed_feature]
         value_coeff = values_coeff_dict[displayed_feature]
         feature_content_dic[displayed_feature].append(feature_coeff_dict[displayed_feature])
         feature_content_dic[displayed_feature].append(values_coeff_dict[displayed_feature])
         intermediate_predicted_score += feature_coeff * value_coeff
-    # feature_content_dic : label, question, description, coefficients, feature_values
-    #print(feature_content_dic)
-    #print(feature_coeff_dict)
-    #print(values_coeff_dict)
 
+    # Explain interactive data
+    # 1) extract questions for the 5 lifestyle features
+    questionnaire_dico = {}
+    questions = Question.query.filter(
+        Question.group_id == "lifestyle",
+        Question.pilote_id.in_(displayed_feature_list)
+    ).all()
+    for question in questions:
+        questionnaire_dico[(question.question_id, question.question_content, question.form_id)] = question.get_form()
+
+    # 2) extract most recent answers (logs) from the 5 lifestyle features
+    most_recent_answers = get_most_recent_answers(current_user.user_id, questions)
+    print(most_recent_answers)
 
     explain_dic = {
         "predicted_score": round(predicted_score),
@@ -318,6 +359,7 @@ def explain():
         f'main/{current_user.condition_id}.html', 
         form = form,
         explain_dic=explain_dic,
+        questionnaire_dico=questionnaire_dico,
     )
 
 
