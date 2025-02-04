@@ -19,6 +19,28 @@ import io
 # Treat multiple answers for checkbox questions
 from werkzeug.datastructures import ImmutableMultiDict
 
+
+#####################################
+############# Functions #############
+#####################################
+
+# Function to transform MultiDict (due to checkbox questions) of the form to a simple dict
+def form_todict(request_form):
+    form_data = request_form.to_dict(flat=False)
+    cleaned_form_data = {}
+    for key, value in form_data.items():
+        # If [] in the key, it is a checkbox question
+        if "[]" in key:
+            cleaned_form_data[key.rstrip("[]")] = value
+        else:
+            cleaned_form_data[key] = value[0]
+    return cleaned_form_data
+
+
+#####################################
+############## Routes ###############
+#####################################
+
 # @bp.before_app_request
 # def before_request():
 #     pass
@@ -127,19 +149,6 @@ def radar_chart():
 
     # Return the image as a response
     return Response(buf.getvalue(), mimetype='image/png')
-    
-
-# Function to transform MultiDict (due to checkbox questions) of the form to a simple dict
-def form_todict(request_form):
-    form_data = request_form.to_dict(flat=False)
-    cleaned_form_data = {}
-    for key, value in form_data.items():
-        # If [] in the key, it is a checkbox question
-        if "[]" in key:
-            cleaned_form_data[key.rstrip("[]")] = value
-        else:
-            cleaned_form_data[key] = value[0]
-    return cleaned_form_data
 
 
 @bp.route('/explain', methods=["POST"])
