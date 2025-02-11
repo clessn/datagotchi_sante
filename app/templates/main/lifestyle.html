@@ -24,9 +24,9 @@
                 {% set answers_key = questionnaire_value | map(attribute=1) | list %}
                 {% set answers_key_str = answers_key | join(',') %}
                 {% if grouped_questions.get(answers_key_str) is none %}
-                    {% set _ = grouped_questions.update({answers_key_str: []}) %}
+                    {% set _ = grouped_questions.update({answers_key_str: (question_info_list[0],[])}) %}
                 {% endif %}
-                {% set _ = grouped_questions[answers_key_str].append((question_id, question_content, questionnaire_value)) %}
+                {% set _ = grouped_questions[answers_key_str][1].append((question_id, question_content, questionnaire_value)) %}
             {% else %}
                 {% set _ = all_other_questions.append((form_id, question_id, question_content, question_info_list, questionnaire_value)) %}
             {% endif %}
@@ -89,7 +89,8 @@
             {% endfor %}
 
             <!-- Render Likert Questions at the End -->
-            {% for answers_key_str, questions in grouped_questions.items() %}
+            {% for answers_key_str, (question_info, questions) in grouped_questions.items() %}
+            <h4 style="margin-left: 50px;"><label for={{question_id}}>{{question_info}}</label></h4>
                 <table class="table table-bordered table-striped likert-table">
                     <thead class="table-light">
                         <tr>
