@@ -65,7 +65,8 @@ code/
 │   └── (various cleaning functions)
 ├── eda/
 │   └── (exploratory data analysis scripts)
-└── ml/
+app/
+├── ml/
     └── (machine learning workflow from raw data to evaluated predictions)
 ``````
 - **cleaning**: Contains scripts for data cleaning.
