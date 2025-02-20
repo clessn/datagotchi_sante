@@ -7,13 +7,13 @@
     <table class="table table-borderless">
         <tr>
             <td ALIGN="CENTER">
-                <h4 class="pnavbut"><b>Explanation of your predicted mental health score.</b></h4>
+                <h4 class="pnavbut"><b>Explanation of your predicted well-being score.</b></h4>
             </td>
         </tr>
         <tr>
             <td ALIGN="LEFT">
                 <p>
-                    Your mental health score is <strong>{{ explain_dic.predicted_score }}</strong>.
+                    Your well-being score is <strong>{{ explain_dic.predicted_score }}</strong>.
                 </p>
                 <form action="/explain" method="post">
                     {% set grouped_questions = {} %}
