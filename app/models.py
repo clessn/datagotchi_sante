@@ -39,12 +39,12 @@ class User(UserMixin, db.Model):
 class UserPII(db.Model):
     user_id: so.Mapped[str] = so.mapped_column(sa.String(64), sa.ForeignKey('user.user_id'), primary_key=True)
     email: so.Mapped[Optional[str]] = so.mapped_column(sa.String(120), index=True, unique=True)
-    interac: so.Mapped[Optional[str]] = so.mapped_column(sa.String(120), index=True, unique=True)
+    interac_email: so.Mapped[Optional[str]] = so.mapped_column(sa.String(120), index=True, unique=True)
 
     user: so.Mapped['User'] = so.relationship("User", back_populates="pii")
     
     def __repr__(self):
-        return f'{self.user_id} - email : {self.email} - interac : {self.interac}'
+        return f'{self.user_id} - email : {self.email} - interac email: {self.interac_email}'
 
 class Question(db.Model):
     question_id: so.Mapped[str] = so.mapped_column(sa.String(64), primary_key=True)
