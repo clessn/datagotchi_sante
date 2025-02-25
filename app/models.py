@@ -15,17 +15,18 @@ def load_user(id):
 
 class User(UserMixin, db.Model):
     user_id: so.Mapped[str] = so.mapped_column(sa.String(64), primary_key=True)
-    email: so.Mapped[str] = so.mapped_column(sa.String(120), index=True,
-                                             unique=True)
-    interac: so.Mapped[Optional[str]] = so.mapped_column(sa.String(120), index=True,
-                                             unique=True)
     condition_id: so.Mapped[Optional[str]] = so.mapped_column(sa.String(64))                                   
 
     logs: so.WriteOnlyMapped['Log'] = so.relationship(
         back_populates='participant')
+    
+    # uselist=False to specify it is a one-to-one relationship
+    # cascade="all, delete-orphan" removes userpii related to a user if this user is deleted in User
+    pii: so.WriteOnlyMapped['UserPII'] = so.relationship(
+        "UserPII", uselist=False, back_populates="user", cascade="all, delete-orphan")
 
     def __repr__(self):
-        return f'{self.email} - condition : {self.condition_id}'
+        return f'{self.user_id} - condition : {self.condition_id}'
     
     def get_id(self):
         return self.user_id
@@ -35,6 +36,15 @@ class User(UserMixin, db.Model):
         self.condition_id = condition_id
         db.session.commit()
 
+class UserPII(db.Model):
+    user_id: so.Mapped[str] = so.mapped_column(sa.String(64), sa.ForeignKey('user.user_id'), primary_key=True)
+    email: so.Mapped[Optional[str]] = so.mapped_column(sa.String(120), index=True, unique=True)
+    interac: so.Mapped[Optional[str]] = so.mapped_column(sa.String(120), index=True, unique=True)
+
+    user: so.Mapped['User'] = so.relationship("User", back_populates="pii")
+    
+    def __repr__(self):
+        return f'{self.user_id} - email : {self.email} - interac : {self.interac}'
 
 class Question(db.Model):
     question_id: so.Mapped[str] = so.mapped_column(sa.String(64), primary_key=True)
