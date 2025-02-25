@@ -22,7 +22,7 @@ class User(UserMixin, db.Model):
     
     # uselist=False to specify it is a one-to-one relationship
     # cascade="all, delete-orphan" removes userpii related to a user if this user is deleted in User
-    pii: so.WriteOnlyMapped['UserPII'] = so.relationship(
+    pii: so.Mapped['UserPII'] = so.relationship(
         "UserPII", uselist=False, back_populates="user", cascade="all, delete-orphan")
 
     def __repr__(self):
