@@ -1,33 +1,5 @@
-{% extends "main/base_navigate.html" %}
-
-{% block app_content %}
-<br>
-<br>
-<div class ="pagestyle">
-
-    <table class="table table-borderless">
-        <tr> 
-            <td ALIGN="CENTER"><h4 class = "pnavbut"> <b>Updated knowledge about mental health</b></h4> </td>
-        </tr>
-        <tr> 
-            <td ALIGN="LEFT">
-                <p>Before ending, we would like to re-evaluate your knowledge of what is important for good mental health. Here are ten statements. How do you think each statement is important to have a good mental health (in a general manner, not espacially about yourself)?</p>
-            </td>
-        </tr>
-    </table>
-
-    <form action="/essaim" method="post">
-        <tr> 
-            <td ALIGN="LEFT">
-                {% include 'main/likert_table.html' %}
-            </td>
-        </tr>
-    </form>
-</div>
-
-{% endblock %}
-
-
-
-
-
+{% extends "main/base_questionnaire.html" %}
+{% set title = "Updated knowledge about mental health" %}
+{% set description = "Before ending, we would like to re-evaluate your knowledge of what is important for good mental health. Here are ten statements. How do you think each statement is important to have a good mental health (in a general manner, not espacially about yourself)?" %}
+{% set table_description = "" %}
+{% set form_action = "/essaim" %}

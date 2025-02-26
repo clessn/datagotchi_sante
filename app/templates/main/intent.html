@@ -1,28 +1,5 @@
-{% extends "main/base_navigate.html" %}
-
-{% block app_content %}
-<br>
-<br>
-<div class ="pagestyle">
-    <table class="table table-borderless">
-        <tr> 
-            <td ALIGN="CENTER"><h4 class = "pnavbut"> <b>Intent</b></h4> </td>
-        </tr>
-        <tr> 
-            <td ALIGN="LEFT">
-                <p>Here is a questionnaire about your intention to act to improve your mental health. To what extent do you intend to do each of the following things to improve your mental health in the next month?</p>
-            </td>
-        </tr>
-    </table>
-
-    <form action="/knowledge_after" method="post">
-        <tr> 
-            <td ALIGN="LEFT">
-                {% include 'main/likert_table.html' %}
-            </td>
-        </tr> 
-    </form>
-</div>
-{% endblock %}
-
-
+{% extends "main/base_questionnaire.html" %}
+{% set title = "Intent" %}
+{% set description = "Here is a questionnaire about your intention to act to improve your mental health. To what extent do you intend to do each of the following things to improve your mental health in the next month?" %}
+{% set table_description = "" %}
+{% set form_action = "/knowledge_after" %}
