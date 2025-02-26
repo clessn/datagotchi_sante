@@ -122,10 +122,10 @@ class Log(db.Model):
     user_id: so.Mapped[str] = so.mapped_column(sa.ForeignKey(User.user_id),index=True)
     participant: so.Mapped['User'] = so.relationship(back_populates='logs')
 
-    question_id: so.Mapped[str] = so.mapped_column(sa.ForeignKey(Question.question_id),index=True)
+    question_id: so.Mapped[Optional[str]] = so.mapped_column(sa.ForeignKey(Question.question_id),index=True)
     question: so.Mapped['Question'] = so.relationship(back_populates='logs')
 
-    answer_id: so.Mapped[str] = so.mapped_column(sa.ForeignKey(Answer.answer_id),index=True)
+    answer_id: so.Mapped[Optional[str]] = so.mapped_column(sa.ForeignKey(Answer.answer_id),index=True)
     answer: so.Mapped['Answer'] = so.relationship(back_populates='logs')
 
     phase_id: so.Mapped[str] = so.mapped_column(sa.String(64))
