@@ -299,6 +299,17 @@ def explain():
     )
     predicted_score = df_y['score_tot_prediction'].iloc[0]
 
+    # Log predicted score
+    new_log = Log(
+        timestamp=datetime.now(timezone.utc),
+        log_type='score_computation',
+        log_info=predicted_score,
+        user_id=current_user.user_id,
+        phase_id='explain'
+        )
+    db.session.add(new_log)
+    db.session.commit()
+
     # Extract additional info
     ## 1 - regression coefficient
     coefficients = best_model.named_steps["regressor"].coef_

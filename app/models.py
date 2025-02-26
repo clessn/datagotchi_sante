@@ -119,18 +119,29 @@ class Log(db.Model):
     timestamp: so.Mapped[datetime] = so.mapped_column(
         index=True, default=lambda: datetime.now(timezone.utc))
     
+    # Type of log: answer, score_computation
+    # By default, it is an answer to a question
+    log_type: so.Mapped[str] = so.mapped_column(sa.String(64), default='answer')
+
+    # Additionnal info about the log
+    log_info: so.Mapped[Optional[str]] = so.mapped_column(sa.String(64))
+    
     user_id: so.Mapped[str] = so.mapped_column(sa.ForeignKey(User.user_id),index=True)
     participant: so.Mapped['User'] = so.relationship(back_populates='logs')
 
-    question_id: so.Mapped[str] = so.mapped_column(sa.ForeignKey(Question.question_id),index=True)
+    question_id: so.Mapped[Optional[str]] = so.mapped_column(sa.ForeignKey(Question.question_id),index=True)
     question: so.Mapped['Question'] = so.relationship(back_populates='logs')
 
-    answer_id: so.Mapped[str] = so.mapped_column(sa.ForeignKey(Answer.answer_id),index=True)
+    answer_id: so.Mapped[Optional[str]] = so.mapped_column(sa.ForeignKey(Answer.answer_id),index=True)
     answer: so.Mapped['Answer'] = so.relationship(back_populates='logs')
 
     phase_id: so.Mapped[str] = so.mapped_column(sa.String(64))
 
     def __repr__(self):
-        return f'{self.timestamp} - Q:{self.question_id} - A:{self.answer_id}'
-
+        if self.log_type=='answer':
+            return f'{self.timestamp} - User:{self.user_id} - Q:{self.question_id} - A:{self.answer_id}'
+        elif self.log_type=='score_computation':
+            return f'{self.timestamp} - User:{self.user_id} - Phase:{self.phase_id} - Score:{self.log_info}'
+        else:
+            return f'{self.timestamp} - User:{self.user_id} - Type:{self.log_type} - Info:{self.log_info}'
 
