@@ -107,7 +107,6 @@ def knowledge_before():
      # step 1 : extract questions for knowledge
     questions = Question.query.filter(Question.group_id == "knowledge").all()
     questionnaire_dico = questionnaire(questions)
-
     return render_template(
         'main/knowledge_before.html',
         questionnaire_dico = questionnaire_dico,

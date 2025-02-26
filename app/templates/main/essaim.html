@@ -1,31 +1,5 @@
-{% extends "main/base_navigate.html" %}
-
-{% block app_content %}
-<br>
-<br>
-<div class ="pagestyle">
-    <table class="table table-borderless">
-        <tr> 
-            <td ALIGN="CENTER"><h4 class = "pnavbut"> <b>Perceived mental health</b></h4> </td>
-        </tr>
-        <tr> 
-            <td ALIGN="LEFT">
-                <p>Here is a questionnaire to improve our prediction algorithm with questions about how do you perceive your mental health.</p>
-            </td>
-        </tr>
-    </table>
-    
-    <br>
-    <form action="/merci" method="post">
-        <tr> 
-            <td ALIGN="LEFT">
-                <p>In the past month, how often have you felt...</p>
-                {% include 'main/likert_table.html' %}
-            </td>
-        </tr> 
-    </form>
-</div>
-
-{% endblock %}
-
-
+{% extends "main/base_questionnaire.html" %}
+{% set title = "Perceived mental health" %}
+{% set description = "Here is a questionnaire to improve our prediction algorithm with questions about how do you perceive your mental health." %}
+{% set table_description = "In the past month, how often have you felt..." %}
+{% set form_action = "/merci" %}

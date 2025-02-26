@@ -202,3 +202,5 @@ __pycache__
 # db file
 *.db
 
+# VScode
+.vscode/
