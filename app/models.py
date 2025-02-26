@@ -119,6 +119,13 @@ class Log(db.Model):
     timestamp: so.Mapped[datetime] = so.mapped_column(
         index=True, default=lambda: datetime.now(timezone.utc))
     
+    # Type of log: answer, score_computation
+    # By default, it is an answer to a question
+    log_type: so.Mapped[str] = so.mapped_column(sa.String(64), default='answer')
+
+    # Additionnal info about the log
+    log_info: so.Mapped[Optional[str]] = so.mapped_column(sa.String(64))
+    
     user_id: so.Mapped[str] = so.mapped_column(sa.ForeignKey(User.user_id),index=True)
     participant: so.Mapped['User'] = so.relationship(back_populates='logs')
 
