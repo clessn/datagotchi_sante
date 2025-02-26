@@ -138,6 +138,10 @@ class Log(db.Model):
     phase_id: so.Mapped[str] = so.mapped_column(sa.String(64))
 
     def __repr__(self):
-        return f'{self.timestamp} - Q:{self.question_id} - A:{self.answer_id}'
-
+        if self.log_type=='answer':
+            return f'{self.timestamp} - User:{self.user_id} - Q:{self.question_id} - A:{self.answer_id}'
+        elif self.log_type=='score_computation':
+            return f'{self.timestamp} - User:{self.user_id} - Phase:{self.phase_id} - Score:{self.log_info}'
+        else:
+            return f'{self.timestamp} - User:{self.user_id} - Type:{self.log_type} - Info:{self.log_info}'
 
