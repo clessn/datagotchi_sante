@@ -101,10 +101,62 @@ def get_question_ids(questions):
 def consent():
     return render_template('main/consent.html')
 
+@bp.route('/sociodemo', methods=["POST"])
+@login_required
+def sociodemo():
+     # step 1 : extract questions for sociodemo
+    questions = Question.query.filter(Question.group_id == "sociodemo").all()
+    questionnaire_dico = questionnaire(questions)
+    return render_template(
+        'main/sociodemo.html',
+        questionnaire_dico = questionnaire_dico,
+        skip_valid=current_app.config['SKIP_VALID'],
+    )
+
 @bp.route('/knowledge_before', methods=["POST"])
 @login_required
 def knowledge_before():
-     # step 1 : extract questions for knowledge
+
+    # Convert form from sociodemo with list for questions with multiple answers
+    form_data = form_todict(request.form)
+    print(form_data)
+
+    # step 1 : extract questions for sociodemo
+    questions = Question.query.filter(Question.group_id == "sociodemo").all()
+    questionnaire_dico_responses = questionnaire(questions)
+    
+    # step 2 : extract and load answer values for sociodemo
+    timestamp = datetime.now(timezone.utc)
+    seed = 0
+    for question_id, (_,_, form_id, questionnaire_value) in questionnaire_dico_responses.items():
+
+        # For cursor, answer_content is registered instead of answerd_id
+        if form_id=="cursor":
+            answer_content = form_data[question_id]
+            # Find the answer_id associated to this answer_content
+            for a_id, a_content in questionnaire_value:
+                if a_content == answer_content:
+                    answer_id = a_id
+            
+        else:
+            answer_id = form_data[question_id]
+
+        # Chose random value if not answered for debug
+        if not answer_id and current_app.config['SKIP_VALID']:
+            question = db.session.get(Question, question_id)
+            answer_id = question.get_random_answer(seed=seed).answer_id
+                
+        new_log = Log(
+            timestamp=timestamp,
+            user_id=current_user.user_id,
+            question_id=question_id,
+            answer_id=answer_id,
+            phase_id='sociodemo'
+        )
+        db.session.add(new_log)
+    db.session.commit()
+
+     # step 3 : extract questions for knowledge
     questions = Question.query.filter(Question.group_id == "knowledge").all()
     questionnaire_dico = questionnaire(questions)
     return render_template(
@@ -116,7 +168,7 @@ def knowledge_before():
 @bp.route('/lifestyle', methods=['GET', 'POST'])
 @login_required
 def lifestyle():
-
+    
     # step 1 : extract questions ids for knowledge before
     questions = Question.query.filter(Question.group_id == "knowledge").all()
     question_ids = get_question_ids(questions)
