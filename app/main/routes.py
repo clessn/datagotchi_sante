@@ -101,6 +101,18 @@ def get_question_ids(questions):
 def consent():
     return render_template('main/consent.html')
 
+@bp.route('/sociodemo', methods=["POST"])
+@login_required
+def sociodemo():
+     # step 1 : extract questions for sociodemo
+    questions = Question.query.filter(Question.group_id == "sociodemo").all()
+    questionnaire_dico = questionnaire(questions)
+    return render_template(
+        'main/sociodemo.html',
+        questionnaire_dico = questionnaire_dico,
+        skip_valid=current_app.config['SKIP_VALID'],
+    )
+
 @bp.route('/knowledge_before', methods=["POST"])
 @login_required
 def knowledge_before():
