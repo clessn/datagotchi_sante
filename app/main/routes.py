@@ -570,9 +570,9 @@ def essaim():
         skip_valid=current_app.config['SKIP_VALID'],
     )
 
-@bp.route('/merci', methods=["POST"])
+@bp.route('/interac', methods=["POST"])
 @login_required
-def merci():
+def interac():
 
     # step 1 : extract questions ids for essaim
     questions = Question.query.filter(Question.group_id == "essaim").all()
@@ -592,5 +592,21 @@ def merci():
         db.session.add(new_log)
     db.session.commit()
 
+    # step 3 : extract questions for interac
+    questions = Question.query.filter(Question.group_id == "interac").all()
+    questionnaire_dico = questionnaire(questions)
+
+    return render_template(
+        'main/interac.html',
+        questionnaire_dico = questionnaire_dico,
+        skip_valid=current_app.config['SKIP_VALID'],
+    )
+
+@bp.route('/merci', methods=["POST"])
+@login_required
+def merci():
+
+    # step 1 : extract answer from interac
+    
     return render_template('main/merci.html')
 
