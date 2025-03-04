@@ -68,6 +68,16 @@
                 </div>
                 <br><br>
             {% endif %}
+            
+            {% if form_id == "email" %}
+                <h4 style="margin-left: 50px;"><label for={{question_id}}>{{question_content}}</label></h4>
+                {% for question_info in question_info_list %}
+                    <p style="margin-left: 50px;">{{question_info}}</p>
+                {% endfor %}
+                <input type="text" id="{{ question_id }}" name="{{ question_id }}" class="large-text" style="margin-left: 50px;">
+                <br><br>
+            {% endif %}
+
         {% endfor %}
 
         <!-- Render Likert Questions at the End -->
