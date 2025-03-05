@@ -74,7 +74,7 @@
                 {% for question_info in question_info_list %}
                     <p style="margin-left: 50px;">{{question_info}}</p>
                 {% endfor %}
-                <input type="text" id="{{ question_id }}" name="{{ question_id }}" class="large-text" style="margin-left: 50px;">
+                <input type="email" id="{{ question_id }}" name="{{ question_id }}" class="large-text" style="margin-left: 50px;" {% if not skip_valid %} required {% endif %}>
                 <br><br>
             {% endif %}
 
