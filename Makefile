@@ -64,9 +64,9 @@ reload-experiment:
 
 update-deploy:
 	git pull
-	sudo supervisorctl stop microblog
+	sudo supervisorctl stop microapp
 	flask db upgrade
-	sudo supervisorctl start microblog
+	sudo supervisorctl start microapp
 
 start-website:
 	poetry run python microapp.py --config=default
