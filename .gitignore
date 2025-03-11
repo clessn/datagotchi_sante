@@ -204,3 +204,6 @@ __pycache__
 
 # VScode
 .vscode/
+
+# ignore in/out files from VM machine
+deploy/data
