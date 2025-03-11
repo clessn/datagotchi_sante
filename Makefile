@@ -73,3 +73,6 @@ start-website:
 
 debug:
 	poetry run python microapp.py --config=debug
+
+send-files:
+	gcloud compute copy-files deploy/data/to_send $(vm):datagotchi_sante/deploy/data/to_send
