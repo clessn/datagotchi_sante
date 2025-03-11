@@ -142,6 +142,8 @@ class Log(db.Model):
             return f'{self.timestamp} - User:{self.user_id} - Q:{self.question_id} - A:{self.answer_id}'
         elif self.log_type=='score_computation':
             return f'{self.timestamp} - User:{self.user_id} - Phase:{self.phase_id} - Score:{self.log_info}'
+        elif self.log_type=='finished':
+            return f'{self.timestamp} - User:{self.user_id} - Type:{self.log_type} - Time:{self.timestamp}'
         else:
             return f'{self.timestamp} - User:{self.user_id} - Type:{self.log_type} - Info:{self.log_info}'
 

@@ -1,7 +1,7 @@
 from app.main import bp
 from flask import render_template, flash, redirect, url_for, current_app, make_response, g, send_file, Response
 from flask_login import current_user, login_required
-from app.models import User, Log, Question, Answer
+from app.models import UserPII, Log, Question, Answer
 from flask import request
 from app.main.forms import PurchaseForm
 from app import db
@@ -101,10 +101,61 @@ def get_question_ids(questions):
 def consent():
     return render_template('main/consent.html')
 
+@bp.route('/sociodemo', methods=["POST"])
+@login_required
+def sociodemo():
+     # step 1 : extract questions for sociodemo
+    questions = Question.query.filter(Question.group_id == "sociodemo").all()
+    questionnaire_dico = questionnaire(questions)
+    return render_template(
+        'main/sociodemo.html',
+        questionnaire_dico = questionnaire_dico,
+        skip_valid=current_app.config['SKIP_VALID'],
+    )
+
 @bp.route('/knowledge_before', methods=["POST"])
 @login_required
 def knowledge_before():
-     # step 1 : extract questions for knowledge
+
+    # Convert form from sociodemo with list for questions with multiple answers
+    form_data = form_todict(request.form)
+
+    # step 1 : extract questions for sociodemo
+    questions = Question.query.filter(Question.group_id == "sociodemo").all()
+    questionnaire_dico_responses = questionnaire(questions)
+    
+    # step 2 : extract and load answer values for sociodemo
+    timestamp = datetime.now(timezone.utc)
+    seed = 0
+    for question_id, (_,_, form_id, questionnaire_value) in questionnaire_dico_responses.items():
+
+        # For cursor, answer_content is registered instead of answerd_id
+        if form_id=="cursor":
+            answer_content = form_data[question_id]
+            # Find the answer_id associated to this answer_content
+            for a_id, a_content in questionnaire_value:
+                if a_content == answer_content:
+                    answer_id = a_id
+            
+        else:
+            answer_id = form_data[question_id]
+
+        # Chose random value if not answered for debug
+        if not answer_id and current_app.config['SKIP_VALID']:
+            question = db.session.get(Question, question_id)
+            answer_id = question.get_random_answer(seed=seed).answer_id
+                
+        new_log = Log(
+            timestamp=timestamp,
+            user_id=current_user.user_id,
+            question_id=question_id,
+            answer_id=answer_id,
+            phase_id='sociodemo'
+        )
+        db.session.add(new_log)
+    db.session.commit()
+
+     # step 3 : extract questions for knowledge
     questions = Question.query.filter(Question.group_id == "knowledge").all()
     questionnaire_dico = questionnaire(questions)
     return render_template(
@@ -116,7 +167,7 @@ def knowledge_before():
 @bp.route('/lifestyle', methods=['GET', 'POST'])
 @login_required
 def lifestyle():
-
+    
     # step 1 : extract questions ids for knowledge before
     questions = Question.query.filter(Question.group_id == "knowledge").all()
     question_ids = get_question_ids(questions)
@@ -518,9 +569,9 @@ def essaim():
         skip_valid=current_app.config['SKIP_VALID'],
     )
 
-@bp.route('/merci', methods=["POST"])
+@bp.route('/interac', methods=["POST"])
 @login_required
-def merci():
+def interac():
 
     # step 1 : extract questions ids for essaim
     questions = Question.query.filter(Question.group_id == "essaim").all()
@@ -540,5 +591,40 @@ def merci():
         db.session.add(new_log)
     db.session.commit()
 
+    # step 3 : extract questions for interac
+    questions = Question.query.filter(Question.group_id == "interac").all()
+    questionnaire_dico = questionnaire(questions)
+
+    return render_template(
+        'main/interac.html',
+        questionnaire_dico = questionnaire_dico,
+        skip_valid=current_app.config['SKIP_VALID'],
+    )
+
+@bp.route('/merci', methods=["POST"])
+@login_required
+def merci():
+    
+    # Extract question id for interac (only one question so we take the first)
+    question_id = Question.query.filter(Question.group_id == "interac").first().question_id
+
+    # New log for finished time
+    timestamp = datetime.now(timezone.utc)
+    new_log_finished = Log(
+            timestamp=timestamp,
+            log_type='finished',
+            user_id=current_user.user_id,
+            question_id=question_id,
+            phase_id='interac'
+        )
+    db.session.add(new_log_finished)
+
+    # Find userpii
+    user_pii = UserPII.query.get(current_user.user_id)
+    # Save interac email (not in log because sensitive data)
+    user_pii.interac_email = request.form[question_id]
+
+    db.session.commit()
+    
     return render_template('main/merci.html')
 
