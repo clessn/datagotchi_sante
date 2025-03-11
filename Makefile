@@ -75,4 +75,4 @@ debug:
 	poetry run python microapp.py --config=debug
 
 send-files:
-	gcloud compute copy-files deploy/data/to_send $(vm):datagotchi_sante/deploy/data/to_send
+	gcloud compute scp --recurse deploy/data/to_send $(vm):datagotchi_sante/deploy/data/to_send
