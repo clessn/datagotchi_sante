@@ -244,106 +244,100 @@ def radar_chart():
     # Return the image as a response
     return Response(buf.getvalue(), mimetype='image/png')
 
+def get_random_answer_id(question_id, seed):
+    question = db.session.get(Question, question_id)
+    answer_id = question.get_random_answer(seed=seed).answer_id
+    return answer_id
+
+def get_answer_ids(form_data, form_id, question_id, questionnaire_value, seed):
+    if form_id=="cursor":
+        answer_content = form_data[question_id]
+        # Find the answer_id associated to this answer_content
+        for a_id, a_content in questionnaire_value:
+            if a_content == answer_content:
+                answer_id = a_id
+        # in skip_mode, choose random cursor value if not answered
+        if not answer_id and current_app.config['SKIP_VALID']:
+            answer_id = get_random_answer_id(question_id, seed)
+        answer_ids = [answer_id]
+    
+    elif form_id=="checkbox":
+        if question_id not in form_data:
+            answer_ids = [get_random_answer_id(question_id, seed)]
+            # answer_ids = []
+        else:
+            answer_ids = form_data[question_id]
+    
+    else: # likert, scroll
+        answer_id = form_data[question_id]
+        if not answer_id and current_app.config['SKIP_VALID']:
+            answer_id = get_random_answer_id(question_id, seed)
+        answer_ids = [answer_id]
+    return answer_ids
+
+def log_answer_ids(answer_ids, timestamp, question_id):
+    for answer_id in answer_ids:
+        new_log = Log(
+            timestamp=timestamp,
+            user_id=current_user.user_id,
+            question_id=question_id,
+            answer_id=answer_id,
+            phase_id='lifestyle'
+        )
+        db.session.add(new_log)
+
+def update_features_dico(features_dico, answer_ids, question_id, form_id):
+    for answer_id in answer_ids:
+        # Find pilote_id for this question and answer_weight 
+        pilote_id = Question.query.filter(Question.question_id == question_id).first().pilote_id
+        answer_weight = Answer.query.filter(Answer.answer_id == answer_id).first().answer_weight
+
+        if form_id=="scroll":
+            pilote_id_nominal_single = pilote_id + "_" + str(float(answer_weight))
+            if pilote_id_nominal_single in features_dico:
+                features_dico[pilote_id_nominal_single] = 1.0
+
+        elif form_id=="checkbox":
+            pilote_id_nominal_multiple = pilote_id + "_" + str(int(answer_weight))
+            if pilote_id_nominal_multiple in features_dico:
+                features_dico[pilote_id_nominal_multiple] = 1.0
+        
+        else: # likert, cursor
+            if pilote_id in features_dico:
+                features_dico[pilote_id] = answer_weight
+
+    return features_dico
 
 @bp.route('/explain', methods=["POST"])
 @login_required
 def explain():
 
-    # Convert form from lifestyle with list for questions with multiple answers
+    # (for checkboxes) Parse form for lifestyle questions with multiple answers
     form_data = form_todict(request.form)
 
-    # Dico for prediction
-    best_model = current_app.best_model
-    selected_features = current_app.selected_features
-    lifestyle_dico = {feature: 0.0 for feature in selected_features}
-
-    # step 1 : extract questions for lifestyle
+    # Extract list of lifestyle questions in questionnaire
     questions = Question.query.filter(Question.group_id == "lifestyle").all()
     questionnaire_dico_responses = questionnaire(questions)
+
+    # Preallocate features to be populated
+    selected_features = current_app.selected_features
+    features_dico = {feature: 0.0 for feature in selected_features}
     
-    # step 2 : extract and load answer values for lifestyle
+    # Record timestamp and set seed
     timestamp = datetime.now(timezone.utc)
     seed = 0
     for question_id, (_,_, form_id, questionnaire_value) in questionnaire_dico_responses.items():
-        
-        # For checkbox, result is a list not a value
-        if form_id!="checkbox":
-
-            # For cursor, answer_content is registered instead of answerd_id
-            if form_id=="cursor":
-                answer_content = form_data[question_id]
-                # Find the answer_id associated to this answer_content
-                for a_id, a_content in questionnaire_value:
-                    if a_content == answer_content:
-                        answer_id = a_id
-            
-            else:
-                answer_id = form_data[question_id]
-
-            # Chose random value if not answered for debug
-            if not answer_id and current_app.config['SKIP_VALID']:
-                question = db.session.get(Question, question_id)
-                answer_id = question.get_random_answer(seed=seed).answer_id
-                
-            new_log = Log(
-                timestamp=timestamp,
-                user_id=current_user.user_id,
-                question_id=question_id,
-                answer_id=answer_id,
-                phase_id='lifestyle'
-            )
-            db.session.add(new_log)
-
-            # Find pilote_id for this question and answer_weight 
-            pilote_id = Question.query.filter(Question.question_id == question_id).first().pilote_id
-            answer_weight = Answer.query.filter(Answer.answer_id == answer_id).first().answer_weight
-
-            # if scroll, it is a nominal single variable and we have to one-hot encode it
-            if form_id=="scroll":
-                pilote_id_nominal_single = pilote_id + "_" + str(float(answer_weight))
-                if pilote_id_nominal_single in lifestyle_dico:
-                    lifestyle_dico[pilote_id_nominal_single] = 1.0
-            else:
-                if pilote_id in lifestyle_dico:
-                    lifestyle_dico[pilote_id] = answer_weight
-
-        # For checkbox, result is a list not a value
-        else:
-            if question_id not in form_data:
-                question = db.session.get(Question, question_id)
-                answer_id = question.get_random_answer(seed=seed).answer_id
-                answers = [answer_id]
-            else:
-                answers = form_data[question_id]
-                
-            for answer_id in answers:
-                
-                # New log
-                new_log = Log(
-                timestamp=timestamp,
-                user_id=current_user.user_id,
-                question_id=question_id,
-                answer_id=answer_id,
-                phase_id='lifestyle'
-                )
-                db.session.add(new_log)
-
-                # Add save answer in dico for prediction
-                pilote_id = Question.query.filter(Question.question_id == question_id).first().pilote_id
-                answer_weight = Answer.query.filter(Answer.answer_id == answer_id).first().answer_weight
-                pilote_id_nominal_multiple = pilote_id + "_" + str(int(answer_weight))
-                if pilote_id_nominal_multiple in lifestyle_dico:
-                    lifestyle_dico[pilote_id_nominal_multiple] = 1.0
-
+        answer_ids = get_answer_ids(form_data, form_id, question_id, questionnaire_value, seed)
+        log_answer_ids(answer_ids, timestamp, question_id)
+        features_dico = update_features_dico(features_dico, answer_ids, question_id, form_id)
         seed += 1
     db.session.commit()
 
-    # Convert to dataframe    
-    lifestyle_df = pd.DataFrame([lifestyle_dico])
-
-    # Predict
+    # Predict score from features
+    features_df = pd.DataFrame([features_dico])
+    best_model = current_app.best_model
     df_y = predict_for_example(
-        df_example = lifestyle_df,
+        df_example = features_df,
         model_info = (best_model, selected_features),
         is_df_features = True
     )
@@ -360,14 +354,14 @@ def explain():
     db.session.add(new_log)
     db.session.commit()
 
-    # Extract additional info
+    # Extract model additional info
     ## 1 - regression coefficient
     coefficients = best_model.named_steps["regressor"].coef_
     feature_coeff_dict = dict(zip(selected_features, coefficients))
     sorted_feature_coeff_dict = dict(sorted(feature_coeff_dict.items(), key=lambda item: item[1], reverse=True))
 
     ## 2 - values after scaler steps
-    X = lifestyle_df[selected_features].values
+    X = features_df[selected_features].values
     scaler = best_model.named_steps['scaler']
     X_scaled = scaler.transform(best_model.named_steps['imputer'].transform(X))
     values = X_scaled[0]
@@ -415,7 +409,7 @@ def explain():
         feature_content_dic[displayed_feature].append(values_coeff_dict[displayed_feature])
         intermediate_predicted_score += feature_coeff * value_coeff
 
-    # Explain interactive data
+    # Extract additional data for explain-interactive
     # 1) extract questions for the 5 lifestyle features
     questions = Question.query.filter(
         Question.group_id == "lifestyle",
@@ -426,6 +420,7 @@ def explain():
     # 2) extract most recent answers (logs) from the 5 lifestyle features
     most_recent_answers = get_most_recent_answers(current_user.user_id, questions)
 
+    # Prepare dictionary with all explainable information
     explain_dic = {
         "predicted_score": round(predicted_score),
         "intermediate_predicted_score": round(intermediate_predicted_score),
