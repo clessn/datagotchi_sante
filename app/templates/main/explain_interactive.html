@@ -16,6 +16,7 @@
                     Your well-being score is <strong>{{ explain_dic.predicted_score }}</strong>.
                 </p>
                 <form action="/explain" method="post">
+                    <input type="hidden" name="source_page" value="explain_interactive.html">
                     {% include 'main/question_blocs.html' %}
                 </form> 
             </td>

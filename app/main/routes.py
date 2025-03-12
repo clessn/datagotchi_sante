@@ -55,6 +55,42 @@ def get_most_recent_answers(user_id, question_list):
 
     return recent_answers
 
+# suggested alternative
+# def get_most_recent_answers(user_id, question_list):
+#     """
+#     Retrieves the most recent answers for each question in the question_list for the specified user_id.
+#     If multiple answers exist at the same timestamp, all are returned in a list.
+
+#     :param user_id: The ID of the user.
+#     :param question_list: A list of Question instances.
+#     :return: A dictionary mapping question_id to the most recent Answer instances (or lists of answers).
+#     """
+#     recent_answers = {}
+
+#     for question in question_list:
+#         # Query all logs for the given user and question, ordered by timestamp
+#         recent_logs = (
+#             db.session.query(Log)
+#             .filter_by(user_id=user_id, question_id=question.question_id)
+#             .order_by(desc(Log.timestamp))
+#             .all()  # Use all() to retrieve all logs with the same timestamp
+#         )
+
+#         if recent_logs:
+#             # Initialize an empty list for the answers
+#             answers = []
+
+#             # Group answers for the current question, if there are multiple at the same timestamp
+#             for log in recent_logs:
+#                 answers.append((log.answer.answer_id, log.answer.answer_content, log.answer.answer_weight))
+
+#             # Store the list of answers in the dictionary
+#             recent_answers[question.question_id] = answers
+#         else:
+#             recent_answers[question.question_id] = None  # No answer recorded
+
+#     return recent_answers
+
 
 # Function to transform MultiDict (due to checkbox questions) of the form to a simple dict
 def form_todict(request_form):
@@ -267,6 +303,7 @@ def get_answer_ids(form_data, form_id, question_id, questionnaire_value, seed):
             answer_ids = []
         else:
             answer_ids = form_data[question_id]
+            print(answer_ids)
     
     else: # likert, scroll
         answer_id = form_data[question_id]
@@ -326,12 +363,21 @@ def explain():
     # Record timestamp and set seed
     timestamp = datetime.now(timezone.utc)
     seed = 0
-    for question_id, (_,_, form_id, questionnaire_value) in questionnaire_dico_responses.items():
-        answer_ids = get_answer_ids(form_data, form_id, question_id, questionnaire_value, seed)
-        log_answer_ids(answer_ids, timestamp, question_id)
-        features_dico = update_features_dico(features_dico, answer_ids, question_id, form_id)
-        seed += 1
-    db.session.commit()
+
+    # If coming from lifestyle.html, then extract answers, logs answers and create features
+    if form_data['source_page'] == 'lifestyle.html':
+        for question_id, (_,_, form_id, questionnaire_value) in questionnaire_dico_responses.items():
+            answer_ids = get_answer_ids(form_data, form_id, question_id, questionnaire_value, seed)
+            log_answer_ids(answer_ids, timestamp, question_id)
+            features_dico = update_features_dico(features_dico, answer_ids, question_id, form_id)
+            seed += 1
+        db.session.commit()
+    # If coming from explain_interactive.html, then get most recent features then update the 5 new ones
+    elif form_data['source_page'] == 'explain_interactive.html':
+        most_recent_answers = get_most_recent_answers(current_user.user_id, questions)
+    else:
+        raise
+
 
     # Predict score from features
     features_df = pd.DataFrame([features_dico])
