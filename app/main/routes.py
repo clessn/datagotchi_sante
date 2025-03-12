@@ -263,8 +263,8 @@ def get_answer_ids(form_data, form_id, question_id, questionnaire_value, seed):
     
     elif form_id=="checkbox":
         if question_id not in form_data:
-            answer_ids = [get_random_answer_id(question_id, seed)]
-            # answer_ids = []
+            #answer_ids = [get_random_answer_id(question_id, seed)]
+            answer_ids = []
         else:
             answer_ids = form_data[question_id]
     
