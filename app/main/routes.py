@@ -21,6 +21,34 @@ from sqlalchemy import desc
 from werkzeug.datastructures import ImmutableMultiDict
 
 
+feature_content_dic = {
+    'sommeil_1': [
+        'Sleep quality',
+        'During the past seven days, how would you rate your sleep quality overall?',
+        "Sleep quality is a critical factor influencing mental health. Poor sleep can contribute to increased stress, anxiety, and depression, while good sleep supports emotional regulation and cognitive function. Over a seven-day period, tracking sleep quality provides insights into an individual’s ability to recover and manage daily challenges. Since sleep disturbances often correlate with mental health challenges, incorporating this variable into a mental health prediction model improves the model's ability to identify patterns and make accurate predictions, ultimately supporting more personalized and actionable feedback.",
+        ],
+    'autogestion_9': [
+        'Healthy diet',
+        'Indicate how often you have used a healthy diet it in the past month.',
+        "Diet plays a vital role in mental health, as a nutritious diet supports brain function, reduces inflammation, and stabilizes mood. Frequent consumption of healthy foods is linked to lower risks of depression and anxiety, while poor dietary habits can exacerbate mental health challenges. By asking about the frequency of healthy diet use over the past month, the model can identify patterns between diet consistency and mental health outcomes. This information enhances the ability to provide accurate predictions and tailored feedback to support individuals in improving their overall well-being.",
+        ],
+    'act_friends': [
+        'Social activities',
+        'How often do you do activities with one or more friend(s)?',
+        "Social interactions are closely tied to mental health, as spending time with friends provides emotional support, reduces feelings of loneliness, and fosters a sense of belonging. Regular social activities help buffer stress, improve mood, and promote resilience against mental health challenges. By assessing the frequency of activities with friends, the model can capture the impact of social connections on mental health, leading to more accurate predictions and meaningful feedback to help individuals enhance their social well-being.",
+        ],
+    'quartier_domicile_3': [
+        'Friendly neighborhood',
+        'Do you perceive your neighborhood as friendly ?',
+        "Perceptions of neighborhood friendliness significantly influence mental health. A friendly neighborhood fosters a sense of safety, social support, and community, which can reduce stress and feelings of isolation. Positive social environments promote well-being by encouraging interactions and creating a buffer against mental health challenges. Including this variable allows the model to capture the impact of local social dynamics on mental health, enabling more accurate predictions and actionable insights to enhance community-based interventions.",
+        ],
+    'act_volunteer': [
+        'Volunteering',
+        'How often do you volunteer or involve yourself in a cause?',
+        "Volunteering and involvement in a cause are strongly associated with improved mental health. Engaging in altruistic activities provides a sense of purpose, boosts self-esteem, and fosters social connections, all of which contribute to emotional well-being. Such activities also encourage positive thinking and reduce stress by shifting focus away from personal challenges. By evaluating the frequency of volunteering, the model can better understand the relationship between community engagement and mental health, enhancing the accuracy of predictions and the relevance of feedback.",
+        ],
+}
+
 
 #####################################
 ############# Functions #############
@@ -317,6 +345,7 @@ def update_features_dico(features_dico, answer_ids, question_id, form_id):
 
     return features_dico
 
+
 @bp.route('/explain', methods=["POST"])
 @login_required
 def explain():
@@ -326,7 +355,15 @@ def explain():
 
     # Extract list of lifestyle questions in questionnaire
     questions = Question.query.filter(Question.group_id == "lifestyle").all()
-    questionnaire_dico_responses = questionnaire(questions)
+    questionnaire_dico = questionnaire(questions)
+
+    # Extract list of lifestyle questions in questionnaire for explainability
+    displayed_feature_list = list(feature_content_dic.keys())
+    questions_explain = Question.query.filter(
+        Question.group_id == "lifestyle",
+        Question.pilote_id.in_(displayed_feature_list)
+    ).all()
+    questionnaire_explain_dico = questionnaire(questions_explain)
 
     # Preallocate features to be populated
     selected_features = current_app.selected_features
@@ -336,15 +373,21 @@ def explain():
     timestamp = datetime.now(timezone.utc)
     seed = 0
 
-    # If coming from lifestyle.html, then extract answers, logs answers and create features
+    # If coming from lifestyle.html, then 
+    # - extract and log lifestyle answers
+    # - create create features based on lifestyle answers
     if form_data['source_page'] == 'lifestyle.html':
-        for question_id, (_,_, form_id, questionnaire_value) in questionnaire_dico_responses.items():
+        for question_id, (_,_, form_id, questionnaire_value) in questionnaire_dico.items():
             answer_ids = get_answer_ids(form_data, form_id, question_id, questionnaire_value, seed)
             log_answer_ids(answer_ids, timestamp, question_id)
             features_dico = update_features_dico(features_dico, answer_ids, question_id, form_id)
             seed += 1
         db.session.commit()
-    # If coming from explain_interactive.html, then get most recent features then update the 5 new ones
+    # If coming from explain_interactive.html, then 
+    # - extract and log explain_interactive answers
+    # - extract most recent lifestyle answers
+    # - create new lifestyle answer = old lifestyle answer with 5 updates from explain_interactive answers
+    # - create create features based on new lifestyle answers    
     elif form_data['source_page'] == 'explain_interactive.html':
         most_recent_answers = get_most_recent_answers(current_user.user_id, questions)
     else:
@@ -391,35 +434,7 @@ def explain():
     predicted_score_bis += best_model.named_steps["regressor"].intercept_ 
 
     ## 4 - information about features
-    feature_content_dic = {
-        'sommeil_1': [
-            'Sleep quality',
-            'During the past seven days, how would you rate your sleep quality overall?',
-            "Sleep quality is a critical factor influencing mental health. Poor sleep can contribute to increased stress, anxiety, and depression, while good sleep supports emotional regulation and cognitive function. Over a seven-day period, tracking sleep quality provides insights into an individual’s ability to recover and manage daily challenges. Since sleep disturbances often correlate with mental health challenges, incorporating this variable into a mental health prediction model improves the model's ability to identify patterns and make accurate predictions, ultimately supporting more personalized and actionable feedback.",
-            ],
-        'autogestion_9': [
-            'Healthy diet',
-            'Indicate how often you have used a healthy diet it in the past month.',
-            "Diet plays a vital role in mental health, as a nutritious diet supports brain function, reduces inflammation, and stabilizes mood. Frequent consumption of healthy foods is linked to lower risks of depression and anxiety, while poor dietary habits can exacerbate mental health challenges. By asking about the frequency of healthy diet use over the past month, the model can identify patterns between diet consistency and mental health outcomes. This information enhances the ability to provide accurate predictions and tailored feedback to support individuals in improving their overall well-being.",
-            ],
-        'act_friends': [
-            'Social activities',
-            'How often do you do activities with one or more friend(s)?',
-            "Social interactions are closely tied to mental health, as spending time with friends provides emotional support, reduces feelings of loneliness, and fosters a sense of belonging. Regular social activities help buffer stress, improve mood, and promote resilience against mental health challenges. By assessing the frequency of activities with friends, the model can capture the impact of social connections on mental health, leading to more accurate predictions and meaningful feedback to help individuals enhance their social well-being.",
-            ],
-        'quartier_domicile_3': [
-            'Friendly neighborhood',
-            'Do you perceive your neighborhood as friendly ?',
-            "Perceptions of neighborhood friendliness significantly influence mental health. A friendly neighborhood fosters a sense of safety, social support, and community, which can reduce stress and feelings of isolation. Positive social environments promote well-being by encouraging interactions and creating a buffer against mental health challenges. Including this variable allows the model to capture the impact of local social dynamics on mental health, enabling more accurate predictions and actionable insights to enhance community-based interventions.",
-            ],
-        'act_volunteer': [
-            'Volunteering',
-            'How often do you volunteer or involve yourself in a cause?',
-            "Volunteering and involvement in a cause are strongly associated with improved mental health. Engaging in altruistic activities provides a sense of purpose, boosts self-esteem, and fosters social connections, all of which contribute to emotional well-being. Such activities also encourage positive thinking and reduce stress by shifting focus away from personal challenges. By evaluating the frequency of volunteering, the model can better understand the relationship between community engagement and mental health, enhancing the accuracy of predictions and the relevance of feedback.",
-            ],
-    }
     intermediate_predicted_score = 0
-    displayed_feature_list = list(feature_content_dic.keys())
     for displayed_feature in displayed_feature_list:
         feature_coeff = feature_coeff_dict[displayed_feature]
         value_coeff = values_coeff_dict[displayed_feature]
@@ -427,17 +442,9 @@ def explain():
         feature_content_dic[displayed_feature].append(values_coeff_dict[displayed_feature])
         intermediate_predicted_score += feature_coeff * value_coeff
 
-    # Extract additional data for explain-interactive
-    # 1) extract questions for the 5 lifestyle features
-    questions = Question.query.filter(
-        Question.group_id == "lifestyle",
-        Question.pilote_id.in_(displayed_feature_list)
-    ).all()
-    questionnaire_dico = questionnaire(questions)
+    # 5) extract most recent answers (logs) from the 5 lifestyle features
+    most_recent_answers_explain = get_most_recent_answers(current_user.user_id, questions_explain)
 
-    # 2) extract most recent answers (logs) from the 5 lifestyle features
-    most_recent_answers = get_most_recent_answers(current_user.user_id, questions)
-    print(most_recent_answers)
     # Prepare dictionary with all explainable information
     explain_dic = {
         "predicted_score": round(predicted_score),
@@ -450,8 +457,8 @@ def explain():
         f'main/{current_user.condition_id}.html', 
         form = form,
         explain_dic=explain_dic,
-        questionnaire_dico=questionnaire_dico,
-        predefined_values=most_recent_answers,
+        questionnaire_dico=questionnaire_explain_dico,
+        predefined_values=most_recent_answers_explain,
     )
 
 
