@@ -312,14 +312,14 @@ def get_answer_ids(form_data, form_id, question_id, questionnaire_value, seed):
         answer_ids = [answer_id]
     return answer_ids
 
-def log_answer_ids(answer_ids, timestamp, question_id):
+def log_answer_ids(answer_ids, timestamp, question_id, phase_id):
     for answer_id in answer_ids:
         new_log = Log(
             timestamp=timestamp,
             user_id=current_user.user_id,
             question_id=question_id,
             answer_id=answer_id,
-            phase_id='lifestyle'
+            phase_id=phase_id,
         )
         db.session.add(new_log)
 
@@ -379,17 +379,23 @@ def explain():
     if form_data['source_page'] == 'lifestyle.html':
         for question_id, (_,_, form_id, questionnaire_value) in questionnaire_dico.items():
             answer_ids = get_answer_ids(form_data, form_id, question_id, questionnaire_value, seed)
-            log_answer_ids(answer_ids, timestamp, question_id)
+            print(answer_ids)
+            log_answer_ids(answer_ids, timestamp, question_id, 'lifestyle')
             features_dico = update_features_dico(features_dico, answer_ids, question_id, form_id)
             seed += 1
         db.session.commit()
     # If coming from explain_interactive.html, then 
-    # - extract and log explain_interactive answers
-    # - extract most recent lifestyle answers
-    # - create new lifestyle answer = old lifestyle answer with 5 updates from explain_interactive answers
-    # - create create features based on new lifestyle answers    
+    # - extract and log new answers from explain_interactive answers
+    # - extract most recent  answers
+    # - create create features based on most recent answers    
     elif form_data['source_page'] == 'explain_interactive.html':
+        for question_id, (_,_, form_id, questionnaire_value) in questionnaire_explain_dico.items():
+            answer_ids = get_answer_ids(form_data, form_id, question_id, questionnaire_value, seed)
+            log_answer_ids(answer_ids, timestamp, question_id, 'explain_interactive')
         most_recent_answers = get_most_recent_answers(current_user.user_id, questions)
+        for question_id, answers in most_recent_answers.items():
+            answer_ids = [answer_id for answer_id, _, _ in answers]
+            features_dico = update_features_dico(features_dico, answer_ids, question_id, form_id)
     else:
         raise
 

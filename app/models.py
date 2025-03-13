@@ -139,11 +139,11 @@ class Log(db.Model):
 
     def __repr__(self):
         if self.log_type=='answer':
-            return f'{self.timestamp} - User:{self.user_id} - Q:{self.question_id} - A:{self.answer_id}'
+            return f'{self.timestamp} - User:{self.user_id} - Q:{self.question_id} - A:{self.answer_id} - Ph:{self.phase_id}'
         elif self.log_type=='score_computation':
-            return f'{self.timestamp} - User:{self.user_id} - Phase:{self.phase_id} - Score:{self.log_info}'
+            return f'{self.timestamp} - User:{self.user_id} - Phase:{self.phase_id} - Score:{self.log_info} - Ph:{self.phase_id}'
         elif self.log_type=='finished':
-            return f'{self.timestamp} - User:{self.user_id} - Type:{self.log_type} - Time:{self.timestamp}'
+            return f'{self.timestamp} - User:{self.user_id} - Type:{self.log_type} - Time:{self.timestamp} - Ph:{phase_id}'
         else:
-            return f'{self.timestamp} - User:{self.user_id} - Type:{self.log_type} - Info:{self.log_info}'
+            return f'{self.timestamp} - User:{self.user_id} - Type:{self.log_type} - Info:{self.log_info} - Ph:{phase_id}'
 
