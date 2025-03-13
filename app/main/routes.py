@@ -21,37 +21,74 @@ from sqlalchemy import desc
 from werkzeug.datastructures import ImmutableMultiDict
 
 
+feature_content_dic = {
+    'sommeil_1': [
+        'Sleep quality',
+        'During the past seven days, how would you rate your sleep quality overall?',
+        "Sleep quality is a critical factor influencing mental health. Poor sleep can contribute to increased stress, anxiety, and depression, while good sleep supports emotional regulation and cognitive function. Over a seven-day period, tracking sleep quality provides insights into an individual’s ability to recover and manage daily challenges. Since sleep disturbances often correlate with mental health challenges, incorporating this variable into a mental health prediction model improves the model's ability to identify patterns and make accurate predictions, ultimately supporting more personalized and actionable feedback.",
+        ],
+    'autogestion_9': [
+        'Healthy diet',
+        'Indicate how often you have used a healthy diet it in the past month.',
+        "Diet plays a vital role in mental health, as a nutritious diet supports brain function, reduces inflammation, and stabilizes mood. Frequent consumption of healthy foods is linked to lower risks of depression and anxiety, while poor dietary habits can exacerbate mental health challenges. By asking about the frequency of healthy diet use over the past month, the model can identify patterns between diet consistency and mental health outcomes. This information enhances the ability to provide accurate predictions and tailored feedback to support individuals in improving their overall well-being.",
+        ],
+    'act_friends': [
+        'Social activities',
+        'How often do you do activities with one or more friend(s)?',
+        "Social interactions are closely tied to mental health, as spending time with friends provides emotional support, reduces feelings of loneliness, and fosters a sense of belonging. Regular social activities help buffer stress, improve mood, and promote resilience against mental health challenges. By assessing the frequency of activities with friends, the model can capture the impact of social connections on mental health, leading to more accurate predictions and meaningful feedback to help individuals enhance their social well-being.",
+        ],
+    'quartier_domicile_3': [
+        'Friendly neighborhood',
+        'Do you perceive your neighborhood as friendly ?',
+        "Perceptions of neighborhood friendliness significantly influence mental health. A friendly neighborhood fosters a sense of safety, social support, and community, which can reduce stress and feelings of isolation. Positive social environments promote well-being by encouraging interactions and creating a buffer against mental health challenges. Including this variable allows the model to capture the impact of local social dynamics on mental health, enabling more accurate predictions and actionable insights to enhance community-based interventions.",
+        ],
+    'act_volunteer': [
+        'Volunteering',
+        'How often do you volunteer or involve yourself in a cause?',
+        "Volunteering and involvement in a cause are strongly associated with improved mental health. Engaging in altruistic activities provides a sense of purpose, boosts self-esteem, and fosters social connections, all of which contribute to emotional well-being. Such activities also encourage positive thinking and reduce stress by shifting focus away from personal challenges. By evaluating the frequency of volunteering, the model can better understand the relationship between community engagement and mental health, enhancing the accuracy of predictions and the relevance of feedback.",
+        ],
+}
+
 
 #####################################
 ############# Functions #############
 #####################################
 
-# Function to get the most recent answers
+# # Function to get the most recent answers
 def get_most_recent_answers(user_id, question_list):
     """
-    Retrieves the most recent answer for each question in the question_list for the specified user_id.
+    Retrieves all answers linked to the most recent timestamp for each question in the question_list for the specified user_id.
 
     :param user_id: The ID of the user.
     :param question_list: A list of Question instances.
-    :return: A dictionary mapping question_id to the most recent Answer instance.
+    :return: A dictionary mapping question_id to a list of tuples (answer_id, answer_content, answer_weight).
     """
     recent_answers = {}
 
     for question in question_list:
-        # Query the most recent log for the given user and question
-        recent_log = (
-            db.session.query(Log)
+        # Find the most recent timestamp for the given user and question
+        recent_timestamp = (
+            db.session.query(Log.timestamp)
             .filter_by(user_id=user_id, question_id=question.question_id)
             .order_by(desc(Log.timestamp))
-            .first()
+            .limit(1)
+            .scalar()
         )
 
-        # Map the question_id to the corresponding answer if a log is found
-        if recent_log:
-            recent_answers[question.question_id] = \
-                (recent_log.answer.answer_id, recent_log.answer.answer_content, recent_log.answer.answer_weight)
+        if recent_timestamp:
+            # Retrieve all answers linked to this timestamp
+            recent_logs = (
+                db.session.query(Log)
+                .filter_by(user_id=user_id, question_id=question.question_id, timestamp=recent_timestamp)
+                .all()
+            )
+
+            recent_answers[question.question_id] = [
+                (log.answer.answer_id, log.answer.answer_content, log.answer.answer_weight)
+                for log in recent_logs
+            ]
         else:
-            recent_answers[question.question_id] = None  # No answer recorded
+            recent_answers[question.question_id] = []  # No answer recorded
 
     return recent_answers
 
@@ -244,106 +281,130 @@ def radar_chart():
     # Return the image as a response
     return Response(buf.getvalue(), mimetype='image/png')
 
+def get_random_answer_id(question_id, seed):
+    question = db.session.get(Question, question_id)
+    answer_id = question.get_random_answer(seed=seed).answer_id
+    return answer_id
+
+def get_answer_ids(form_data, form_id, question_id, questionnaire_value, seed):
+    if form_id=="cursor":
+        answer_content = form_data[question_id]
+        # Find the answer_id associated to this answer_content
+        for a_id, a_content in questionnaire_value:
+            if a_content == answer_content:
+                answer_id = a_id
+        # in skip_mode, choose random cursor value if not answered
+        if not answer_id and current_app.config['SKIP_VALID']:
+            answer_id = get_random_answer_id(question_id, seed)
+        answer_ids = [answer_id]
+    
+    elif form_id=="checkbox":
+        if question_id not in form_data:
+            #answer_ids = [get_random_answer_id(question_id, seed)]
+            answer_ids = []
+        else:
+            answer_ids = form_data[question_id]
+    
+    else: # likert, scroll
+        answer_id = form_data[question_id]
+        if not answer_id and current_app.config['SKIP_VALID']:
+            answer_id = get_random_answer_id(question_id, seed)
+        answer_ids = [answer_id]
+    return answer_ids
+
+def log_answer_ids(answer_ids, timestamp, question_id, phase_id):
+    for answer_id in answer_ids:
+        new_log = Log(
+            timestamp=timestamp,
+            user_id=current_user.user_id,
+            question_id=question_id,
+            answer_id=answer_id,
+            phase_id=phase_id,
+        )
+        db.session.add(new_log)
+
+def update_features_dico(features_dico, answer_ids, question_id, form_id):
+    for answer_id in answer_ids:
+        # Find pilote_id for this question and answer_weight 
+        pilote_id = Question.query.filter(Question.question_id == question_id).first().pilote_id
+        answer_weight = Answer.query.filter(Answer.answer_id == answer_id).first().answer_weight
+
+        if form_id=="scroll":
+            pilote_id_nominal_single = pilote_id + "_" + str(float(answer_weight))
+            if pilote_id_nominal_single in features_dico:
+                features_dico[pilote_id_nominal_single] = 1.0
+
+        elif form_id=="checkbox":
+            pilote_id_nominal_multiple = pilote_id + "_" + str(int(answer_weight))
+            if pilote_id_nominal_multiple in features_dico:
+                features_dico[pilote_id_nominal_multiple] = 1.0
+        
+        else: # likert, cursor
+            if pilote_id in features_dico:
+                features_dico[pilote_id] = answer_weight
+
+    return features_dico
+
 
 @bp.route('/explain', methods=["POST"])
 @login_required
 def explain():
 
-    # Convert form from lifestyle with list for questions with multiple answers
+    # (for checkboxes) Parse form for lifestyle questions with multiple answers
     form_data = form_todict(request.form)
 
-    # Dico for prediction
-    best_model = current_app.best_model
-    selected_features = current_app.selected_features
-    lifestyle_dico = {feature: 0.0 for feature in selected_features}
-
-    # step 1 : extract questions for lifestyle
+    # Extract list of lifestyle questions in questionnaire
     questions = Question.query.filter(Question.group_id == "lifestyle").all()
-    questionnaire_dico_responses = questionnaire(questions)
+    questionnaire_dico = questionnaire(questions)
+
+    # Extract list of lifestyle questions in questionnaire for explainability
+    displayed_feature_list = list(feature_content_dic.keys())
+    questions_explain = Question.query.filter(
+        Question.group_id == "lifestyle",
+        Question.pilote_id.in_(displayed_feature_list)
+    ).all()
+    questionnaire_explain_dico = questionnaire(questions_explain)
+
+    # Preallocate features to be populated
+    selected_features = current_app.selected_features
+    features_dico = {feature: 0.0 for feature in selected_features}
     
-    # step 2 : extract and load answer values for lifestyle
+    # Record timestamp and set seed
     timestamp = datetime.now(timezone.utc)
     seed = 0
-    for question_id, (_,_, form_id, questionnaire_value) in questionnaire_dico_responses.items():
-        
-        # For checkbox, result is a list not a value
-        if form_id!="checkbox":
 
-            # For cursor, answer_content is registered instead of answerd_id
-            if form_id=="cursor":
-                answer_content = form_data[question_id]
-                # Find the answer_id associated to this answer_content
-                for a_id, a_content in questionnaire_value:
-                    if a_content == answer_content:
-                        answer_id = a_id
-            
-            else:
-                answer_id = form_data[question_id]
+    # If coming from lifestyle.html, then 
+    # - extract and log lifestyle answers
+    # - create create features based on lifestyle answers
+    if form_data['source_page'] == 'lifestyle.html':
+        for question_id, (_,_, form_id, questionnaire_value) in questionnaire_dico.items():
+            answer_ids = get_answer_ids(form_data, form_id, question_id, questionnaire_value, seed)
+            print(answer_ids)
+            log_answer_ids(answer_ids, timestamp, question_id, 'lifestyle')
+            features_dico = update_features_dico(features_dico, answer_ids, question_id, form_id)
+            seed += 1
+        db.session.commit()
+    # If coming from explain_interactive.html, then 
+    # - extract and log new answers from explain_interactive answers
+    # - extract most recent  answers
+    # - create create features based on most recent answers    
+    elif form_data['source_page'] == 'explain_interactive.html':
+        for question_id, (_,_, form_id, questionnaire_value) in questionnaire_explain_dico.items():
+            answer_ids = get_answer_ids(form_data, form_id, question_id, questionnaire_value, seed)
+            log_answer_ids(answer_ids, timestamp, question_id, 'explain_interactive')
+        most_recent_answers = get_most_recent_answers(current_user.user_id, questions)
+        for question_id, answers in most_recent_answers.items():
+            answer_ids = [answer_id for answer_id, _, _ in answers]
+            features_dico = update_features_dico(features_dico, answer_ids, question_id, form_id)
+    else:
+        raise
 
-            # Chose random value if not answered for debug
-            if not answer_id and current_app.config['SKIP_VALID']:
-                question = db.session.get(Question, question_id)
-                answer_id = question.get_random_answer(seed=seed).answer_id
-                
-            new_log = Log(
-                timestamp=timestamp,
-                user_id=current_user.user_id,
-                question_id=question_id,
-                answer_id=answer_id,
-                phase_id='lifestyle'
-            )
-            db.session.add(new_log)
 
-            # Find pilote_id for this question and answer_weight 
-            pilote_id = Question.query.filter(Question.question_id == question_id).first().pilote_id
-            answer_weight = Answer.query.filter(Answer.answer_id == answer_id).first().answer_weight
-
-            # if scroll, it is a nominal single variable and we have to one-hot encode it
-            if form_id=="scroll":
-                pilote_id_nominal_single = pilote_id + "_" + str(float(answer_weight))
-                if pilote_id_nominal_single in lifestyle_dico:
-                    lifestyle_dico[pilote_id_nominal_single] = 1.0
-            else:
-                if pilote_id in lifestyle_dico:
-                    lifestyle_dico[pilote_id] = answer_weight
-
-        # For checkbox, result is a list not a value
-        else:
-            if question_id not in form_data:
-                question = db.session.get(Question, question_id)
-                answer_id = question.get_random_answer(seed=seed).answer_id
-                answers = [answer_id]
-            else:
-                answers = form_data[question_id]
-                
-            for answer_id in answers:
-                
-                # New log
-                new_log = Log(
-                timestamp=timestamp,
-                user_id=current_user.user_id,
-                question_id=question_id,
-                answer_id=answer_id,
-                phase_id='lifestyle'
-                )
-                db.session.add(new_log)
-
-                # Add save answer in dico for prediction
-                pilote_id = Question.query.filter(Question.question_id == question_id).first().pilote_id
-                answer_weight = Answer.query.filter(Answer.answer_id == answer_id).first().answer_weight
-                pilote_id_nominal_multiple = pilote_id + "_" + str(int(answer_weight))
-                if pilote_id_nominal_multiple in lifestyle_dico:
-                    lifestyle_dico[pilote_id_nominal_multiple] = 1.0
-
-        seed += 1
-    db.session.commit()
-
-    # Convert to dataframe    
-    lifestyle_df = pd.DataFrame([lifestyle_dico])
-
-    # Predict
+    # Predict score from features
+    features_df = pd.DataFrame([features_dico])
+    best_model = current_app.best_model
     df_y = predict_for_example(
-        df_example = lifestyle_df,
+        df_example = features_df,
         model_info = (best_model, selected_features),
         is_df_features = True
     )
@@ -360,14 +421,14 @@ def explain():
     db.session.add(new_log)
     db.session.commit()
 
-    # Extract additional info
+    # Extract model additional info
     ## 1 - regression coefficient
     coefficients = best_model.named_steps["regressor"].coef_
     feature_coeff_dict = dict(zip(selected_features, coefficients))
     sorted_feature_coeff_dict = dict(sorted(feature_coeff_dict.items(), key=lambda item: item[1], reverse=True))
 
     ## 2 - values after scaler steps
-    X = lifestyle_df[selected_features].values
+    X = features_df[selected_features].values
     scaler = best_model.named_steps['scaler']
     X_scaled = scaler.transform(best_model.named_steps['imputer'].transform(X))
     values = X_scaled[0]
@@ -379,35 +440,7 @@ def explain():
     predicted_score_bis += best_model.named_steps["regressor"].intercept_ 
 
     ## 4 - information about features
-    feature_content_dic = {
-        'sommeil_1': [
-            'Sleep quality',
-            'During the past seven days, how would you rate your sleep quality overall?',
-            "Sleep quality is a critical factor influencing mental health. Poor sleep can contribute to increased stress, anxiety, and depression, while good sleep supports emotional regulation and cognitive function. Over a seven-day period, tracking sleep quality provides insights into an individual’s ability to recover and manage daily challenges. Since sleep disturbances often correlate with mental health challenges, incorporating this variable into a mental health prediction model improves the model's ability to identify patterns and make accurate predictions, ultimately supporting more personalized and actionable feedback.",
-            ],
-        'autogestion_9': [
-            'Healthy diet',
-            'Indicate how often you have used a healthy diet it in the past month.',
-            "Diet plays a vital role in mental health, as a nutritious diet supports brain function, reduces inflammation, and stabilizes mood. Frequent consumption of healthy foods is linked to lower risks of depression and anxiety, while poor dietary habits can exacerbate mental health challenges. By asking about the frequency of healthy diet use over the past month, the model can identify patterns between diet consistency and mental health outcomes. This information enhances the ability to provide accurate predictions and tailored feedback to support individuals in improving their overall well-being.",
-            ],
-        'act_friends': [
-            'Social activities',
-            'How often do you do activities with one or more friend(s)?',
-            "Social interactions are closely tied to mental health, as spending time with friends provides emotional support, reduces feelings of loneliness, and fosters a sense of belonging. Regular social activities help buffer stress, improve mood, and promote resilience against mental health challenges. By assessing the frequency of activities with friends, the model can capture the impact of social connections on mental health, leading to more accurate predictions and meaningful feedback to help individuals enhance their social well-being.",
-            ],
-        'quartier_domicile_3': [
-            'Friendly neighborhood',
-            'Do you perceive your neighborhood as friendly ?',
-            "Perceptions of neighborhood friendliness significantly influence mental health. A friendly neighborhood fosters a sense of safety, social support, and community, which can reduce stress and feelings of isolation. Positive social environments promote well-being by encouraging interactions and creating a buffer against mental health challenges. Including this variable allows the model to capture the impact of local social dynamics on mental health, enabling more accurate predictions and actionable insights to enhance community-based interventions.",
-            ],
-        'act_volunteer': [
-            'Volunteering',
-            'How often do you volunteer or involve yourself in a cause?',
-            "Volunteering and involvement in a cause are strongly associated with improved mental health. Engaging in altruistic activities provides a sense of purpose, boosts self-esteem, and fosters social connections, all of which contribute to emotional well-being. Such activities also encourage positive thinking and reduce stress by shifting focus away from personal challenges. By evaluating the frequency of volunteering, the model can better understand the relationship between community engagement and mental health, enhancing the accuracy of predictions and the relevance of feedback.",
-            ],
-    }
     intermediate_predicted_score = 0
-    displayed_feature_list = list(feature_content_dic.keys())
     for displayed_feature in displayed_feature_list:
         feature_coeff = feature_coeff_dict[displayed_feature]
         value_coeff = values_coeff_dict[displayed_feature]
@@ -415,17 +448,10 @@ def explain():
         feature_content_dic[displayed_feature].append(values_coeff_dict[displayed_feature])
         intermediate_predicted_score += feature_coeff * value_coeff
 
-    # Explain interactive data
-    # 1) extract questions for the 5 lifestyle features
-    questions = Question.query.filter(
-        Question.group_id == "lifestyle",
-        Question.pilote_id.in_(displayed_feature_list)
-    ).all()
-    questionnaire_dico = questionnaire(questions)
+    # 5) extract most recent answers (logs) from the 5 lifestyle features
+    most_recent_answers_explain = get_most_recent_answers(current_user.user_id, questions_explain)
 
-    # 2) extract most recent answers (logs) from the 5 lifestyle features
-    most_recent_answers = get_most_recent_answers(current_user.user_id, questions)
-
+    # Prepare dictionary with all explainable information
     explain_dic = {
         "predicted_score": round(predicted_score),
         "intermediate_predicted_score": round(intermediate_predicted_score),
@@ -437,8 +463,8 @@ def explain():
         f'main/{current_user.condition_id}.html', 
         form = form,
         explain_dic=explain_dic,
-        questionnaire_dico=questionnaire_dico,
-        most_recent_answers=most_recent_answers,
+        questionnaire_dico=questionnaire_explain_dico,
+        predefined_values=most_recent_answers_explain,
     )
 
 
