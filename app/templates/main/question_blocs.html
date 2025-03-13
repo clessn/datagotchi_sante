@@ -40,7 +40,7 @@
                 <p style="margin-left: 50px;margin-bottom: 55px;"></p>
                 <div class="range-container" style="margin-left: 50px; width: calc(100% - 100px);">
                     <input type="range" id="{{question_id}}" name="{{question_id}}" 
-                        min="1" max="{{ questionnaire_value | length }}" value="{% if predefined_values and predefined_values[question_id] %}{{ predefined_values[question_id][2] | int }}{% else %}1{% endif %}" 
+                        min="1" max="{{ questionnaire_value | length }}" value="{% if predefined_values and predefined_values[question_id] %}{{ predefined_values[question_id][0][2] | int }}{% else %}1{% endif %}" 
                         style="width: 100%;" step="1" list="tickmarks_{{question_id}}">
                     <div class="tickmarks" style="position: absolute; left: 0; right: 0; display: flex; justify-content: space-between; font-size: 15px; top: -25px;">
                         {% for (answer_id, answer_content) in questionnaire_value %}
@@ -102,7 +102,7 @@
                                     <input type="radio" 
                                         name="{{ question_id }}" 
                                         value="{{ answer_id }}"
-                                        {% if predefined_values is defined and predefined_values[question_id][0] == answer_id %}
+                                        {% if predefined_values is defined and predefined_values[question_id][0][0] == answer_id %}
                                         checked
                                         {% endif %}
                                         {% if not skip_valid %} required {% endif %}

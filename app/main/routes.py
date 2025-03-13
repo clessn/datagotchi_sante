@@ -26,70 +26,43 @@ from werkzeug.datastructures import ImmutableMultiDict
 ############# Functions #############
 #####################################
 
-# Function to get the most recent answers
+# # Function to get the most recent answers
 def get_most_recent_answers(user_id, question_list):
     """
-    Retrieves the most recent answer for each question in the question_list for the specified user_id.
+    Retrieves all answers linked to the most recent timestamp for each question in the question_list for the specified user_id.
 
     :param user_id: The ID of the user.
     :param question_list: A list of Question instances.
-    :return: A dictionary mapping question_id to the most recent Answer instance.
+    :return: A dictionary mapping question_id to a list of tuples (answer_id, answer_content, answer_weight).
     """
     recent_answers = {}
 
     for question in question_list:
-        # Query the most recent log for the given user and question
-        recent_log = (
-            db.session.query(Log)
+        # Find the most recent timestamp for the given user and question
+        recent_timestamp = (
+            db.session.query(Log.timestamp)
             .filter_by(user_id=user_id, question_id=question.question_id)
             .order_by(desc(Log.timestamp))
-            .first()
+            .limit(1)
+            .scalar()
         )
 
-        # Map the question_id to the corresponding answer if a log is found
-        if recent_log:
-            recent_answers[question.question_id] = \
-                (recent_log.answer.answer_id, recent_log.answer.answer_content, recent_log.answer.answer_weight)
+        if recent_timestamp:
+            # Retrieve all answers linked to this timestamp
+            recent_logs = (
+                db.session.query(Log)
+                .filter_by(user_id=user_id, question_id=question.question_id, timestamp=recent_timestamp)
+                .all()
+            )
+
+            recent_answers[question.question_id] = [
+                (log.answer.answer_id, log.answer.answer_content, log.answer.answer_weight)
+                for log in recent_logs
+            ]
         else:
-            recent_answers[question.question_id] = None  # No answer recorded
+            recent_answers[question.question_id] = []  # No answer recorded
 
     return recent_answers
-
-# suggested alternative
-# def get_most_recent_answers(user_id, question_list):
-#     """
-#     Retrieves the most recent answers for each question in the question_list for the specified user_id.
-#     If multiple answers exist at the same timestamp, all are returned in a list.
-
-#     :param user_id: The ID of the user.
-#     :param question_list: A list of Question instances.
-#     :return: A dictionary mapping question_id to the most recent Answer instances (or lists of answers).
-#     """
-#     recent_answers = {}
-
-#     for question in question_list:
-#         # Query all logs for the given user and question, ordered by timestamp
-#         recent_logs = (
-#             db.session.query(Log)
-#             .filter_by(user_id=user_id, question_id=question.question_id)
-#             .order_by(desc(Log.timestamp))
-#             .all()  # Use all() to retrieve all logs with the same timestamp
-#         )
-
-#         if recent_logs:
-#             # Initialize an empty list for the answers
-#             answers = []
-
-#             # Group answers for the current question, if there are multiple at the same timestamp
-#             for log in recent_logs:
-#                 answers.append((log.answer.answer_id, log.answer.answer_content, log.answer.answer_weight))
-
-#             # Store the list of answers in the dictionary
-#             recent_answers[question.question_id] = answers
-#         else:
-#             recent_answers[question.question_id] = None  # No answer recorded
-
-#     return recent_answers
 
 
 # Function to transform MultiDict (due to checkbox questions) of the form to a simple dict
@@ -303,7 +276,6 @@ def get_answer_ids(form_data, form_id, question_id, questionnaire_value, seed):
             answer_ids = []
         else:
             answer_ids = form_data[question_id]
-            print(answer_ids)
     
     else: # likert, scroll
         answer_id = form_data[question_id]
@@ -465,7 +437,7 @@ def explain():
 
     # 2) extract most recent answers (logs) from the 5 lifestyle features
     most_recent_answers = get_most_recent_answers(current_user.user_id, questions)
-
+    print(most_recent_answers)
     # Prepare dictionary with all explainable information
     explain_dic = {
         "predicted_score": round(predicted_score),
