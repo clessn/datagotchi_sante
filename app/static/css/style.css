@@ -170,8 +170,32 @@ body {
   transition: background-color 0.3s;
 }
 
+.btn-secondary {
+  background-color: rgb(171, 37, 41); /* Red theme for buttons */
+  border: none;
+  color: rgb(245, 247, 243);
+  font-size: 1.2em;
+  padding: 10px 20px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
 .btn-primary:hover {
   background-color: rgb(109, 110, 109); /* Darker hover effect */
+}
+
+.btn-retry {
+  background-color: #f39c12; /* Orange color */
+  font-size: 1em; /* Smaller font */
+  padding: 5px 15px; /* Less padding */
+  border: none;
+  color: white;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-retry:hover {
+  background-color: #e67e22; /* Darker orange on hover */
 }
 
 .custom-btn {

@@ -17,7 +17,9 @@
                 </p>
                 <form action="/explain" method="post">
                     <input type="hidden" name="source_page" value="explain_interactive.html">
-                    {% include 'main/question_blocs.html' %}
+                    {% set button_text = "Retry" %}
+                    {% set button_class = "btn-retry" %}
+                    {% include 'main/question_blocs.html'%}
                 </form> 
             </td>
         </tr>
