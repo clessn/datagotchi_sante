@@ -82,7 +82,9 @@
 
         <!-- Render Likert Questions at the End -->
         {% for answers_key_str, (question_info, questions) in grouped_questions.items() %}
+        {% if question_info %}
         <h4 style="margin-left: 50px;"><label for={{question_id}}>{{question_info}}</label></h4>
+        {% endif %}
             <table class="table table-bordered table-striped likert-table">
                 <thead class="table-light">
                     <tr>
@@ -115,7 +117,6 @@
                     {% endfor %}
                 </tbody>
             </table>
-            <br>
         {% endfor %}
     </div>
     <p>
