@@ -607,6 +607,12 @@ def interac():
     timestamp = datetime.now(timezone.utc)
     for question_id in question_ids:
         answer_id = request.form[question_id]
+
+        # chose random value if not answered for debug
+        if not answer_id and current_app.config['SKIP_VALID']:
+            question = db.session.get(Question, question_id)
+            answer_id = question.get_random_answer().answer_id
+            
         new_log = Log(
             timestamp=timestamp,
             user_id=current_user.user_id,
