@@ -379,7 +379,6 @@ def explain():
     if form_data['source_page'] == 'lifestyle.html':
         for question_id, (_,_, form_id, questionnaire_value) in questionnaire_dico.items():
             answer_ids = get_answer_ids(form_data, form_id, question_id, questionnaire_value, seed)
-            print(answer_ids)
             log_answer_ids(answer_ids, timestamp, question_id, 'lifestyle')
             features_dico = update_features_dico(features_dico, answer_ids, question_id, form_id)
             seed += 1
@@ -395,6 +394,7 @@ def explain():
         most_recent_answers = get_most_recent_answers(current_user.user_id, questions)
         for question_id, answers in most_recent_answers.items():
             answer_ids = [answer_id for answer_id, _, _ in answers]
+            _, _, form_id, _ = questionnaire_dico[question_id]
             features_dico = update_features_dico(features_dico, answer_ids, question_id, form_id)
     else:
         raise
