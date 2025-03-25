@@ -13,8 +13,8 @@ server {
     server_name _;
 
     # location of the self-signed SSL certificate
-    ssl_certificate /home/fvancomperno/datagotchi_sante/certs/cert.pem;
-    ssl_certificate_key /home/fvancomperno/datagotchi_sante/certs/key.pem;
+    ssl_certificate /etc/letsencrypt/live/wellbeing-predictor.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/wellbeing-predictor.com/privkey.pem;
 
     # write access and error logs to /var/log
     access_log /var/log/microapp_access.log;
