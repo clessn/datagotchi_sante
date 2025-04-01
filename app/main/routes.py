@@ -3,7 +3,6 @@ from flask import render_template, flash, redirect, url_for, current_app, make_r
 from flask_login import current_user, login_required
 from app.models import UserPII, Log, Question, Answer
 from flask import request
-from app.main.forms import PurchaseForm
 from app import db
 from app import create_app
 import pickle
@@ -458,10 +457,8 @@ def explain():
         "n_informative": len(feature_content_dic),
         "feature_content_dic": feature_content_dic,
     }
-    form = PurchaseForm()
     return render_template(
         f'main/{current_user.condition_id}.html', 
-        form = form,
         explain_dic=explain_dic,
         questionnaire_dico=questionnaire_explain_dico,
         predefined_values=most_recent_answers_explain,
