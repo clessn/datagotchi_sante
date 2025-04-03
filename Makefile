@@ -75,7 +75,7 @@ debug:
 	poetry run python microapp.py --config=debug
 
 send-files:
-	gcloud compute scp --recurse deploy/data/to_send $(vm):datagotchi_sante/deploy/data/to_send
+	gcloud compute scp --recurse $(DATA_WEBAPP_PATH)$(SEP)* $(vm):datagotchi_sante/deploy/data/to_send
 
 download-files:
 	gcloud compute scp --recurse $(vm):datagotchi_sante/deploy/data/received deploy/data/received 
