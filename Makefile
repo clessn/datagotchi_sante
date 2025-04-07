@@ -26,6 +26,9 @@ predict-for-example:
 run-crossval:
 	poetry run python -c "from app.ml.crossval import run_crossval; run_crossval()"
 
+eda:
+	poetry run python -c "from app.ml.eda import score_eda; score_eda()"
+
 launch-visuals:
 	poetry run python -c "import os, sys; project_root = os.path.abspath(os.getcwd()); os.chdir(project_root); from streamlit.web.cli import main; sys.argv = ['streamlit', 'run', 'app/ml/visuals.py', '--client.showSidebarNavigation=False']; main()"
 
