@@ -26,6 +26,9 @@ predict-for-example:
 run-crossval:
 	poetry run python -c "from app.ml.crossval import run_crossval; run_crossval()"
 
+eda:
+	poetry run python -c "from app.ml.eda import score_eda; score_eda()"
+
 launch-visuals:
 	poetry run python -c "import os, sys; project_root = os.path.abspath(os.getcwd()); os.chdir(project_root); from streamlit.web.cli import main; sys.argv = ['streamlit', 'run', 'app/ml/visuals.py', '--client.showSidebarNavigation=False']; main()"
 
@@ -81,7 +84,7 @@ debug:
 	poetry run python microapp.py --config=debug
 
 send-files:
-	gcloud compute scp --recurse deploy/data/to_send $(vm):datagotchi_sante/deploy/data/to_send
+	gcloud compute scp --recurse $(DATA_WEBAPP_PATH) $(vm):datagotchi_sante/deploy/data/to_send
 
 download-files:
 	gcloud compute scp --recurse $(vm):datagotchi_sante/deploy/data/received ./deploy/data/received 

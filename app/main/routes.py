@@ -3,7 +3,6 @@ from flask import render_template, flash, redirect, url_for, current_app, make_r
 from flask_login import current_user, login_required
 from app.models import UserPII, Log, Question, Answer
 from flask import request
-from app.main.forms import PurchaseForm
 from app import db
 from app import create_app
 import pickle
@@ -21,7 +20,13 @@ from sqlalchemy import desc
 from werkzeug.datastructures import ImmutableMultiDict
 
 
-feature_content_dic = {
+#####################################
+############# Functions #############
+#####################################
+
+## Function to initialize the feature_content dictionnary
+def get_feature_content_dic():
+    feature_content_dic_init = {
     'sommeil_1': [
         'Sleep quality',
         'During the past seven days, how would you rate your sleep quality overall?',
@@ -47,12 +52,8 @@ feature_content_dic = {
         'How often do you volunteer or involve yourself in a cause?',
         "Volunteering and involvement in a cause are strongly associated with improved mental health. Engaging in altruistic activities provides a sense of purpose, boosts self-esteem, and fosters social connections, all of which contribute to emotional well-being. Such activities also encourage positive thinking and reduce stress by shifting focus away from personal challenges. By evaluating the frequency of volunteering, the model can better understand the relationship between community engagement and mental health, enhancing the accuracy of predictions and the relevance of feedback.",
         ],
-}
-
-
-#####################################
-############# Functions #############
-#####################################
+    }
+    return feature_content_dic_init
 
 # # Function to get the most recent answers
 def get_most_recent_answers(user_id, question_list):
@@ -358,6 +359,7 @@ def explain():
     questionnaire_dico = questionnaire(questions)
 
     # Extract list of lifestyle questions in questionnaire for explainability
+    feature_content_dic = get_feature_content_dic()
     displayed_feature_list = list(feature_content_dic.keys())
     questions_explain = Question.query.filter(
         Question.group_id == "lifestyle",
@@ -458,10 +460,8 @@ def explain():
         "n_informative": len(feature_content_dic),
         "feature_content_dic": feature_content_dic,
     }
-    form = PurchaseForm()
     return render_template(
         f'main/{current_user.condition_id}.html', 
-        form = form,
         explain_dic=explain_dic,
         questionnaire_dico=questionnaire_explain_dico,
         predefined_values=most_recent_answers_explain,

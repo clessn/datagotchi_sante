@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 import argparse
 
 
-parser = argparse.ArgumentParser(description='Purchases simulation for recommendation systems')
+parser = argparse.ArgumentParser(description='Well-being predictor')
 parser.add_argument('--config', type=str, default='default', help='Configuration name, see config.py')
 args, _ = parser.parse_known_args()
 config_name = args.config

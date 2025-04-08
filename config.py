@@ -22,9 +22,10 @@ class DefaultConfig(Config):
 class DebugConfig(Config):
     MAIN_PAGE='main.consent'
     SKIP_VALID=True
-    EXPLAIN_TYPE='explain_interactive'
+    EXPLAIN_TYPE=None
+    #EXPLAIN_TYPE='explain_interactive'
     # choose amongts 'explain_baseline', 'explain_visual',
-    # 'explain_textual', 'explain_quantitative', 'explain_interactive',
+    # 'explain_textual', 'explain_quantitative', 'explain_interactive', 'explain_contextual'
 
 configs = {
   'default'  : DefaultConfig,
