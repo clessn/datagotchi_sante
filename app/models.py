@@ -15,7 +15,7 @@ def load_user(id):
 
 class User(UserMixin, db.Model):
     user_id: so.Mapped[str] = so.mapped_column(sa.String(64), primary_key=True)
-    condition_id: so.Mapped[Optional[str]] = so.mapped_column(sa.String(64))                                   
+    condition_id: so.Mapped[Optional[str]] = so.mapped_column(sa.String(64), nullable=True)                                   
 
     logs: so.WriteOnlyMapped['Log'] = so.relationship(
         back_populates='participant')
