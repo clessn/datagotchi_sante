@@ -12,7 +12,7 @@ def export_database_to_csv():
 
     # Create timestamped directory
     now = datetime.utcnow().strftime('%Y-%m-%d_%H-%M-%S')
-    export_dir = os.path.join('deploy', 'data', 'received', now)
+    export_dir = os.path.join('deploy', 'data', 'experiment', now)
     os.makedirs(export_dir, exist_ok=True)
  
     with app.app_context():

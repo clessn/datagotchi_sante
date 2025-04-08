@@ -86,10 +86,10 @@ debug:
 	poetry run python microapp.py --config=debug
 
 send-files:
-	gcloud compute scp --recurse $(DATA_WEBAPP_PATH) $(vm):datagotchi_sante/deploy/data/to_send
+	gcloud compute scp --recurse $(DATA_WEBAPP_PATH) $(vm):datagotchi_sante/deploy/data
 
 download-files:
-	gcloud compute scp --recurse $(vm):datagotchi_sante/deploy/data/received ./deploy/data/received 
+	gcloud compute scp --recurse $(vm):datagotchi_sante/deploy/data/experiment $(DATA_EXPERIMENT_PATH) 
 
 dump-database:
 	poetry run python -c "from scripts.export_db import export_database_to_csv; export_database_to_csv()"
