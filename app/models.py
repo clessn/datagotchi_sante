@@ -38,8 +38,8 @@ class User(UserMixin, db.Model):
 
 class UserPII(db.Model):
     user_id: so.Mapped[str] = so.mapped_column(sa.String(64), sa.ForeignKey('user.user_id'), primary_key=True)
-    email: so.Mapped[Optional[str]] = so.mapped_column(sa.String(120), index=True, unique=True)
-    interac_email: so.Mapped[Optional[str]] = so.mapped_column(sa.String(120), index=True, unique=True)
+    email: so.Mapped[Optional[str]] = so.mapped_column(sa.String(120), index=True, unique=True, nullable=True)
+    interac_email: so.Mapped[Optional[str]] = so.mapped_column(sa.String(120), index=True, unique=True, nullable=True)
 
     user: so.Mapped['User'] = so.relationship("User", back_populates="pii")
     
