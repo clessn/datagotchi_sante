@@ -4,6 +4,8 @@ else
     SEP = /
 endif
 
+include .env
+
 clean-python:
 	poetry run isort .
 	poetry run black .
