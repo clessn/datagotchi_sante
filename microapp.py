@@ -7,7 +7,7 @@ import argparse
 
 
 parser = argparse.ArgumentParser(description='Well-being predictor')
-parser.add_argument('--config', type=str, default='default', help='Configuration name, see config.py')
+parser.add_argument('--config', type=str, default='debug', help='Configuration name, see config.py')
 args, _ = parser.parse_known_args()
 config_name = args.config
 
