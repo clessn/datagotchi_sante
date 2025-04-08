@@ -92,4 +92,4 @@ download-files:
 	gcloud compute scp --recurse $(vm):datagotchi_sante/deploy/data/received ./deploy/data/received 
 
 dump-database:
-	poetry run python -c "from scripts.export_database import export_database_to_csv; export_database_to_csv()"
+	poetry run python -c "from scripts.export_db import export_database_to_csv; export_database_to_csv()"
