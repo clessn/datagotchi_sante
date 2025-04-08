@@ -68,6 +68,12 @@ update-deploy:
 	flask db upgrade
 	sudo supervisorctl start microapp
 
+sup-start:
+	sudo supervisorctl start microapp
+
+sup-stop:
+	sudo supervisorctl stop microapp
+
 start-website:
 	poetry run python microapp.py --config=default
 
@@ -78,4 +84,4 @@ send-files:
 	gcloud compute scp --recurse deploy/data/to_send $(vm):datagotchi_sante/deploy/data/to_send
 
 download-files:
-	gcloud compute scp --recurse $(vm):datagotchi_sante/deploy/data/received deploy/data/received 
+	gcloud compute scp --recurse $(vm):datagotchi_sante/deploy/data/received ./deploy/data/received 
