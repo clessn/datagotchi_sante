@@ -23,7 +23,7 @@ ANSWER_FILENAME = 'answer.csv'
 
 
 def populate_db(db_name, csv_file):
-    df = pd.read_csv(csv_file, delimiter=";", na_values=["nan", "NaN", ""])
+    df = pd.read_csv(csv_file, delimiter=";")
     # convert missing values in None
     df = df.where(pd.notnull(df), None)
     for record in df.to_dict("records"):
