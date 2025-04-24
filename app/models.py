@@ -74,7 +74,7 @@ class Question(db.Model):
         query = self.answers.select()
         answers = db.session.scalars(query).all()
         for answer in answers:
-            form.append((answer.answer_id,answer.answer_content))
+            form.append((answer.answer_id, answer.answer_content))
         return form
 
     def get_random_answer(self, seed=None):
@@ -102,6 +102,7 @@ class Answer(db.Model):
     answer_id: so.Mapped[str] = so.mapped_column(sa.String(64), primary_key=True)
     answer_content: so.Mapped[str] = so.mapped_column(sa.String(1000)) 
     answer_weight: so.Mapped[float] = so.mapped_column(sa.Float)
+    explain_txt: so.Mapped[str] = so.mapped_column(sa.String(1000), nullable=True)
 
     question_id: so.Mapped[str] = so.mapped_column(sa.ForeignKey(Question.question_id),index=True)                           
     question: so.Mapped['Question'] = so.relationship(back_populates='answers')
@@ -112,6 +113,15 @@ class Answer(db.Model):
     def __repr__(self):
         return f'{self.answer_id} - weight: {self.answer_weight}'
 
+
+def get_explains_by_answer_ids(answer_ids):
+    # Query the Answer table to get the corresponding 'explain_txt' for each answer_id
+    answers = Answer.query.filter(Answer.answer_id.in_(answer_ids)).all()
+    
+    # Extract the 'explain_txt' from the queried results
+    explain_texts = [answer.explain_txt for answer in answers if answer.explain_txt]
+    
+    return explain_texts
 
 
 class Log(db.Model):

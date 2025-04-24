@@ -1,7 +1,7 @@
 from app.main import bp
 from flask import render_template, flash, redirect, url_for, current_app, make_response, g, send_file, Response
 from flask_login import current_user, login_required
-from app.models import UserPII, Log, Question, Answer
+from app.models import UserPII, Log, Question, Answer, get_explains_by_answer_ids
 from flask import request
 from app import db
 from app import create_app
@@ -346,6 +346,7 @@ def log_answer_ids(answer_ids, timestamp, question_id, phase_id):
         db.session.add(new_log)
 
 def update_features_dico(features_dico, answer_ids, question_id, form_id):
+    pilote_id_out = None
     for answer_id in answer_ids:
         # Find pilote_id for this question and answer_weight 
         pilote_id = Question.query.filter(Question.question_id == question_id).first().pilote_id
@@ -355,17 +356,19 @@ def update_features_dico(features_dico, answer_ids, question_id, form_id):
             pilote_id_nominal_single = pilote_id + "_" + str(float(answer_weight))
             if pilote_id_nominal_single in features_dico:
                 features_dico[pilote_id_nominal_single] = 1.0
+                pilote_id_out = pilote_id_nominal_single
 
         elif form_id=="checkbox":
             pilote_id_nominal_multiple = pilote_id + "_" + str(int(answer_weight))
             if pilote_id_nominal_multiple in features_dico:
                 features_dico[pilote_id_nominal_multiple] = 1.0
-        
+                pilote_id_out = pilote_id_nominal_multiple
         else: # likert, cursor
             if pilote_id in features_dico:
                 features_dico[pilote_id] = answer_weight
+                pilote_id_out = pilote_id
 
-    return features_dico
+    return features_dico, pilote_id_out
 
 
 @bp.route('/explain', methods=["POST"])
@@ -391,7 +394,8 @@ def explain():
     # Preallocate features to be populated
     selected_features = current_app.selected_features
     features_dico = {feature: 0.0 for feature in selected_features}
-    
+    features_explain_txt_dico = {feature: "" for feature in selected_features}
+
     # Record timestamp and set seed
     timestamp = datetime.now(timezone.utc)
     seed = 0
@@ -402,8 +406,10 @@ def explain():
     if form_data['source_page'] == 'lifestyle.html':
         for question_id, (_,_, form_id, questionnaire_value) in questionnaire_dico.items():
             answer_ids = get_answer_ids(form_data, form_id, question_id, questionnaire_value, seed)
+            explain_txt_list = get_explains_by_answer_ids(answer_ids)
             log_answer_ids(answer_ids, timestamp, question_id, 'lifestyle')
-            features_dico = update_features_dico(features_dico, answer_ids, question_id, form_id)
+            features_dico, pilote_id = update_features_dico(features_dico, answer_ids, question_id, form_id)
+            features_explain_txt_dico[pilote_id] = explain_txt_list[0] if len(explain_txt_list) > 0 else ""  # assuming explain feature only have 1 answer id
             seed += 1
         db.session.commit()
     # If coming from explain_interactive.html, then 
@@ -418,10 +424,9 @@ def explain():
         for question_id, answers in most_recent_answers.items():
             answer_ids = [answer_id for answer_id, _, _ in answers]
             _, _, form_id, _ = questionnaire_dico[question_id]
-            features_dico = update_features_dico(features_dico, answer_ids, question_id, form_id)
+            features_dico, _ = update_features_dico(features_dico, answer_ids, question_id, form_id)
     else:
         raise
-
 
     # Predict score from features
     features_df = pd.DataFrame([features_dico])
@@ -450,13 +455,19 @@ def explain():
     feature_coeff_dict = dict(zip(selected_features, coefficients))
     sorted_feature_coeff_dict = dict(sorted(feature_coeff_dict.items(), key=lambda item: item[1], reverse=True))
 
-    ## 2 - values after scaler steps
+    ## 2 - values before and after scaler steps
     X = features_df[selected_features].values
     scaler = best_model.named_steps['scaler']
     X_scaled = scaler.transform(best_model.named_steps['imputer'].transform(X))
+    
     values = X_scaled[0]
     values_coeff_dict = dict(zip(selected_features, values))
     sorted_values_coeff_dict = dict(sorted(values_coeff_dict.items(), key=lambda item: item[1], reverse=True))
+    
+    raw_values = X[0]
+    raw_values_coeff_dict = dict(zip(selected_features, raw_values))
+    sorted_raw_values_coeff_dict = dict(sorted(raw_values_coeff_dict.items(), key=lambda item: item[1], reverse=True))
+
 
     ## 3 - double check model prediction
     predicted_score_bis = sum(coef * val for coef, val in zip(coefficients, values))
@@ -469,7 +480,10 @@ def explain():
         value_coeff = values_coeff_dict[displayed_feature]
         feature_content_dic[displayed_feature].append(feature_coeff_dict[displayed_feature])
         feature_content_dic[displayed_feature].append(values_coeff_dict[displayed_feature])
+        feature_content_dic[displayed_feature].append(features_explain_txt_dico[displayed_feature])
         intermediate_predicted_score += feature_coeff * value_coeff
+
+    print(feature_content_dic)
 
     # 5) extract most recent answers (logs) from the 5 lifestyle features
     most_recent_answers_explain = get_most_recent_answers(current_user.user_id, questions_explain)
