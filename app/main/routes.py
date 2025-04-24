@@ -241,6 +241,26 @@ def lifestyle():
     )
 
 
+def set_dynamick_xtick_labels(ax, angles, labels):
+    # Set the tick locations (must do this before modifying labels)
+    ax.set_xticks(angles[:-1])
+
+    # Set the tick labels
+    ax.set_xticklabels(labels, fontsize=10)
+
+    # Adjust each label
+    for label, angle in zip(ax.get_xticklabels(), angles[:-1]):
+        angle_deg = np.degrees(angle)
+        
+        # Dynamically align based on angle
+        if angle_deg >= 90 and angle_deg <= 270:
+            label.set_horizontalalignment('right')
+        else:
+            label.set_horizontalalignment('left')
+
+        # Offset the label from the circle
+        label.set_position((label.get_position()[0], label.get_position()[1] + 0.1))
+        
 @bp.route('/radar_chart', methods=["GET"])
 def radar_chart():
     labels = request.args.get('labels').split(',')
@@ -268,8 +288,9 @@ def radar_chart():
 
     # Adjust labels and styling
     ax.set_yticklabels([])  # Remove radial labels for a cleaner look
-    ax.set_xticks(angles[:-1])
-    ax.set_xticklabels(labels, fontsize=10, ha='center')  # Adjust font size and alignment
+    #ax.set_xticks(angles[:-1])
+    #ax.set_xticklabels(labels, fontsize=10, ha='center')  # Adjust font size and alignment
+    set_dynamick_xtick_labels(ax, angles, labels)
 
     # Improve layout to avoid cutting text
     fig.tight_layout(pad=2)
