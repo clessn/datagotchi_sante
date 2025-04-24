@@ -73,10 +73,13 @@ body {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for professional look */
 }
 
-.pagestyle p {
-  font-size: 1.2em; /* Increase font size for better readability */
-  line-height: 1.6; /* Improve line spacing */
-  color: rgb(64, 65, 63); /* Match content text color */
+.pagestyle p,
+.pagestyle ul,
+.pagestyle ol,
+.pagestyle li {
+  font-size: 1.7rem;
+  line-height: 1.6;
+  color: rgb(64, 65, 63);
 }
 
 .pagestyle h4 {
