@@ -14,7 +14,7 @@
                     Your well-being score is <strong>{{ explain_dic.predicted_score }}</strong>. It is calculated based on how you answered <strong>{{ explain_dic.n_informative }}</strong> key lifestyle questions. These questions are particularly important because our analysis showed they are the best indicators of well-being. Here's how your score was determined:
                 </p>
                 <p><ol>
-                {% for question_id, (question_label, question_content, _, question_coefficient, question_value) in explain_dic.feature_content_dic.items() %}
+                {% for question_id, (question_label, question_content, _, question_coefficient, question_value, _) in explain_dic.feature_content_dic.items() %}
                 <li><strong>{{ question_content }}</strong>: This contributes <strong>{{ (question_coefficient * question_value) | round  }}</strong> points to your score.</li>
                 {% endfor %}
                 </ol></p>
