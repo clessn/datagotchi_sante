@@ -20,7 +20,7 @@
             {% if form_id == "scroll" %}
                 <h4 style="margin-left: 50px;"><label for={{question_id}}>{{question_content}}</label></h4>
                 {% for question_info in question_info_list %}
-                    <p style="margin-left: 50px;">{{question_info}}</p>
+                    <p style="margin-left: 50px;">{{ question_info|safe }}</p>
                 {% endfor %}
                 <select id={{question_id}} name={{question_id}} class="large-text" style="margin-left: 50px;">
                     <option value=""></option>
@@ -35,7 +35,7 @@
                     <label for="{{question_id}}">{{question_content}}</label>
                 </h4>
                 {% for question_info in question_info_list %}
-                    <p style="margin-left: 50px;">{{question_info}}</p>
+                    <p style="margin-left: 50px;">{{ question_info|safe }}</p>
                 {% endfor %}
                 <p style="margin-left: 50px;margin-bottom: 55px;"></p>
                 <div class="range-container" style="margin-left: 50px; width: calc(100% - 100px);">
@@ -54,7 +54,7 @@
             {% if form_id == "checkbox" %}
                 <h4 style="margin-left: 50px;"><label for={{question_id}}>{{question_content}}</label></h4>
                 {% for question_info in question_info_list %}
-                    <p style="margin-left: 50px;">{{question_info}}</p>
+                    <p style="margin-left: 50px;">{{ question_info|safe }}</p>
                 {% endfor %}
                 <div class="checkbox-group" data-question-id="{{question_id}}" style="margin-left: 50px;">
                     {% for (answer_id, answer_content) in questionnaire_value %}
@@ -72,7 +72,7 @@
             {% if form_id == "email" %}
                 <h4 style="margin-left: 50px;"><label for={{question_id}}>{{question_content}}</label></h4>
                 {% for question_info in question_info_list %}
-                    <p style="margin-left: 50px;">{{question_info}}</p>
+                    <p style="margin-left: 50px;">{{ question_info|safe }}</p>
                 {% endfor %}
                 <input type="email" id="{{ question_id }}" name="{{ question_id }}" class="large-text" style="margin-left: 50px;" {% if not skip_valid %} required {% endif %}>
                 <br><br>
@@ -83,7 +83,7 @@
         <!-- Render Likert Questions at the End -->
         {% for answers_key_str, (question_info, questions) in grouped_questions.items() %}
         {% if question_info %}
-        <h4 style="margin-left: 50px;"><label for={{question_id}}>{{question_info}}</label></h4>
+        <h4 style="margin-left: 50px;"><label for={{question_id}}>{{ question_info|safe }}</label></h4>
         {% endif %}
             <table class="table table-bordered table-striped likert-table">
                 <thead class="table-light">
