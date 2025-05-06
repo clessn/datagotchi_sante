@@ -402,6 +402,7 @@ def explain():
 
     # Retry flag for interactive mode
     interactive_retry_mode = (form_data['source_page'] == 'explain_interactive.html')
+    previous_predicted_score = None
 
     # If coming from lifestyle.html, then 
     # - extract and log lifestyle answers
@@ -420,6 +421,7 @@ def explain():
     # - extract most recent  answers
     # - create create features based on most recent answers    
     else:
+        previous_predicted_score = form_data['previous_predicted_score']
         for question_id, (_,_, form_id, questionnaire_value) in questionnaire_explain_dico.items():
             answer_ids = get_answer_ids(form_data, form_id, question_id, questionnaire_value, seed)
             log_answer_ids(answer_ids, timestamp, question_id, 'explain_interactive')
@@ -492,6 +494,7 @@ def explain():
     # Prepare dictionary with all explainable information
     explain_dic = {
         "predicted_score": round(predicted_score),
+        "previous_predicted_score": previous_predicted_score,
         "intermediate_predicted_score": round(intermediate_predicted_score),
         "n_informative": len(feature_content_dic),
         "feature_content_dic": feature_content_dic,

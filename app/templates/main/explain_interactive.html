@@ -13,7 +13,13 @@
         <tr>
             <td ALIGN="LEFT">
                 <p>
-                    Based on your answers, we’ve estimated your current well-being score: <strong>{{ explain_dic.predicted_score }}</strong>.
+                    {% if explain_dic.previous_predicted_score is none %}
+                        Based on your answers, we’ve estimated your current well-being score: <strong>{{ explain_dic.predicted_score }}</strong>.
+                    {% else %}
+                        Based on the new answers you provided, your well-being score has changed from 
+                        <strong>{{ explain_dic.previous_predicted_score }}</strong> to 
+                        <strong>{{ explain_dic.predicted_score }}</strong>.
+                    {% endif %}
                 </p>
                 <p>
                     Among all the lifestyle factors you shared, the ones that influence your score the most are:
@@ -33,6 +39,7 @@
                 </p>
                 <form action="/explain" method="post">
                     <input type="hidden" name="source_page" value="explain_interactive.html">
+                    <input type="hidden" name="previous_predicted_score" value="{{ explain_dic.predicted_score }}">
                     {% set button_text = "Retry" %}
                     {% set button_class = "btn-retry" %}
                     {% include 'main/question_blocs.html'%}
