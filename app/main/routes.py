@@ -483,8 +483,6 @@ def explain():
         feature_content_dic[displayed_feature].append(features_explain_txt_dico[displayed_feature])
         intermediate_predicted_score += feature_coeff * value_coeff
 
-    print(feature_content_dic)
-
     # 5) extract most recent answers (logs) from the 5 lifestyle features
     most_recent_answers_explain = get_most_recent_answers(current_user.user_id, questions_explain)
 
