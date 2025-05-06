@@ -400,10 +400,13 @@ def explain():
     timestamp = datetime.now(timezone.utc)
     seed = 0
 
+    # Retry flag for interactive mode
+    interactive_retry_mode = (form_data['source_page'] == 'explain_interactive.html')
+
     # If coming from lifestyle.html, then 
     # - extract and log lifestyle answers
     # - create create features based on lifestyle answers
-    if form_data['source_page'] == 'lifestyle.html':
+    if not interactive_retry_mode:
         for question_id, (_,_, form_id, questionnaire_value) in questionnaire_dico.items():
             answer_ids = get_answer_ids(form_data, form_id, question_id, questionnaire_value, seed)
             explain_txt_list = get_explains_by_answer_ids(answer_ids)
@@ -416,7 +419,7 @@ def explain():
     # - extract and log new answers from explain_interactive answers
     # - extract most recent  answers
     # - create create features based on most recent answers    
-    elif form_data['source_page'] == 'explain_interactive.html':
+    else:
         for question_id, (_,_, form_id, questionnaire_value) in questionnaire_explain_dico.items():
             answer_ids = get_answer_ids(form_data, form_id, question_id, questionnaire_value, seed)
             log_answer_ids(answer_ids, timestamp, question_id, 'explain_interactive')
@@ -425,8 +428,6 @@ def explain():
             answer_ids = [answer_id for answer_id, _, _ in answers]
             _, _, form_id, _ = questionnaire_dico[question_id]
             features_dico, _ = update_features_dico(features_dico, answer_ids, question_id, form_id)
-    else:
-        raise
 
     # Predict score from features
     features_df = pd.DataFrame([features_dico])

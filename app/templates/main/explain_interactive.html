@@ -7,13 +7,29 @@
     <table class="table table-borderless">
         <tr>
             <td ALIGN="CENTER">
-                <h4 class="pnavbut"><b>Communication of your predicted well-being predicted score</b></h4>
+                <h4 class="pnavbut"><b>Communication of your predicted well-being score</b></h4>
             </td>
         </tr>
         <tr>
             <td ALIGN="LEFT">
                 <p>
-                    Your well-being score is <strong>{{ explain_dic.predicted_score }}</strong>.
+                    Based on your answers, we’ve estimated your current well-being score: <strong>{{ explain_dic.predicted_score }}</strong>.
+                </p>
+                <p>
+                    Among all the lifestyle factors you shared, the ones that influence your score the most are:
+                </p>
+                <ul>
+                    <li><strong>Sleep quality</strong></li>
+                    <li><strong>Healthy diet</strong></li>
+                    <li><strong>Social activities</strong></li>
+                    <li><strong>Friendly neighborhood</strong></li>
+                    <li><strong>Volunteering</strong></li>
+                </ul>
+                <p>
+                    To better understand how these factors shape your well-being, try adjusting your answers below.
+                    After adjusting your answers, click the <strong>"Retry"</strong> button to see how your well-being score would change — helping you explore what matters most for your well-being.
+                    You can try as many changes as you like — feel free to explore different combinations before moving on.
+
                 </p>
                 <form action="/explain" method="post">
                     <input type="hidden" name="source_page" value="explain_interactive.html">
@@ -23,7 +39,7 @@
                 </form> 
             </td>
         </tr>
-    </table>
+    </table>    
     <a>
         <form action="{{ url_for('main.satisfaction') }}" method="post">
             <div style="text-align: left;">
