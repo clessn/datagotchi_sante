@@ -521,29 +521,31 @@ def satisfaction():
 @bp.route('/intent', methods=['GET', 'POST'])
 @login_required
 def intent():
-    # step 1 : extract questions ids for satisfaction
-    questions = Question.query.filter(Question.group_id == "satisfaction").all()
-    question_ids = get_question_ids(questions)
-    
-    # step 2 : extract and load answer values for satisfaction
-    timestamp = datetime.now(timezone.utc)
-    for question_id in question_ids:
-        answer_id = request.form[question_id]
 
-        # chose random value if not answered for debug
-        if not answer_id and current_app.config['SKIP_VALID']:
-            question = db.session.get(Question, question_id)
-            answer_id = question.get_random_answer(seed=42).answer_id
+    if current_user.condition_id != "explain_baseline":
+        # step 1 : extract questions ids for satisfaction
+        questions = Question.query.filter(Question.group_id == "satisfaction").all()
+        question_ids = get_question_ids(questions)
+        
+        # step 2 : extract and load answer values for satisfaction
+        timestamp = datetime.now(timezone.utc)
+        for question_id in question_ids:
+            answer_id = request.form[question_id]
 
-        new_log = Log(
-            timestamp=timestamp,
-            user_id=current_user.user_id,
-            question_id=question_id,
-            answer_id=answer_id,
-            phase_id='satisfaction'
-        )
-        db.session.add(new_log)
-    db.session.commit()
+            # chose random value if not answered for debug
+            if not answer_id and current_app.config['SKIP_VALID']:
+                question = db.session.get(Question, question_id)
+                answer_id = question.get_random_answer(seed=42).answer_id
+
+            new_log = Log(
+                timestamp=timestamp,
+                user_id=current_user.user_id,
+                question_id=question_id,
+                answer_id=answer_id,
+                phase_id='satisfaction'
+            )
+            db.session.add(new_log)
+        db.session.commit()
 
     # step 3 : extract questions for intent
     questions = Question.query.filter(Question.group_id == "intent").all()
