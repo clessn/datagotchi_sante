@@ -18,10 +18,30 @@
                     To help you situate yourself, here is the distribution of scores observed during our pilot study:
                 </p>
                 <ul>
-                    <li>25% of participants had a score below 43</li>
-                    <li>25% had a score between 43 and 59</li>
-                    <li>25% had a score between 59 and 74</li>
-                    <li>25% had a score above 74</li>
+                    <li>
+                        25% of participants had a score below 43.
+                        {% if explain_dic.predicted_score < 43 %}
+                            &larr; <span style="color:#007bff;">Your well-being score falls in this group</span>
+                        {% endif %}
+                    </li>
+                    <li>
+                        25% had a score between 43 and 59
+                        {% if explain_dic.predicted_score >= 43 and explain_dic.predicted_score < 59 %}
+                            &larr; <span style="color:#007bff;">Your well-being score falls in this group</span>
+                        {% endif %}
+                    </li>
+                    <li>
+                        25% had a score between 59 and 74
+                        {% if explain_dic.predicted_score >= 59 and explain_dic.predicted_score < 74 %}
+                            &larr; <span style="color:#007bff;">Your well-being score falls in this group</span>
+                        {% endif %}
+                    </li>
+                    <li>
+                        25% had a score above 74
+                        {% if explain_dic.predicted_score >= 74 %}
+                            &larr; <span style="color:#007bff;">Your well-being score falls in this group</span>
+                        {% endif %}
+                    </li>
                 </ul>
             </td>
         </tr>
