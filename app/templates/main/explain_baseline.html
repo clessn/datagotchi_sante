@@ -12,6 +12,9 @@
             <td ALIGN="LEFT">
                 <p>
                     Your well-being score is <strong>{{ explain_dic.predicted_score }}</strong>.
+                </p>
+                {% set gauge_score = explain_dic.predicted_score %}
+                {% include 'main/explain_gauge.html' %}
             </td>
         </tr>
     </table>
