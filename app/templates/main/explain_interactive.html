@@ -15,10 +15,15 @@
                 <p>
                     {% if explain_dic.previous_predicted_score is none %}
                         Based on your answers, the algorithm estimated your current well-being score: <strong>{{ explain_dic.predicted_score }}</strong>.
+                        {% set gauge_score = explain_dic.predicted_score %}
+                        {% include 'main/explain_gauge.html' %}
                     {% else %}
                         Based on the new answers you provided, your well-being score has changed from 
                         <strong>{{ explain_dic.previous_predicted_score }}</strong> to 
                         <strong>{{ explain_dic.predicted_score }}</strong>.
+                        {% set gauge_score_start = explain_dic.previous_predicted_score %}
+                        {% set gauge_score_end = explain_dic.predicted_score %}
+                        {% include 'main/explain_gauge_interactive.html' %}
                     {% endif %}
                 </p>
                 <p>

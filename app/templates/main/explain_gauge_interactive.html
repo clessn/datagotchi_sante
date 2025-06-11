@@ -1,0 +1,67 @@
+<div id="gauge-container" style="width:100%; max-width:400px; margin:20px 0;">
+    <div style="position:relative; height:30px; background:linear-gradient(to right, #e74c3c, #f1c40f, #27ae60); border-radius:15px;">
+        <div id="gauge-marker" style="
+            position:absolute;
+            left:calc({{ gauge_score_start|default(0) }}% - 15px);
+            top:-5px;
+            width:40px;
+            height:40px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            transition:left 1s cubic-bezier(.4,2,.6,1);
+            ">
+            <span id="gauge-value" style="
+                background:#fff;
+                border:2px solid #007bff;
+                border-radius:50%;
+                width:30px;
+                height:30px;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                font-weight:bold;
+                color:#007bff;
+                box-shadow:0 2px 6px rgba(0,0,0,0.1);
+                ">
+                {{ gauge_score_start|int }}
+            </span>
+        </div>
+    </div>
+    <div style="display:flex; justify-content:space-between; font-size:12px; margin-top:5px;">
+        <span style="color:#e74c3c;">0</span>
+        <span style="color:#27ae60;">100</span>
+    </div>
+</div>
+<script>
+    // Animate the gauge marker and value
+    document.addEventListener("DOMContentLoaded", function() {
+        var start = {{ gauge_score_start|default(0)|int }};
+        var end = {{ gauge_score_end|default(0)|int }};
+        var marker = document.getElementById("gauge-marker");
+        var value = document.getElementById("gauge-value");
+        var duration = 1000; // ms
+        var frameRate = 60;
+        var totalFrames = Math.round(duration / (1000 / frameRate));
+        var frame = 0;
+
+        function animate() {
+            frame++;
+            var progress = Math.min(frame / totalFrames, 1);
+            var current = Math.round(start + (end - start) * progress);
+            var left = "calc(" + current + "% - 15px)";
+            marker.style.left = left;
+            value.textContent = current;
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            }
+        }
+        // Only animate if start != end
+        if (start !== end) {
+            setTimeout(animate, 200);
+        } else {
+            marker.style.left = "calc(" + end + "% - 15px)";
+            value.textContent = end;
+        }
+    });
+</script>
