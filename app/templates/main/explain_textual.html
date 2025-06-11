@@ -11,7 +11,12 @@
         <tr> 
             <td ALIGN="LEFT">
                 <p>
-                    Based on your answers, the algorithm estimated your current well-being score: <strong>{{ explain_dic.predicted_score }}</strong>. This score reflects how some of your lifestyle habits influence your overall well-being, based on patterns we've observed in a large group of people. Let me explain this without technical jargon:
+                    Based on your answers, the algorithm estimated your current well-being score: <strong>{{ explain_dic.predicted_score }}</strong>. 
+                </p>
+                {% set gauge_score = explain_dic.predicted_score %}
+                {% include 'main/explain_gauge.html' %}
+                <p>
+                    This score reflects how some of your lifestyle habits influence your overall well-being, based on patterns we've observed in a large group of people. Let me explain this without technical jargon:
                 </p>
                 <p>
                     We found that <strong>{{ explain_dic.n_informative }}</strong> key questions had the most impact on your well-being score:
