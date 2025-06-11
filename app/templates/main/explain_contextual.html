@@ -13,6 +13,8 @@
                 <p>
                     Based on your answers, the algorithm estimated your current well-being score: <strong>{{ explain_dic.predicted_score }}</strong>.
                 </p>
+                {% set gauge_score = explain_dic.predicted_score %}
+                {% include 'main/explain_gauge.html' %}
                 <p>
                     This score reflects how some of your lifestyle habits influence your overall well-being, based on patterns we've observed in our pilot study with 1,881 participants.
                     To help you situate yourself, here is the distribution of scores observed during our pilot study:
