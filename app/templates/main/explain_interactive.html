@@ -14,7 +14,7 @@
             <td ALIGN="LEFT">
                 <p>
                     {% if explain_dic.previous_predicted_score is none %}
-                        Based on your answers, we’ve estimated your current well-being score: <strong>{{ explain_dic.predicted_score }}</strong>.
+                        Based on your answers, the algorithm estimated your current well-being score: <strong>{{ explain_dic.predicted_score }}</strong>.
                     {% else %}
                         Based on the new answers you provided, your well-being score has changed from 
                         <strong>{{ explain_dic.previous_predicted_score }}</strong> to 
