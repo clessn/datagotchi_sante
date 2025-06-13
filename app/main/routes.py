@@ -406,7 +406,7 @@ def explain():
 
     # If coming from lifestyle.html, then 
     # - extract and log lifestyle answers
-    # - create create features based on lifestyle answers
+    # - create features based on lifestyle answers
     if not interactive_retry_mode:
         for question_id, (_,_, form_id, questionnaire_value) in questionnaire_dico.items():
             answer_ids = get_answer_ids(form_data, form_id, question_id, questionnaire_value, seed)
@@ -419,7 +419,7 @@ def explain():
     # If coming from explain_interactive.html, then 
     # - extract and log new answers from explain_interactive answers
     # - extract most recent  answers
-    # - create create features based on most recent answers    
+    # - create features based on most recent answers    
     else:
         previous_predicted_score = form_data['previous_predicted_score']
         for question_id, (_,_, form_id, questionnaire_value) in questionnaire_explain_dico.items():
