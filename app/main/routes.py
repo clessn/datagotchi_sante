@@ -310,11 +310,9 @@ def get_random_answer_id(question_id, seed):
 
 def get_answer_ids(form_data, form_id, question_id, questionnaire_value, seed):
     if form_id=="cursor":
-        answer_content = form_data[question_id]
-        # Find the answer_id associated to this answer_content
-        for a_id, a_content in questionnaire_value:
-            if a_content == answer_content:
-                answer_id = a_id
+        # Find the answer_id associated to this level selected on the cursor
+        answer_cursor = int(form_data[question_id])
+        answer_id = questionnaire_value[answer_cursor][0]
         # in skip_mode, choose random cursor value if not answered
         if not answer_id and current_app.config['SKIP_VALID']:
             answer_id = get_random_answer_id(question_id, seed)
