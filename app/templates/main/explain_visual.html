@@ -19,7 +19,7 @@
                 {# — Key factors — #}
                 <h4 class="pnavsub">Key factors</h4>
                 <p>
-                    We found <strong>{{ explain_dic.n_informative }}</strong> factors that explain the majority of your score:
+                    According to our algorithm, the <strong>{{ explain_dic.n_informative }}</strong> lifestyle factors that most strongly predict your well-being score are:
                     <ol>
                     {% for question_id, question_data in explain_dic.feature_content_dic.items() %}
                     <li>
@@ -28,8 +28,11 @@
                     {% endfor %}
                 </ol>
                 </p>
+
+                {# — Radar chart — #}
+                <h4 class="pnavsub">Radar chart visualization</h4>
                 <p>
-                    Each axis of the radar chart represents your answers to these questions, showing how each factor contributes to your overall well-being score. The distance from the center indicates how well you are doing in the factor mentionned.
+                    Each axis of the radar chart represents one of the key factors above. The position on each axis shows how well you are doing in that area, based on your answers to the corresponding questions. Therefore, the <strong>closer</strong> the point on an axis is <strong>to the center</strong> of the chart, the more <strong>room there is for improvement</strong> in that factor.
                 </p>
 
                 <div class="chart-container">
@@ -40,13 +43,13 @@
                         alt="Radar Chart">
                 </div>
 
-                {# — Additionnal factors — #}
-                <h4 class="pnavsub">Additionnal factors</h4>
+                {# — Disclaimer — #}
+                <h4 class="pnavsub">About this tool </h4>
                 <p>
-                    
+                    This chart highlights only the {{ explain_dic.n_informative }} most predictive factors identified by the algorithm. However, other factors may also impact your well-being score.
                 </p>
                 <p>
-                    This tool aims to help you identify which aspects of your lifestyle have the most influence on your well-being and where you might want to focus your attention to feel better overall. Small, consistent changes in these areas could make a meaningful difference.
+                    The insights provided here are based on the algorithm trained in our pilot study and are not intended to replace professional advice. For any concerns about your mental health, we encourage you to speak with a qualified healthcare provider.
                 </p>
             </td>
         </tr>
