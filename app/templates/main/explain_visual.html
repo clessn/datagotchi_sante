@@ -12,10 +12,24 @@
         </tr>
         <tr>
             <td ALIGN="LEFT">
+                {# — Score — #}
                 {% set gauge_score = explain_dic.predicted_score %}
                 {% include 'main/explain_intro_and_gauge.html' %}
-                <p>The radar chart highlights 
-                    <strong>{{ explain_dic.n_informative }}</strong> key aspects of your lifestyle that significantly influence this score. Let me explain how these factors contribute to your overall well-being:
+
+                {# — Key factors — #}
+                <h4 class="pnavsub">Key factors</h4>
+                <p>
+                    We found <strong>{{ explain_dic.n_informative }}</strong> factors that explain the majority of your score:
+                    <ol>
+                    {% for question_id, question_data in explain_dic.feature_content_dic.items() %}
+                    <li>
+                        <strong>{{ question_data[0] }}</strong>: {{ question_data[1] }}
+                    </li>
+                    {% endfor %}
+                </ol>
+                </p>
+                <p>
+                    Each axis of the radar chart represents your answers to these questions, showing how each factor contributes to your overall well-being score. The distance from the center indicates how well you are doing in the factor mentionned.
                 </p>
 
                 <div class="chart-container">
@@ -26,18 +40,10 @@
                         alt="Radar Chart">
                 </div>
 
-                <ol>
-                    {% for question_id, question_data in explain_dic.feature_content_dic.items() %}
-                    <li>
-                        <strong>{{ question_data[0] }}</strong>: {{ question_data[1] }}
-                    </li>
-                    {% endfor %}
-                </ol>
+                {# — Additionnal factors — #}
+                <h4 class="pnavsub">Additionnal factors</h4>
                 <p>
-                    These factors together explain the majority of your score. The radar chart visually represents how well-balanced these areas are in your life and suggests areas where small improvements could lead to better well-being.
-                </p>
-                <p>
-                    The remaining points come from other aspects of your lifestyle and environment that are not captured in the radar chart but still contribute to your overall well-being.
+                    
                 </p>
                 <p>
                     This tool aims to help you identify which aspects of your lifestyle have the most influence on your well-being and where you might want to focus your attention to feel better overall. Small, consistent changes in these areas could make a meaningful difference.
