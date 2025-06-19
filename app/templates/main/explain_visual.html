@@ -12,9 +12,6 @@
         </tr>
         <tr>
             <td ALIGN="LEFT">
-                <p>
-                    Based on your answers, the algorithm estimated your current well-being score: <strong>{{ explain_dic.predicted_score }}</strong>. 
-                </p>
                 {% set gauge_score = explain_dic.predicted_score %}
                 {% include 'main/explain_gauge.html' %}
                 <p>The radar chart highlights 
