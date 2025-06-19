@@ -14,7 +14,7 @@
             <td ALIGN="LEFT">
                 {% if explain_dic.previous_predicted_score is none %}
                     {% set gauge_score = explain_dic.predicted_score %}
-                    {% include 'main/explain_gauge.html' %}
+                    {% include 'main/explain_intro_and_gauge.html' %}
                 {% else %}
                     <p>
                         Based on the new answers you provided, your well-being score has changed from 
