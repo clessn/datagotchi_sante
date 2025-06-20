@@ -16,14 +16,14 @@
                 {% set gauge_score = explain_dic.predicted_score %}
                 {% include 'main/explain_intro_and_gauge.html' %}
 
-                {# — Radar chart — #}
+                {# — Explanation — #}
                 <h4 class="pnavsub">Why do you have this score?</h4>
                 <p>
-                    The radar chart represents the <strong>{{ explain_dic.n_informative }}</strong> lifestyle factors that most strongly predict your well-being score according to our algorithm.
-                    Each axis corresponds to one of these key factors, and your position on the axis reflects how well you're doing in that area based on your answers.
+                    According to our algorithm, <strong>{{ explain_dic.n_informative }}</strong> lifestyle factors most strongly predict your well-being score.
+                    Each axis of the radar chart corresponds to one of these key factors, and the position on the axis reflects how well you're doing in that area based on your answers.
                 <br>
                     The <strong>outer edge</strong> of the chart represents the <strong>best possible score</strong> for that factor, while the <strong>center</strong> represents the <strong>worst possible score</strong>.
-                    Therefore, <strong>points near the center</strong> suggest there may be <strong>room for improvement</strong> for that factor.
+                    Therefore, <strong>being positioned near the center of the circle</strong> suggest there may be <strong>room for improvement</strong> for that factor.
                 </p>
 
                 <div class="chart-container">
