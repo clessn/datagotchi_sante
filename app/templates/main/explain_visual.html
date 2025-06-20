@@ -16,23 +16,14 @@
                 {% set gauge_score = explain_dic.predicted_score %}
                 {% include 'main/explain_intro_and_gauge.html' %}
 
-                {# — Key factors — #}
-                <h4 class="pnavsub">Key factors</h4>
-                <p>
-                    According to our algorithm, the <strong>{{ explain_dic.n_informative }}</strong> lifestyle factors that most strongly predict your well-being score are:
-                    <ol>
-                    {% for question_id, question_data in explain_dic.feature_content_dic.items() %}
-                    <li>
-                        <strong>{{ question_data[0] }}</strong>: {{ question_data[1] }}
-                    </li>
-                    {% endfor %}
-                </ol>
-                </p>
-
                 {# — Radar chart — #}
-                <h4 class="pnavsub">Radar chart visualization</h4>
+                <h4 class="pnavsub">Why do you have this score?</h4>
                 <p>
-                    Each axis of the radar chart represents one of the key factors above. The position on each axis shows how well you are doing in that area, based on your answers to the corresponding questions. Therefore, the <strong>closer</strong> the point on an axis is <strong>to the center</strong> of the chart, the more <strong>room there is for improvement</strong> in that factor.
+                    The radar chart represents the <strong>{{ explain_dic.n_informative }}</strong> lifestyle factors that most strongly predict your well-being score according to our algorithm.
+                    Each axis corresponds to one of these key factors, and your position on the axis reflects how well you're doing in that area based on your answers.
+                <br>
+                    The <strong>outer edge</strong> of the chart represents the <strong>best possible score</strong> for that factor, while the <strong>center</strong> represents the <strong>worst possible score</strong>.
+                    Therefore, <strong>points near the center</strong> suggest there may be <strong>room for improvement</strong> for that factor.
                 </p>
 
                 <div class="chart-container">
@@ -43,14 +34,25 @@
                         alt="Radar Chart">
                 </div>
 
-                {# — Disclaimer — #}
-                <h4 class="pnavsub">About this tool </h4>
+                {# — Legend of key factors — #}
+                <p>
+                    <strong>Radar chart legend</strong>
+                </p>
+                <p>
+                    {% for question_id, question_data in explain_dic.feature_content_dic.items() %}
+                        {{ question_data[0] }} - {{ question_data[1] }}<br>
+                    {% endfor %}
+                </p>
+                <br>
+
+                {# — Additionnal factors — #}
+                <h4 class="pnavsub">What about the other factors?</h4>
                 <p>
                     This chart highlights only the {{ explain_dic.n_informative }} most predictive factors identified by the algorithm. However, other factors may also impact your well-being score.
                 </p>
-                <p>
-                    The insights provided here are based on the algorithm trained in our pilot study and are not intended to replace professional advice. For any concerns about your mental health, we encourage you to speak with a qualified healthcare provider.
-                </p>
+                
+                
+
             </td>
         </tr>
     </table>
