@@ -10,26 +10,52 @@
         </tr>
         <tr> 
             <td ALIGN="LEFT">
-                <p>
-                    Based on your answers, the algorithm estimated your current well-being score: <strong>{{ explain_dic.predicted_score }}</strong>. 
-                </p>
+                {# — Score — #}
                 {% set gauge_score = explain_dic.predicted_score %}
-                {% include 'main/explain_gauge.html' %}
+                {% include 'main/explain_intro_and_gauge.html' %}
+
+                {# — Explanation — #}
+                <h4 class="pnavsub">Why do you have this score?</h4>
                 <p>
-                    It is calculated based on how you answered <strong>{{ explain_dic.n_informative }}</strong> key lifestyle questions. These questions are particularly important because our analysis showed they are the best indicators of well-being. Here's how your score was determined:
+                     According to our algorithm, <strong>{{ explain_dic.n_informative }} lifestyle factors</strong> most strongly predict your well-being score. 
+                     Here's how your score was determined:
                 </p>
-                <p><ol>
-                {% for question_id, (question_label, question_content, _, question_coefficient, question_value, _) in explain_dic.feature_content_dic.items() %}
-                <li><strong>{{ question_content }}</strong>: This contributes <strong>{{ (question_coefficient * question_value) | round  }}</strong> points to your score.</li>
-                {% endfor %}
-                </ol></p>
 
-                <p><strong>Total Contribution:</strong> Adding these factors together: <strong>{{ explain_dic.intermediate_predicted_score }}</strong> points.</p>
+                <ol>
+                    {% for question_id, (question_label, question_content, question_description, question_coefficient, question_value, question_explain) in explain_dic.feature_content_dic.items() %}
+                    <li class="question-item">
+                        <strong>{{ question_content }}</strong> 
+                        <br />
+                        This factor contributes <strong>{{ (question_coefficient * question_value) | round(2) }}</strong> points to your score.
+                        <button class="dropdown-toggle">How is it computed?</button>
+                        <div class="dropdown-content">
+                            <p>
+                                This <strong>question</strong> is associated with a coefficient of <strong>{{ question_coefficient | round(2)}}</strong> by the algorithm.
+                            </p>
+                            <p>
+                                Your <strong>answer</strong> to this question was: "<em>{{ question_explain }}</em>".
+                                This answer is associated with a coefficient of <strong>{{ question_value | round(2)}}</strong> by the algorithm.
+                            </p>
+                            <p>
+                                Therefore, the contribution of this factor to your score is calculated as:
+                                <br>
+                                <strong>{{ question_coefficient | round(2)}} × {{ question_value | round(2)}} = {{ (question_coefficient * question_value) | round(2) }}</strong>
+                            </p>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ol>
 
-                <p><strong>The Remaining Points:</strong> The rest of your score, 
-                <strong>{{ explain_dic.predicted_score }} - {{ explain_dic.intermediate_predicted_score }}</strong> = <strong>{{ explain_dic.predicted_score - explain_dic.intermediate_predicted_score }}</strong> points, come from your responses to other lifestyle and socio-demographic questions. These questions collectively play a smaller role in the prediction but still provide additional insights into your well-being.</p>
+                <p>Adding these factors together, we obtain <strong>{{ explain_dic.intermediate_predicted_score }}</strong> points.</p>
 
-                <p><strong>Why This Explanation Matters:</strong> This breakdown shows how much each factor influences your score. For instance, the most influential questions highlight the areas where small changes could significantly impact your well-being score.</p>
+                {# — Additionnal factors — #}
+                <h4 class="pnavsub">What about the other factors?</h4>
+                <p>
+                    We detail only the points for the the {{ explain_dic.n_informative }} most predictive factors identified by the algorithm. 
+                    However, the rest of your score, <strong>{{ explain_dic.predicted_score }} - {{ explain_dic.intermediate_predicted_score }}</strong> = <strong>{{ explain_dic.predicted_score - explain_dic.intermediate_predicted_score }}</strong> points, come from other factors such as time spent in nature, your chronotype, your working environment, etc. that may also explain your well-being score.
+                </p>
+
+                {% include 'main/disclaimer.html' %} 
 
             </td>
         </tr>

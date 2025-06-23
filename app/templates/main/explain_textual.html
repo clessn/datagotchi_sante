@@ -10,16 +10,14 @@
         </tr>
         <tr> 
             <td ALIGN="LEFT">
-                <p>
-                    Based on your answers, the algorithm estimated your current well-being score: <strong>{{ explain_dic.predicted_score }}</strong>. 
-                </p>
+                {# — Score — #}
                 {% set gauge_score = explain_dic.predicted_score %}
-                {% include 'main/explain_gauge.html' %}
+                {% include 'main/explain_intro_and_gauge.html' %}
+
+                {# — Explanation — #}
+                <h4 class="pnavsub">Why do you have this score?</h4>
                 <p>
-                    This score reflects how some of your lifestyle habits influence your overall well-being, based on patterns we've observed in a large group of people. Let me explain this without technical jargon:
-                </p>
-                <p>
-                    We found that <strong>{{ explain_dic.n_informative }}</strong> key questions had the most impact on your well-being score:
+                     According to our algorithm, <strong>{{ explain_dic.n_informative }} lifestyle factors</strong> most strongly predict your well-being score:
                 </p>
                 <ol>
                     {% for question_id, (question_label, question_content, question_description, _, _, question_explain) in explain_dic.feature_content_dic.items() %}
@@ -34,13 +32,14 @@
                     </li>
                     {% endfor %}
                 </ol>
+
+                {# — Additionnal factors — #}
+                <h4 class="pnavsub">What about the other factors?</h4>
                 <p>
-                    These factors combined explain most of your score. The remaining points come from other areas in your life, such as your daily stress levels, eating habits, or work-life balance. These areas are harder to capture but still contribute to your overall well-being.
-                </p>
-                <p>
-                    The goal of this tool is to help you understand where you might focus your energy to improve your well-being. Based on your responses, small changes in these areas could make a meaningful difference to your well-being.
+                    We highlight only the {{ explain_dic.n_informative }} most predictive factors identified by the algorithm. However, other factors such as time spent in nature, your chronotype, your working environment, etc. may also explain your well-being score.
                 </p>
                 
+                {% include 'main/disclaimer.html' %}                
 
             </td>
         </tr>
