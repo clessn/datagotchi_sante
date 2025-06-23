@@ -13,41 +13,51 @@
         <tr>
             <td ALIGN="LEFT">
                 {% if explain_dic.previous_predicted_score is none %}
+                    {# — Score — #}
                     {% set gauge_score = explain_dic.predicted_score %}
                     {% include 'main/explain_intro_and_gauge.html' %}
-                {% else %}
+
+                    {# — Explanation — #}
+                    <h4 class="pnavsub">Why do you have this score?</h4>
+                    
                     <p>
-                        Based on the new answers you provided, your well-being score has changed from 
-                        <strong>{{ explain_dic.previous_predicted_score }}</strong> to 
-                        <strong>{{ explain_dic.predicted_score }}</strong>.
+                        According to our algorithm, <strong>{{ explain_dic.n_informative }} lifestyle factors</strong> most strongly predict your well-being score.
+                        Below are the questions associated with these {{ explain_dic.n_informative }} factors, along with your previous answers.
                     </p>
+                    <p>
+                        To better understand how these factors shape your well-being, <strong>try adjusting your responses</strong>.
+                        Then, click the <strong>"Repredict"</strong> button to see how your score changes — and explore what matters most for your well-being.
+                    </p>
+
+                {% else %}
+                    {# — Score — #}
                     {% set gauge_score_start = explain_dic.previous_predicted_score %}
                     {% set gauge_score_end = explain_dic.predicted_score %}
                     {% include 'main/explain_gauge_interactive.html' %}
-                {% endif %}
-                <p>
-                    Among all the lifestyle factors you shared, the ones that influence your score the most are:
-                </p>
-                <ul>
-                    <li><strong>Sleep quality</strong></li>
-                    <li><strong>Healthy diet</strong></li>
-                    <li><strong>Social activities</strong></li>
-                    <li><strong>Friendly neighborhood</strong></li>
-                    <li><strong>Volunteering</strong></li>
-                </ul>
-                <p>
-                    To better understand how these factors shape your well-being, try adjusting your answers below.
-                    After adjusting your answers, click the <strong>"Retry"</strong> button to see how your well-being score would change — helping you explore what matters most for your well-being.
-                    You can try as many changes as you like — feel free to explore different combinations before moving on.
 
-                </p>
+                    {# — Retry suggestion — #}
+                    <p>
+                        Feel free to experiment with different combinations of answers before moving on. 
+                    </p>
+                {% endif %}
+                
                 <form action="/explain" method="post">
                     <input type="hidden" name="source_page" value="explain_interactive.html">
                     <input type="hidden" name="previous_predicted_score" value="{{ explain_dic.predicted_score }}">
-                    {% set button_text = "Retry" %}
+                    {% set button_text = "Repredict" %}
                     {% set button_class = "btn-retry" %}
                     {% include 'main/question_blocs.html'%}
                 </form> 
+
+                <br><br>
+                {# — Additionnal factors — #}
+                <h4 class="pnavsub">What about the other factors?</h4>
+                <p>
+                    We highlight only the {{ explain_dic.n_informative }} most predictive factors identified by the algorithm. However, other factors such as time spent in nature, your chronotype, your working environment, etc. may also explain your well-being score.
+                </p>
+                
+                {% include 'main/disclaimer.html' %}
+
             </td>
         </tr>
     </table>    
