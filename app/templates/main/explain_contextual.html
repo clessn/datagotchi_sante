@@ -10,8 +10,12 @@
         </tr>
         <tr> 
             <td ALIGN="LEFT">
+                {# — Score — #}
                 {% set gauge_score = explain_dic.predicted_score %}
                 {% include 'main/explain_intro_and_gauge.html' %}
+
+                {# — Explanation — #}
+                <h4 class="pnavsub">Why do you have this score?</h4>
                 <p>
                     To help you understand what this number means, here’s how well-being scores were distributed among participants in the pilot study:
                 </p>
@@ -41,6 +45,9 @@
                         {% endif %}
                     </li>
                 </ul>
+
+                {% include 'main/disclaimer.html' %} 
+                
             </td>
         </tr>
     </table>
