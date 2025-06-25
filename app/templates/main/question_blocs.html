@@ -96,7 +96,7 @@
                         <th>Question</th>
                         {% set answer_labels = answers_key_str.split(',') %}
                         {% for answer_content in answer_labels %}
-                            <th>
+                            <th {% if answer_content == "Don't know" %}class="dontknow-col"{% endif %}>
                                 {{ answer_content }}
                                 <!-- having the value under answer except under "Don't know" option -->
                                 {% if indicate_value == true and answer_content != "Don't know" %}
@@ -111,7 +111,7 @@
                         <tr>
                             <td class="question-cell">{{ question_content }}</td>
                             {% for (answer_id, answer_content) in questionnaire_value %}
-                                <td>
+                                <td {% if answer_content == "Don't know" %}class="dontknow-col"{% endif %}>
                                     <input type="radio" 
                                         name="{{ question_id }}" 
                                         value="{{ answer_id }}"

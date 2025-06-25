@@ -301,3 +301,9 @@ input[type="range"] {
 }
 /* End : style for textual explain */
 
+/* Start : style for "Don't know" option */
+.dontknow-col {
+    border-left: 3px solid #0056b3 !important;
+}
+/* End : style for "Don't know" option */
+
