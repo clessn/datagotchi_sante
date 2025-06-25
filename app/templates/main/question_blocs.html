@@ -109,7 +109,7 @@
                 <tbody>
                     {% for question_id, question_content, questionnaire_value in questions %}
                         <tr>
-                            <td class="question-cell">{{ question_content }}</td>
+                            <td class="question-cell">{{ question_content | safe}}</td>
                             {% for (answer_id, answer_content) in questionnaire_value %}
                                 <td {% if answer_content == "Don't know" %}class="dontknow-col"{% endif %}>
                                     <input type="radio" 
