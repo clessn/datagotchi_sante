@@ -14,6 +14,11 @@
         {% endif %}
     {% endfor %}
 
+    <!-- indicate_value is used for likert scales to indicate value under content of the answer -->
+    {% if indicate_value is not defined %}
+        {% set indicate_value = false %}
+    {% endif %}
+
     <div class="table-container">
         <!-- Render Non-Likert Questions First -->
         {% for form_id, question_id, question_content, question_info_list, questionnaire_value in all_other_questions %}
@@ -91,7 +96,13 @@
                         <th>Question</th>
                         {% set answer_labels = answers_key_str.split(',') %}
                         {% for answer_content in answer_labels %}
-                            <th>{{ answer_content }}</th>
+                            <th>
+                                {{ answer_content }}
+                                <!-- having the value under answer except under "Don't know" option -->
+                                {% if indicate_value == true and answer_content != "Don't know" %}
+                                    <div style="font-size: 0.9em; color: #888;">{{ loop.index }}</div>
+                                {% endif %}
+                            </th>
                         {% endfor %}
                     </tr>
                 </thead>
