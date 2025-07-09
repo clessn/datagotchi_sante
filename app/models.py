@@ -19,11 +19,6 @@ class User(UserMixin, db.Model):
 
     logs: so.WriteOnlyMapped['Log'] = so.relationship(
         back_populates='participant')
-    
-    # uselist=False to specify it is a one-to-one relationship
-    # cascade="all, delete-orphan" removes userpii related to a user if this user is deleted in User
-    pii: so.Mapped['UserPII'] = so.relationship(
-        "UserPII", uselist=False, back_populates="user", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f'{self.user_id} - condition : {self.condition_id}'
@@ -35,16 +30,6 @@ class User(UserMixin, db.Model):
         """Assigns a condition ID to the user."""
         self.condition_id = condition_id
         db.session.commit()
-
-class UserPII(db.Model):
-    user_id: so.Mapped[str] = so.mapped_column(sa.String(64), sa.ForeignKey('user.user_id'), primary_key=True)
-    email: so.Mapped[Optional[str]] = so.mapped_column(sa.String(120), index=True, unique=True, nullable=True)
-    interac_email: so.Mapped[Optional[str]] = so.mapped_column(sa.String(120), index=True, unique=True, nullable=True)
-
-    user: so.Mapped['User'] = so.relationship("User", back_populates="pii")
-    
-    def __repr__(self):
-        return f'{self.user_id} - email : {self.email} - interac email: {self.interac_email}'
 
 class Question(db.Model):
     question_id: so.Mapped[str] = so.mapped_column(sa.String(64), primary_key=True)
