@@ -1,7 +1,7 @@
 from app.main import bp
 from flask import render_template, flash, redirect, url_for, current_app, make_response, g, send_file, Response
 from flask_login import current_user, login_required
-from app.models import UserPII, Log, Question, Answer, get_explains_by_answer_ids
+from app.models import Log, Question, Answer, get_explains_by_answer_ids
 from flask import request
 from app import db
 from app import create_app
@@ -631,9 +631,10 @@ def essaim():
         skip_valid=current_app.config['SKIP_VALID'],
     )
 
-@bp.route('/interac', methods=["POST"])
+
+@bp.route('/merci', methods=["POST"])
 @login_required
-def interac():
+def merci():
 
     # step 1 : extract questions ids for essaim
     questions = Question.query.filter(Question.group_id == "essaim").all()
@@ -659,39 +660,15 @@ def interac():
         db.session.add(new_log)
     db.session.commit()
 
-    # step 3 : extract questions for interac
-    questions = Question.query.filter(Question.group_id == "interac").all()
-    questionnaire_dico = questionnaire(questions)
-
-    return render_template(
-        'main/interac.html',
-        questionnaire_dico = questionnaire_dico,
-        skip_valid=current_app.config['SKIP_VALID'],
-    )
-
-@bp.route('/merci', methods=["POST"])
-@login_required
-def merci():
-    
-    # Extract question id for interac (only one question so we take the first)
-    question_id = Question.query.filter(Question.group_id == "interac").first().question_id
-
     # New log for finished time
-    timestamp = datetime.now(timezone.utc)
     new_log_finished = Log(
             timestamp=timestamp,
             log_type='finished',
             user_id=current_user.user_id,
-            question_id=question_id,
-            phase_id='interac'
+            question_id=question_id, # may we shoulds redefine which question_id to use, here the last one
+            phase_id='merci'
         )
     db.session.add(new_log_finished)
-
-    # Find userpii
-    user_pii = UserPII.query.get(current_user.user_id)
-    # Save interac email (not in log because sensitive data)
-    user_pii.interac_email = request.form[question_id]
-
     db.session.commit()
     
     return render_template('main/merci.html')
