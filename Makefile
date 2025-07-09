@@ -49,9 +49,6 @@ create-model:
 display-users:
 	poetry run python -c "from scripts.view_databases import display_users; display_users()"
 
-display-userpiis:
-	poetry run python -c "from scripts.view_databases import display_userpiis; display_userpiis()"
-
 display-logs:
 	poetry run python -c "from scripts.view_databases import display_logs; display_logs()"
 

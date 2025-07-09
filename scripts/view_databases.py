@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, make_response
 import pandas as pd
 import sqlite3
 import csv
-from app.models import User, UserPII, Log, Question, Answer
+from app.models import User, Log, Question, Answer
 from app import create_app
 from app import db
 
@@ -15,12 +15,6 @@ def display_users():
         users = User.query.all()
         for user in users:
             print(user)
-
-def display_userpiis():
-    with app.app_context():
-        userpiis = UserPII.query.all()
-        for userpii in userpiis:
-            print(userpii)
 
 
 def display_logs():

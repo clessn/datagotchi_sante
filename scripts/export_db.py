@@ -3,7 +3,7 @@ from datetime import datetime
 import pandas as pd
 from app import db
 from app import create_app
-from app.models import User, UserPII, Log, Question, Answer
+from app.models import User, Log, Question, Answer
  
 app = create_app()
 
@@ -19,7 +19,6 @@ def export_database_to_csv():
         # Define your tables
         tables = {
             'User': User,
-            'UserPII': UserPII,
             'Question': Question,
             'Answer': Answer,
             'Log': Log,

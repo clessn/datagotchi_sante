@@ -2,7 +2,7 @@ import csv
 import pandas as pd
 from app import create_app
 from flask import current_app
-from app.models import User, UserPII, Log, Question, Answer
+from app.models import User, Log, Question, Answer
 from app import db
 from config import Config as Cf
 from sqlalchemy import inspect
@@ -17,7 +17,6 @@ load_dotenv()
 app = create_app()
 
 USER_FILENAME = 'user.csv'
-USERPII_FILENAME = 'userpii.csv'
 QUESTION_FILENAME = 'question.csv'
 ANSWER_FILENAME = 'answer.csv'
 
@@ -91,7 +90,6 @@ def drop_all_tables():
 def populate_all_db():
     data_path = Path(os.getenv("DATA_WEBAPP_PATH"))
     populate_db(User, data_path / USER_FILENAME)
-    populate_db(UserPII, data_path / USERPII_FILENAME)
     populate_db(Question, data_path / QUESTION_FILENAME)
     populate_db(Answer, data_path / ANSWER_FILENAME)
 
