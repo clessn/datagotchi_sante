@@ -64,7 +64,7 @@ def login():
         return redirect(url_for(current_app.config['MAIN_PAGE']))
     
     # authentification through prolific
-    prolific_pid = request.args.get("prolific_pid")
+    prolific_pid = request.args.get("PROLIFIC_PID")
     # check if there is a prolific_pid in the URL and that it is not a fake one
     if prolific_pid and re.fullmatch(r'[A-Za-z0-9]{24}', prolific_pid):
         # check if the prolific_pid exists in the database
