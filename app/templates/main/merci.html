@@ -14,6 +14,23 @@
                     Thank you for your participation in this survey! We greatly appreciate the time and effort you have dedicated to completing this questionnaire. If you have encountered any difficulties or if this survey has raised any concerns for you, we encourage you to seek support. You can find helpful mental health resources at the following link:
                     <strong><a href="https://www.ccmhs-ccsms.ca/education/mh-resources-en" target="_blank">Resources</a></strong>
                 </p>
+                <p>
+                    The study is now complete. You can return to Prolific by clicking on the button below, your completion code is automatically submitted.
+                </p>
+
+                <tr>
+                    <td ALIGN="CENTER">
+                        <br>
+                        <form id="prolificForm" method="POST" action="{{ url_for('main.prolific_redirect') }}">
+                            <input type="hidden" name="completion_code" value="{{ completion_code }}">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                Click here to return to Prolific
+                            </button>
+                        </form>
+                    </td> 
+                </tr>
+
+
             </td>
         </tr>
     </table>
