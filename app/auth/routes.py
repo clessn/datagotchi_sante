@@ -2,7 +2,10 @@ from app.auth import bp
 from flask import render_template, flash, redirect, url_for, current_app
 from app.auth.forms import LoginForm
 from flask_login import current_user, login_user, login_required, logout_user
+from flask import request
+from app import db
 import csv
+import re
 from app.models import User
 
 
@@ -60,7 +63,34 @@ def login():
             current_user.assign_condition(condition_id)
         return redirect(url_for(current_app.config['MAIN_PAGE']))
     
-    # new authentification
+    # authentification through prolific
+    prolific_pid = request.args.get("prolific_pid")
+    # check if there is a prolific_pid in the URL and that it is not a fake one
+    if prolific_pid and re.fullmatch(r'[A-Za-z0-9]{24}', prolific_pid):
+        # check if the prolific_pid exists in the database
+        user = User.query.filter_by(user_id=prolific_pid).first()
+
+        # create a new user if not found
+        if user is None:
+            user = User(user_id=prolific_pid)
+            db.session.add(user)
+            db.session.commit()
+
+        # assign a condition
+        if current_app.config['EXPLAIN_TYPE'] is not None:
+            condition_id = current_app.config['EXPLAIN_TYPE']
+            user.assign_condition(condition_id)
+
+        else:
+            if user.condition_id is None:
+                condition_id = get_next_condition_id(User, CONDITION_ID_LIST)
+                user.assign_condition(condition_id)
+
+        # connect user
+        login_user(user)
+        return redirect(url_for(current_app.config['MAIN_PAGE']))
+    
+    # authentification through db
     form=LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(user_id=form.code.data).first()
@@ -68,7 +98,7 @@ def login():
             flash('Invalid code')
             return redirect(url_for('auth.login'))
         
-        # assign a condition if
+        # assign a condition
         if current_app.config['EXPLAIN_TYPE'] is not None:
             condition_id = current_app.config['EXPLAIN_TYPE']
             user.assign_condition(condition_id)
