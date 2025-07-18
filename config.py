@@ -19,7 +19,7 @@ class DefaultConfig(Config):
     SKIP_VALID=False
     EXPLAIN_TYPE=None
     PROLIFIC_STUDY_ID=None
-    PROLIFIC_COMPLETION_CODE=None
+    PROLIFIC_COMPLETION_CODE='CRQYIPFI'
 
 class DebugConfig(Config):
     MAIN_PAGE='main.consent'
@@ -29,7 +29,7 @@ class DebugConfig(Config):
     # choose amongts 'explain_baseline', 'explain_visual',
     # 'explain_textual', 'explain_quantitative', 'explain_interactive', 'explain_contextual'
     PROLIFIC_STUDY_ID=None
-    PROLIFIC_COMPLETION_CODE=None
+    PROLIFIC_COMPLETION_CODE='CRQYIPFI'
 
 configs = {
   'default'  : DefaultConfig,
