@@ -142,7 +142,21 @@ def consent():
 @bp.route('/sociodemo', methods=["POST"])
 @login_required
 def sociodemo():
-     # step 1 : extract questions for sociodemo
+    # step 1 : log start time
+    timestamp = datetime.now(timezone.utc)
+
+    # New log for start time
+    new_log_started = Log(
+            timestamp=timestamp,
+            log_type='started',
+            user_id=current_user.user_id,
+            question_id=None,
+            phase_id='consent'
+        )
+    db.session.add(new_log_started)
+    db.session.commit()
+
+     # step 2 : extract questions for sociodemo
     questions = Question.query.filter(Question.group_id == "sociodemo").all()
     questionnaire_dico = questionnaire(questions)
     return render_template(
