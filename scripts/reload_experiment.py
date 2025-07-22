@@ -7,6 +7,7 @@ from app import db
 from config import Config as Cf
 from sqlalchemy import inspect
 from sqlalchemy.exc import NoSuchTableError
+from sqlalchemy import inspect, text
 from dotenv import load_dotenv
 import os
 from pathlib import Path
@@ -69,14 +70,10 @@ def drop_tables_in_order(table_names, foreign_keys, engine):
 
 def drop_all_tables():
     """Drop tables in correct order"""
-    # Get metadata
     metadata = db.metadata
-
-    # Get all table names
     table_names = metadata.tables.keys()
     print(table_names)
 
-    # Create a dictionary to store foreign key relationships
     foreign_keys = {}
     inspector = inspect(db.engine)
     for table_name in table_names:
@@ -85,11 +82,10 @@ def drop_all_tables():
         except NoSuchTableError:
             foreign_keys[table_name] = []
 
-    # Disable foreign key checks
     with db.engine.connect() as connection:
-        connection.execute("SET FOREIGN_KEY_CHECKS = 0;")
+        connection.execute(text("SET FOREIGN_KEY_CHECKS = 0;"))
         drop_tables_in_order(table_names, foreign_keys, connection)
-        connection.execute("SET FOREIGN_KEY_CHECKS = 1;")
+        connection.execute(text("SET FOREIGN_KEY_CHECKS = 1;"))
 
 
 def populate_all_db():
