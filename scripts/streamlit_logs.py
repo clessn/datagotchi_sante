@@ -48,7 +48,15 @@ phase_series = pd.Categorical(phase_series, categories=phase_order, ordered=True
 # count per phase
 phase_counts = pd.Series(phase_series).value_counts().reindex(phase_order, fill_value=0).astype(int)
 
-# Streamlit to display the histogram of user phases
+# Display the histogram of user phases
 st.title("Histogram of users per phase")
 st.write("Distribution of last phase_id for users:")
 st.bar_chart(phase_counts)
+
+# Dropdown to select a user and display their last phase
+st.header("Check last phase for a specific user")
+user_ids = sorted(last_phase_dict.keys())
+selected_user = st.selectbox("Select a user_id", user_ids)
+
+if selected_user:
+    st.write(f"User `{selected_user}` has finished phase: **{last_phase_dict[selected_user]}**")
