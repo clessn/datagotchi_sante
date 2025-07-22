@@ -93,3 +93,6 @@ download-files:
 
 dump-database:
 	poetry run python -c "from scripts.export_db import export_database_to_csv; export_database_to_csv()"
+
+visualize-logs:
+	poetry run python -c "from scripts.view_databases import logs_to_user_status; logs_to_user_status()"
