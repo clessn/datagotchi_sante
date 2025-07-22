@@ -7,7 +7,6 @@ from app import db
 from config import Config as Cf
 from sqlalchemy import inspect
 from sqlalchemy.exc import NoSuchTableError
-from sqlalchemy import inspect, text
 from dotenv import load_dotenv
 import os
 from pathlib import Path
@@ -69,33 +68,24 @@ def drop_tables_in_order(table_names, foreign_keys, engine):
 
 
 def drop_all_tables():
-    with db.engine.connect() as connection:
-        connection.execute(text("SET FOREIGN_KEY_CHECKS = 0;"))
-        inspector = inspect(db.engine)
-        table_names = inspector.get_table_names()
-        print(table_names)
-        for table_name in table_names:
-            connection.execute(text(f"DROP TABLE IF EXISTS `{table_name}`;"))
-        connection.execute(text("SET FOREIGN_KEY_CHECKS = 1;"))
+    """Drop tables in correct order"""
+    # Get metadata
+    metadata = db.metadata
 
-# def drop_all_tables():
-#     """Drop tables in correct order"""
-#     metadata = db.metadata
-#     table_names = list(metadata.tables.keys())
-#     print(table_names)
+    # Get all table names
+    table_names = metadata.tables.keys()
+    print(table_names)
 
-#     inspector = inspect(db.engine)
-#     foreign_keys = {table: inspector.get_foreign_keys(table) for table in table_names}
+    # Create a dictionary to store foreign key relationships
+    foreign_keys = {}
+    inspector = inspect(db.engine)
+    for table_name in table_names:
+        try:
+            foreign_keys[table_name] = inspector.get_foreign_keys(table_name)
+        except NoSuchTableError:
+            foreign_keys[table_name] = []
 
-#     with db.engine.connect() as connection:
-#         connection.execute(text("SET FOREIGN_KEY_CHECKS = 0;"))
-
-#         # Drop tables directly with connection
-#         for table in reversed(table_names):
-#             connection.execute(text(f"DROP TABLE IF EXISTS {table};"))
-
-#         connection.execute(text("SET FOREIGN_KEY_CHECKS = 1;"))
-
+    drop_tables_in_order(table_names, foreign_keys, db.engine)
 
 def populate_all_db():
     data_path = Path(os.getenv("DATA_WEBAPP_PATH"))
@@ -103,13 +93,6 @@ def populate_all_db():
     populate_db(Question, data_path / QUESTION_FILENAME)
     populate_db(Answer, data_path / ANSWER_FILENAME)
 
-def reset_db():
-    """Drop and recreate the 'public' schema in PostgreSQL."""
-    engine = db.engine
-    with engine.connect() as connection:
-        connection.execute(text("DROP SCHEMA public CASCADE;"))
-        connection.execute(text("CREATE SCHEMA public;"))
-        connection.commit()
 
 def reload_databases():
     with app.app_context():
