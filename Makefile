@@ -64,6 +64,9 @@ display-activity:
 reload-experiment:
 	poetry run python -c "from scripts.reload_experiment import reload_databases; reload_databases()"
 
+reload-experiment-vm:
+	poetry run python -c "from scripts.reload_experiment_vm import reload_databases; reload_databases()"
+
 update-deploy:
 	git pull
 	sudo supervisorctl stop microapp
