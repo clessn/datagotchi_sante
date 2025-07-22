@@ -93,10 +93,18 @@ def populate_all_db():
     populate_db(Question, data_path / QUESTION_FILENAME)
     populate_db(Answer, data_path / ANSWER_FILENAME)
 
+def reset_db():
+    """Drop and recreate the 'public' schema in PostgreSQL."""
+    engine = db.engine
+    with engine.connect() as connection:
+        connection.execute(text("DROP SCHEMA public CASCADE;"))
+        connection.execute(text("CREATE SCHEMA public;"))
+        connection.commit()
 
 def reload_databases():
     with app.app_context():
-        drop_all_tables()
+        reset_db()
+        #drop_all_tables()
         db.create_all()
         populate_all_db()
         print('reloaded databases with success !')
