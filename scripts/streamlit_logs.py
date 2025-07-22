@@ -1,9 +1,9 @@
-
 from dotenv import load_dotenv
 from pathlib import Path
 import os
 import pandas as pd
 import streamlit as st
+import matplotlib.pyplot as plt
 
 
 # Load the .env file
@@ -45,8 +45,10 @@ last_phase_dict = logs_to_user_status()
 phase_series = pd.Series(list(last_phase_dict.values()))
 phase_series = pd.Categorical(phase_series, categories=phase_order, ordered=True)
 
-# Streamlit app to display the histogram of user phases
-st.title("Histogram of Last Phase per User")
+# count per phase
+phase_counts = pd.Series(phase_series).value_counts().reindex(phase_order, fill_value=0).astype(int)
 
+# Streamlit to display the histogram of user phases
+st.title("Histogram of users per phase")
 st.write("Distribution of last phase_id for users:")
-st.bar_chart(phase_series.value_counts().sort_index())
+st.bar_chart(phase_counts)
