@@ -69,3 +69,11 @@ selected_user = st.selectbox("Select a user_id", user_ids)
 if selected_user:
     st.write(f"User `{selected_user}` has finished phase: **{last_phase_dict[selected_user]}**")
     
+    # Display all logs for this user
+    track_path = Path(os.getenv("DATA_TRACK_PATH"))
+    log_file = track_path / LOG_FILENAME
+    log_df = pd.read_csv(log_file, delimiter=",")
+    user_logs = log_df[log_df['user_id'] == selected_user]
+
+    st.subheader("All logs for selected user")
+    st.dataframe(user_logs)
