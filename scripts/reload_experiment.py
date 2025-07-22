@@ -85,7 +85,12 @@ def drop_all_tables():
         except NoSuchTableError:
             foreign_keys[table_name] = []
 
-    drop_tables_in_order(table_names, foreign_keys, db.engine)
+    # Disable foreign key checks
+    with db.engine.connect() as connection:
+        connection.execute("SET FOREIGN_KEY_CHECKS = 0;")
+        drop_tables_in_order(table_names, foreign_keys, connection)
+        connection.execute("SET FOREIGN_KEY_CHECKS = 1;")
+
 
 def populate_all_db():
     data_path = Path(os.getenv("DATA_WEBAPP_PATH"))
