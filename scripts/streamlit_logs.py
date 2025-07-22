@@ -3,7 +3,7 @@ from pathlib import Path
 import os
 import pandas as pd
 import streamlit as st
-import matplotlib.pyplot as plt
+import plotly.express as px
 
 
 # Load the .env file
@@ -34,6 +34,9 @@ def logs_to_user_status():
     
     return last_phase
 
+# Page title
+st.title("Histogram of users per phase")
+
 # phase order
 phase_order = [
     "login", "consent", "sociodemo", "knowledge_before", "lifestyle",
@@ -42,16 +45,21 @@ phase_order = [
 
 # dict with phase_id for each user_id
 last_phase_dict = logs_to_user_status()
-phase_series = pd.Series(list(last_phase_dict.values()))
-phase_series = pd.Categorical(phase_series, categories=phase_order, ordered=True)
 
 # count per phase
-phase_counts = pd.Series(phase_series).value_counts().reindex(phase_order, fill_value=0).astype(int)
+phase_counts = pd.Series(last_phase_dict).value_counts().reindex(phase_order, fill_value=0).astype(int)
 
 # Display the histogram of user phases
-st.title("Histogram of users per phase")
-st.write("Distribution of last phase_id for users:")
-st.bar_chart(phase_counts)
+df_plot = pd.DataFrame({
+    "Phase": phase_order,
+    "Users": phase_counts.values
+})
+
+fig = px.bar(df_plot, x="Phase", y="Users",
+             labels={"Phase": "Phase", "Users": "Number of users"},
+             title="Number of users per phase")
+
+st.plotly_chart(fig)
 
 # Dropdown to select a user and display their last phase
 st.header("Check last phase for a specific user")
@@ -60,3 +68,4 @@ selected_user = st.selectbox("Select a user_id", user_ids)
 
 if selected_user:
     st.write(f"User `{selected_user}` has finished phase: **{last_phase_dict[selected_user]}**")
+    
