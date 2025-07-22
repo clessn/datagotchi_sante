@@ -69,22 +69,32 @@ def drop_tables_in_order(table_names, foreign_keys, engine):
 
 
 def drop_all_tables():
-    """Drop tables in correct order"""
-    metadata = db.metadata
-    table_names = list(metadata.tables.keys())
-    print(table_names)
-
-    inspector = inspect(db.engine)
-    foreign_keys = {table: inspector.get_foreign_keys(table) for table in table_names}
-
     with db.engine.connect() as connection:
         connection.execute(text("SET FOREIGN_KEY_CHECKS = 0;"))
-
-        # Drop tables directly with connection
-        for table in reversed(table_names):
-            connection.execute(text(f"DROP TABLE IF EXISTS {table};"))
-
+        inspector = inspect(db.engine)
+        table_names = inspector.get_table_names()
+        print(table_names)
+        for table_name in table_names:
+            connection.execute(text(f"DROP TABLE IF EXISTS `{table_name}`;"))
         connection.execute(text("SET FOREIGN_KEY_CHECKS = 1;"))
+
+# def drop_all_tables():
+#     """Drop tables in correct order"""
+#     metadata = db.metadata
+#     table_names = list(metadata.tables.keys())
+#     print(table_names)
+
+#     inspector = inspect(db.engine)
+#     foreign_keys = {table: inspector.get_foreign_keys(table) for table in table_names}
+
+#     with db.engine.connect() as connection:
+#         connection.execute(text("SET FOREIGN_KEY_CHECKS = 0;"))
+
+#         # Drop tables directly with connection
+#         for table in reversed(table_names):
+#             connection.execute(text(f"DROP TABLE IF EXISTS {table};"))
+
+#         connection.execute(text("SET FOREIGN_KEY_CHECKS = 1;"))
 
 
 def populate_all_db():
@@ -103,8 +113,7 @@ def reset_db():
 
 def reload_databases():
     with app.app_context():
-        reset_db()
-        #drop_all_tables()
+        drop_all_tables()
         db.create_all()
         populate_all_db()
         print('reloaded databases with success !')
