@@ -34,11 +34,19 @@ def logs_to_user_status():
     
     return last_phase
 
-# Streamlit app to display the histogram of user phases
-st.title("Histogram of Last Phase per User")
+# phase order
+phase_order = [
+    "login", "consent", "sociodemo", "knowledge_before", "lifestyle",
+    "explain", "satisfaction", "intent", "knowledge_after", "essaim", "merci"
+]
 
+# dict with phase_id for each user_id
 last_phase_dict = logs_to_user_status()
 phase_series = pd.Series(list(last_phase_dict.values()))
+phase_series = pd.Categorical(phase_series, categories=phase_order, ordered=True)
+
+# Streamlit app to display the histogram of user phases
+st.title("Histogram of Last Phase per User")
 
 st.write("Distribution of last phase_id for users:")
 st.bar_chart(phase_series.value_counts().sort_index())
