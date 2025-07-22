@@ -95,4 +95,4 @@ dump-database:
 	poetry run python -c "from scripts.export_db import export_database_to_csv; export_database_to_csv()"
 
 visualize-logs:
-	poetry run python -c "from scripts.streamlit_logs import logs_to_user_status; logs_to_user_status()"
+	poetry run streamlit run scripts/streamlit_logs.py

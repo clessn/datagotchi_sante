@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from pathlib import Path
 import os
 import pandas as pd
+import streamlit as st
 
 
 # Load the .env file
@@ -30,7 +31,14 @@ def logs_to_user_status():
         .set_index('user_id')['phase_id']
         .to_dict()
     )
-
-    print(last_phase) 
     
     return last_phase
+
+# Streamlit app to display the histogram of user phases
+st.title("Histogram of Last Phase per User")
+
+last_phase_dict = logs_to_user_status()
+phase_series = pd.Series(list(last_phase_dict.values()))
+
+st.write("Distribution of last phase_id for users:")
+st.bar_chart(phase_series.value_counts().sort_index())
