@@ -137,6 +137,20 @@ def get_question_ids(questions):
 @bp.route('/consent')
 @login_required
 def consent():
+    # log loggin time
+    timestamp = datetime.now(timezone.utc)
+
+    # New log for start time
+    new_log_started = Log(
+            timestamp=timestamp,
+            log_type='logged_in',
+            user_id=current_user.user_id,
+            question_id=None,
+            phase_id='login'
+        )
+    db.session.add(new_log_started)
+    db.session.commit()
+
     return render_template('main/consent.html')
 
 @bp.route('/sociodemo', methods=["POST"])

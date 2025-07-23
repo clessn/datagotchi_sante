@@ -1,7 +1,5 @@
 from flask import Flask, render_template, request, make_response
-import pandas as pd
 import sqlite3
-import csv
 from app.models import User, Log, Question, Answer
 from app import create_app
 from app import db
