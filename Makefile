@@ -93,3 +93,6 @@ download-files:
 
 dump-database:
 	poetry run python -c "from scripts.export_db import export_database_to_csv; export_database_to_csv()"
+
+track-database:
+	poetry run python -c "from scripts.export_db import export_database_to_csv; export_database_to_csv('deploy/data/track')"
