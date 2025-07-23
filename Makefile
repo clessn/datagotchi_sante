@@ -91,8 +91,17 @@ send-files:
 download-files:
 	gcloud compute scp --recurse $(vm):datagotchi_sante/deploy/data/experiment $(DATA_EXPERIMENT_PATH) 
 
+download-track:
+	gcloud compute scp --recurse $(vm):datagotchi_sante/deploy/data/track $(DATA_EXPERIMENT_PATH) 
+
 dump-database:
 	poetry run python -c "from scripts.export_db import export_database_to_csv; export_database_to_csv()"
 
 track-database:
 	poetry run python -c "from scripts.export_db import export_database_to_csv; export_database_to_csv('deploy/data/track')"
+
+regular-track:
+	poetry run python scripts/regular_runner.py "make track-database"
+
+regular-download:
+	poetry run python scripts/regular_runner.py "make download-track vm=$$vm DATA_EXPERIMENT_PATH='$$DATA_EXPERIMENT_PATH'"
