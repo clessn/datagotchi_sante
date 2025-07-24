@@ -18,8 +18,6 @@ class DefaultConfig(Config):
     MAIN_PAGE='main.consent'
     SKIP_VALID=False
     EXPLAIN_TYPE=None
-    PROLIFIC_STUDY_ID='687f5e181bae365fd931e999' # test
-    PROLIFIC_COMPLETION_CODE='C10EXTDI' #test
     #PROLIFIC_STUDY_ID='687a244efed49cdf9e6592ff' # Final study ID
     #PROLIFIC_COMPLETION_CODE='CRQYIPFI'# Final completion code
 
@@ -30,8 +28,6 @@ class DebugConfig(Config):
     #EXPLAIN_TYPE='explain_interactive'
     # choose amongts 'explain_baseline', 'explain_visual',
     # 'explain_textual', 'explain_quantitative', 'explain_interactive', 'explain_contextual'
-    PROLIFIC_STUDY_ID='687f5e181bae365fd931e999' # test
-    PROLIFIC_COMPLETION_CODE='C10EXTDI' #test
     #PROLIFIC_STUDY_ID='687a244efed49cdf9e6592ff' # Final study ID
     #PROLIFIC_COMPLETION_CODE='CRQYIPFI'# Final completion code
 
