@@ -4,26 +4,30 @@ import pandas as pd
 from app import db
 from app import create_app
 from app.models import User, Log, Question, Answer
- 
+
 app = create_app()
 
-# Define export function
-def export_database_to_csv():
+def export_database_to_csv(export_dir=None):
+    """
+    Export the database tables to CSV files.
+    :param export_dir: The directory where CSV files will be saved.
+                       If None, defaults to ('deploy/data/experiment/<timestamp>')
+    """
+    # Default export_dir
+    if export_dir is None:
+        now = datetime.utcnow().strftime('%Y-%m-%d_%H-%M-%S')
+        export_dir = os.path.join('deploy', 'data', 'experiment', now)
 
-    # Create timestamped directory
-    now = datetime.utcnow().strftime('%Y-%m-%d_%H-%M-%S')
-    export_dir = os.path.join('deploy', 'data', 'experiment', now)
     os.makedirs(export_dir, exist_ok=True)
- 
+
     with app.app_context():
-        # Define your tables
         tables = {
             'User': User,
             'Question': Question,
             'Answer': Answer,
             'Log': Log,
         }
- 
+
         for name, table in tables.items():
             if isinstance(table, db.Table):
                 # For association tables
@@ -34,9 +38,8 @@ def export_database_to_csv():
                 query = table.query.all()
                 df = pd.DataFrame([row.__dict__ for row in query])
                 df.drop(columns=['_sa_instance_state'], inplace=True, errors='ignore')
- 
-            # Export to CSV
+
             output_path = os.path.join(export_dir, f'{name}.csv')
             df.to_csv(output_path, index=False)
- 
+
     print(f"Export completed! Files are in: {export_dir}")
