@@ -52,4 +52,31 @@ df_plot = pd.DataFrame({
 fig = px.bar(
     df_plot, x="Phase", y="Users",
     labels={"Phase": "Phase", "Users": "Number of users"},
-    title="Number of u
+    title="Number of users per phase"
+)
+
+st.plotly_chart(fig, use_container_width=True)
+
+# ---- USER SELECTION ----
+st.header("Check last phase for a specific user")
+
+user_ids = sorted(last_phase_dict.keys())
+
+# Preserve user selection across refreshes
+if "selected_user" not in st.session_state:
+    st.session_state.selected_user = user_ids[0] if user_ids else None
+
+selected_user = st.selectbox(
+    "Select a user_id",
+    user_ids,
+    index=user_ids.index(st.session_state.selected_user) if st.session_state.selected_user in user_ids else 0,
+    key="selected_user"
+)
+
+if selected_user:
+    st.write(f"User `{selected_user}` has finished phase: **{last_phase_dict[selected_user]}**")
+
+    user_logs = log_df[log_df['user_id'] == selected_user]
+
+    st.subheader("All logs for selected user")
+    st.dataframe(user_logs)
