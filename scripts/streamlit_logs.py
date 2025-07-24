@@ -26,10 +26,7 @@ def logs_to_user_status():
     return last_phase, log_df
 
 # ---- AUTO REFRESH EVERY 5 SECONDS ----
-st_autorefresh = st.experimental_rerun  # alias for clarity
-st_autorefresh = st.experimental_rerun  # alias for clarity
-
-st_autorefresh = st.autorefresh(interval=5_000, key="data_refresh")
+st.experimental_autorefresh(interval=5000, key="data_refresh")
 
 # ---- PAGE TITLE ----
 st.title("Histogram of users per phase")
@@ -66,10 +63,14 @@ user_ids = sorted(last_phase_dict.keys())
 if "selected_user" not in st.session_state:
     st.session_state.selected_user = user_ids[0] if user_ids else None
 
+selected_index = 0
+if st.session_state.selected_user in user_ids:
+    selected_index = user_ids.index(st.session_state.selected_user)
+
 selected_user = st.selectbox(
     "Select a user_id",
     user_ids,
-    index=user_ids.index(st.session_state.selected_user) if st.session_state.selected_user in user_ids else 0,
+    index=selected_index,
     key="selected_user"
 )
 
