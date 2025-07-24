@@ -72,3 +72,8 @@ app/
 - **cleaning**: Contains scripts for data cleaning.
 - **eda**: Contains scripts for exploratory data analysis to explore and understand the data.
 - **ml**: Contains scripts for the machine learning workflow, including data processing, model training, and evaluation.
+
+## When launching an experiment
+### How to track the incoming data
+- on the remote machine, run 'make regular-track'
+- on the local machine, run 'make regular-download vm=trainmachine DATA_EXPERIMENT_PATH='/Users/cvandekerckh/Code/datagotchi_sante/deploy/data'

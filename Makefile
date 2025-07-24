@@ -104,7 +104,8 @@ regular-track:
 	poetry run python scripts/regular_runner.py "make track-database"
 
 regular-download:
-	poetry run python scripts/regular_runner.py "make download-track vm=$$vm DATA_EXPERIMENT_PATH='$$DATA_EXPERIMENT_PATH'"
+	poetry run python scripts/regular_runner.py \
+		"make download-track vm=$(vm) DATA_EXPERIMENT_PATH='$(DATA_EXPERIMENT_PATH)'"
 
 visualize-logs:
 	poetry run streamlit run scripts/streamlit_logs.py
