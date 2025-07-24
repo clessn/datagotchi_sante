@@ -6,7 +6,7 @@ import os
 from dotenv import load_dotenv
 
 LOG_FILE = "regular.log"
-INTERVAL = 30  # seconds
+INTERVAL = 10  # seconds
 
 # Load environment variables from .env file (in the script's directory or above)
 load_dotenv()
