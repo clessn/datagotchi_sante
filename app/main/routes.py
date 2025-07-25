@@ -714,7 +714,7 @@ def prolific_redirect():
     completion_code = current_app.config['PROLIFIC_COMPLETION_CODE']
     prolific_url = f"https://app.prolific.com/submissions/complete?cc={completion_code}"
 
-    return render_template('main/prolific_redirect.html', prolific_url=prolific_url)
+    return render_template('main/prolific_redirect.html', prolific_url=prolific_url, completion_code=completion_code)
 
 
 
