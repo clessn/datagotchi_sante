@@ -107,5 +107,13 @@ regular-download:
 	poetry run python scripts/regular_runner.py \
 		"make download-track vm=$(vm) DATA_EXPERIMENT_PATH='$(DATA_EXPERIMENT_PATH)'"
 
+update-prolific:
+	@if [ -z "$(STUDY_ID)" ] || [ -z "$(COMPLETION_CODE)" ]; then \
+		echo "Usage: make update-prolific STUDY_ID=<id> COMPLETION_CODE=<code>"; \
+		exit 1; \
+	fi
+	sed -i -e "s/^PROLIFIC_STUDY_ID=.*/PROLIFIC_STUDY_ID=$(STUDY_ID)/" -e "s/^PROLIFIC_COMPLETION_CODE=.*/PROLIFIC_COMPLETION_CODE=$(COMPLETION_CODE)/" .env
+	@echo "Updated PROLIFIC_STUDY_ID and PROLIFIC_COMPLETION_CODE in .env"
+
 visualize-logs:
 	poetry run streamlit run scripts/streamlit_logs.py
