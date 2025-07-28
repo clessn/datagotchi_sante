@@ -66,9 +66,7 @@ def login():
     
     # authentification through prolific
     prolific_pid = request.args.get("PROLIFIC_PID")
-    print(f"Prolific PID: {prolific_pid}")
     study_id = request.args.get("STUDY_ID")
-    print(f"Study ID: {study_id}")
     # check if there is a prolific_pid in the URL and the study_id matches the expected one
     if prolific_pid and study_id == current_app.config['PROLIFIC_STUDY_ID']:
         # check if the prolific_pid exists in the database
