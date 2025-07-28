@@ -12,14 +12,14 @@ class Config(object):
         'sqlite:///' + os.path.join(basedir, 'app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     POSTS_PER_PAGE = 3
+    PROLIFIC_STUDY_ID = os.environ.get('PROLIFIC_STUDY_ID') # Final study ID
+    PROLIFIC_COMPLETION_CODE = os.environ.get('PROLIFIC_COMPLETION_CODE') # Final completion code
 
 
 class DefaultConfig(Config):
     MAIN_PAGE='main.consent'
     SKIP_VALID=False
     EXPLAIN_TYPE=None
-    PROLIFIC_STUDY_ID='68837dcaf6bc5c305eeda1ac' # Final study ID
-    PROLIFIC_COMPLETION_CODE='CRQYIPFI'# Final completion code
 
 class DebugConfig(Config):
     MAIN_PAGE='main.consent'
@@ -28,8 +28,6 @@ class DebugConfig(Config):
     #EXPLAIN_TYPE='explain_interactive'
     # choose amongts 'explain_baseline', 'explain_visual',
     # 'explain_textual', 'explain_quantitative', 'explain_interactive', 'explain_contextual'
-    PROLIFIC_STUDY_ID='68837dcaf6bc5c305eeda1ac' # Final study ID
-    PROLIFIC_COMPLETION_CODE='CRQYIPFI'# Final completion code
 
 configs = {
   'default'  : DefaultConfig,
