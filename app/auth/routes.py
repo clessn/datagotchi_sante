@@ -15,6 +15,7 @@ CONDITION_ID_LIST = [
     'explain_textual',
     'explain_quantitative',
     'explain_interactive',
+    'explain_contextual',
 ]
 
 def get_next_condition_id(user_class, condition_id_list):
