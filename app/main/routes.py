@@ -688,17 +688,6 @@ def merci():
         db.session.add(new_log)
     db.session.commit()
 
-    # Completion code for prolific
-    completion_code = current_app.config['PROLIFIC_COMPLETION_CODE']
-    
-    return render_template('main/merci.html', completion_code=completion_code)
-
-@bp.route('/prolific_redirect', methods=["POST"])
-@login_required
-def prolific_redirect():
-
-    timestamp = datetime.now(timezone.utc)
-
     # New log for finished time
     new_log_finished = Log(
             timestamp=timestamp,
@@ -712,10 +701,7 @@ def prolific_redirect():
 
     # Completion code for prolific
     completion_code = current_app.config['PROLIFIC_COMPLETION_CODE']
-    prolific_url = f"https://app.prolific.com/submissions/complete?cc={completion_code}"
-
-    return render_template('main/prolific_redirect.html', prolific_url=prolific_url, completion_code=completion_code)
-
-
+    
+    return render_template('main/merci.html', completion_code=completion_code)
 
 
