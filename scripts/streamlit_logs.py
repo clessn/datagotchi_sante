@@ -70,6 +70,46 @@ def get_batch_info():
 
     return batch_info_dict
 
+def select_batch(log_df, batch_info_dict):
+    # select a batch to use
+    batch_options = list(batch_info_dict.keys()) + ["new batch"]
+    batch_name = st.selectbox("Select a batch", batch_options)
+
+    if batch_name == "new batch":
+        # select all users from all batches
+        all_batch_users = set()
+        for df in batch_info_dict.values():
+            all_batch_users.update(df['Participant id'].unique())
+        # select users not in any batch and not used for the test
+        users_selected = [
+            uid for uid in log_df['user_id'].unique()
+            if uid not in all_batch_users and "test" not in str(uid).lower()
+        ]
+    else:
+        # select all users from the chosen batch
+        users_selected = batch_info_dict[batch_name]['Participant id'].tolist()
+
+    return users_selected, batch_name
+
+# Verify if a user passed the attention checks
+def attention_check_user(logs, user_id):
+    # Verify the attention check for knowledge_before
+    before = logs[
+        (logs['user_id'] == user_id) &
+        (logs['answer_id'] == 'knowledge_04_01') &
+        (logs['phase_id'] == 'knowledge_before')
+    ]
+    # Verify the attention check for knowledge_after
+    after = logs[
+        (logs['user_id'] == user_id) &
+        (logs['answer_id'] == 'knowledge_04_01') &
+        (logs['phase_id'] == 'knowledge_after')
+    ]
+    # Both should exist
+    return not before.empty and not after.empty
+
+
+
 ############################
 ######## Streamlit #########
 ############################
@@ -83,18 +123,17 @@ phase_order = [
     "explain", "satisfaction", "intent", "knowledge_after", "essaim", "merci"
 ]
 
-# read batch of experiment
-batch_info_dict = get_batch_info()
-
-# select a batch to use
-batch_name = st.selectbox("Select a batch", list(batch_info_dict.keys()))
-users_from_batch = batch_info_dict[batch_name]['Participant id'].tolist()
-
 # all logs from track folder
 log_df = download_logs()
 
+# read batch of experiment
+batch_info_dict = get_batch_info()
+
+# select a batch of users and batch_name
+users_selected, batch_name = select_batch(log_df, batch_info_dict)
+
 # logs for a batch of users
-log_df_bacth = logs_for_specific_users(log_df, users_from_batch)
+log_df_bacth = logs_for_specific_users(log_df, users_selected)
 
 # select logs to use
 logs = log_df_bacth # logs for a specific batch of users
@@ -131,3 +170,42 @@ if selected_user:
 
     st.subheader("All logs for selected user")
     st.dataframe(user_logs)
+
+# Approbation of a batch of users
+if batch_name!= "new batch":
+    st.header("Users' approbation")
+    batch_df = batch_info_dict[batch_name]
+
+    approved_users = []
+    to_approve_users = []
+    returned_users = []
+    failed_attention_check_users = []
+    for _, user in batch_df.iterrows():
+        user_id = user['Participant id']
+        if user['Status'] == 'APPROVED':
+            approved_users.append(user_id)
+        if user['Status'] == 'AWAITING REVIEW':
+            attention_check = attention_check_user(logs, user_id)
+            if attention_check:
+                to_approve_users.append(user_id)
+            else:
+                failed_attention_check_users.append(user_id)
+        if user['Status'] == 'RETURNED':
+            returned_users.append(user_id)
+
+    # Approved users
+    st.subheader("Approved users")
+    st.write(", ".join(str(u) for u in approved_users))
+
+    # Users to approve
+    st.subheader("Users to approve")
+    st.write(", ".join(str(u) for u in to_approve_users))
+
+    # Returned users
+    st.subheader("Returned users")
+    st.write(", ".join(str(u) for u in returned_users))
+
+    # Users who failed attention check
+    st.subheader("Users who failed attention check")
+    st.write(", ".join(str(u) for u in failed_attention_check_users))
+
