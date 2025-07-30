@@ -66,13 +66,20 @@ def get_batch_info():
     batch_info_dict = {}
     for csv_file in user_batch_info_path.glob("*.csv"):
         df = pd.read_csv(csv_file)
-        batch_info_dict[csv_file.name] = df
+        batch_info_dict[csv_file.stem] = df
 
     return batch_info_dict
 
 def select_batch(log_df, batch_info_dict):
+
+    # batch names
+    batch_keys = sorted(batch_info_dict.keys(), reverse=True)
+    if "pretest" in batch_keys:
+        # I want pretest to be the last option
+        batch_keys.remove("pretest")
+        batch_keys.append("pretest")
     # select a batch to use
-    batch_options = list(batch_info_dict.keys()) + ["new batch"]
+    batch_options = ["new batch"] + batch_keys
     batch_name = st.selectbox("Select a batch", batch_options)
 
     if batch_name == "new batch":
