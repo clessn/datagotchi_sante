@@ -108,6 +108,80 @@ def attention_check_user(logs, user_id):
     # Both should exist
     return not before.empty and not after.empty
 
+def get_users_approval(logs, batch_df):
+    """
+    Displays the approval status of users in a batch.
+    
+    Args:
+        logs (pd.DataFrame): DataFrame containing logs.
+        batch_df (pd.DataFrame): DataFrame containing batch information.
+    """
+    to_approve = []
+    to_reject = []
+    to_check = []
+    approved = []
+    refused_timed_out = []
+    refused_returned = []
+    refused_rejected = []
+
+    # Iterate over each user in the batch
+    for _, user in batch_df.iterrows():
+        user_id = user['Participant id']
+        user_status = user['Status']
+        if user_status =='APPROVED':
+            approved.append(user_id)
+        elif user_status == 'TIME-OUT':
+            refused_timed_out.append(user_id)
+        elif user_status == 'RETURNED':
+            refused_returned.append(user_id)
+        elif user_status == 'REJECTED':
+            refused_rejected.append(user_id)
+        elif user_status == 'AWAITING REVIEW':
+            attention_check = attention_check_user(logs, user_id)
+            if attention_check:
+                if user['Completion code'] == os.getenv("PROLIFIC_COMPLETION_CODE"):
+                    to_approve.append(user_id)
+                else:
+                    # check manually users failing completion code but succeeding attention checks
+                    to_check.append(user_id)
+            else:
+                to_reject.append(user_id)
+
+    return to_approve, to_reject, to_check, approved, refused_timed_out, refused_returned, refused_rejected
+
+def show_users_approval(to_approve, to_reject, to_check, approved, refused_timed_out, refused_returned, refused_rejected):
+    
+    # Users to approve
+    if to_approve:
+        st.subheader("Users to approve")
+        st.write(", ".join(str(u) for u in to_approve))
+
+    # Users to reject
+    if to_reject:
+        st.subheader("Users to reject")
+        st.write("Users to reject because they failed attention checks")
+        st.write(", ".join(str(u) for u in to_reject))
+
+    # Users to check manually
+    if to_check:
+        st.subheader("Users to check manually")
+        st.write("Users to check manually because they passed attention checks but failed completion code")
+        st.write(", ".join(str(u) for u in to_check))
+
+    # Approved users
+    if approved:
+        st.subheader("Approved users")
+        st.write(", ".join(str(u) for u in approved))
+
+    # Refused users
+    if refused_timed_out or refused_returned or refused_rejected:
+        st.subheader("Refused users")
+        if refused_timed_out:
+            st.markdown(f"**Timed-out** :  \n{', '.join(str(u) for u in refused_timed_out)}")
+        if refused_returned:
+            st.markdown(f"**Returned** :  \n{', '.join(str(u) for u in refused_returned)}")
+        if refused_rejected:
+            st.markdown(f"**Rejected** :  \n{', '.join(str(u) for u in refused_rejected)}")
 
 
 ############################
@@ -175,37 +249,5 @@ if selected_user:
 if batch_name!= "new batch":
     st.header("Users' approbation")
     batch_df = batch_info_dict[batch_name]
-
-    approved_users = []
-    to_approve_users = []
-    returned_users = []
-    failed_attention_check_users = []
-    for _, user in batch_df.iterrows():
-        user_id = user['Participant id']
-        if user['Status'] == 'APPROVED':
-            approved_users.append(user_id)
-        if user['Status'] == 'AWAITING REVIEW':
-            attention_check = attention_check_user(logs, user_id)
-            if attention_check:
-                to_approve_users.append(user_id)
-            else:
-                failed_attention_check_users.append(user_id)
-        if user['Status'] == 'RETURNED':
-            returned_users.append(user_id)
-
-    # Approved users
-    st.subheader("Approved users")
-    st.write(", ".join(str(u) for u in approved_users))
-
-    # Users to approve
-    st.subheader("Users to approve")
-    st.write(", ".join(str(u) for u in to_approve_users))
-
-    # Returned users
-    st.subheader("Returned users")
-    st.write(", ".join(str(u) for u in returned_users))
-
-    # Users who failed attention check
-    st.subheader("Users who failed attention check")
-    st.write(", ".join(str(u) for u in failed_attention_check_users))
-
+    to_approve, to_reject, to_check, approved, refused_timed_out, refused_returned, refused_rejected = get_users_approval(logs, batch_df)
+    show_users_approval(to_approve, to_reject, to_check, approved, refused_timed_out, refused_returned, refused_rejected)
