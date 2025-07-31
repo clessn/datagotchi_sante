@@ -11,6 +11,8 @@ load_dotenv()
 
 # Log file
 LOG_FILENAME = 'Log.csv'
+# User file
+USER_FILENAME = 'User.csv'
 
 # User batch info folder
 USER_BATCH_INFO_FOLDER = 'user_batch_info'
@@ -30,6 +32,15 @@ def download_logs():
     log_df['timestamp'] = pd.to_datetime(log_df['timestamp'])
 
     return log_df
+
+def download_users():
+
+    # Load the user file
+    track_path = Path(os.getenv("DATA_TRACK_PATH"))
+    user_file = track_path / USER_FILENAME
+    user_df = pd.read_csv(user_file, delimiter=",")
+
+    return user_df
     
 def get_last_phase(log_df):
 
@@ -190,6 +201,33 @@ def show_users_approval(to_approve, to_reject, to_check, approved, refused_timed
         if refused_rejected:
             st.markdown(f"**Rejected** :  \n{', '.join(str(u) for u in refused_rejected)}")
 
+def users_per_explanation(user_df, approved_user_ids):
+    st.header("Users per explanation type (approved users only)")
+
+    # Filtrer uniquement les utilisateurs approuvés
+    filtered_df = user_df[user_df['user_id'].isin(approved_user_ids)]
+
+    # Compter le nombre d'utilisateurs par condition_id
+    condition_counts = filtered_df['condition_id'].value_counts().sort_index()
+
+    # Préparer le DataFrame pour le plot
+    df_plot = pd.DataFrame({
+        "Condition": condition_counts.index,
+        "Users": condition_counts.values
+    })
+
+    # Afficher l'histogramme
+    fig = px.bar(df_plot, x="Condition", y="Users",
+                 labels={"Condition": "Condition ID", "Users": "Number of users"},
+                 title="Number of users per explanation type (approved only)")
+    st.plotly_chart(fig)
+
+# identify approved users from all batches
+def approved_users(batch_info_dict):
+    approved_users_set = set()
+    for batch_df in batch_info_dict.values():
+        approved_users_set.update(batch_df[batch_df['Status'] == 'APPROVED']['Participant id'].unique())
+    return list(approved_users_set)
 
 ############################
 ######## Streamlit #########
@@ -206,6 +244,9 @@ phase_order = [
 
 # all logs from track folder
 log_df = download_logs()
+
+# all users from track folder
+user_df = download_users()
 
 # read batch of experiment
 batch_info_dict = get_batch_info()
@@ -258,3 +299,9 @@ if batch_name!= "new batch":
     batch_df = batch_info_dict[batch_name]
     to_approve, to_reject, to_check, approved, refused_timed_out, refused_returned, refused_rejected = get_users_approval(logs, batch_df)
     show_users_approval(to_approve, to_reject, to_check, approved, refused_timed_out, refused_returned, refused_rejected)
+
+# global users approved (list of their ids)
+approved_users_global = approved_users(batch_info_dict)
+
+# users per explanation type
+users_per_explanation(user_df, approved_users_global)
