@@ -22,9 +22,11 @@ QUESTION_FILENAME = 'Question.csv'
 # Answer file
 ANSWER_FILENAME = 'Answer.csv'
 
-# Batch selected
+# Batch selected folder
 BATCH_SELECTED = 'batch_06'
 
+# clean folder
+CLEAN_FOLDER = 'clean'
 
 ##########################
 #### Reading functions ###
@@ -51,6 +53,7 @@ def read_results():
     questions = pd.read_csv(batch_result_path / QUESTION_FILENAME)
     answers = pd.read_csv(batch_result_path / ANSWER_FILENAME)
     return logs, users, questions, answers
+    
 
 ##########################
 #### Other functions #####
@@ -63,21 +66,66 @@ def approved_users(batch_info_dict):
         approved_users_set.update(batch_df[batch_df['Status'] == 'APPROVED']['Participant id'].unique())
     return list(approved_users_set)
 
+# Get a list of ids of users who passed the attention check
+def attention_check_users(logs, users):
+
+    attention_check_users_list = []
+
+    for user_id in users:
+
+         # Verify the attention check for knowledge_before
+        before = logs[
+            (logs['user_id'] == user_id) &
+            (logs['answer_id'] == 'knowledge_04_01') &
+            (logs['phase_id'] == 'knowledge_before')
+        ]
+
+        # Verify the attention check for knowledge_after
+        after = logs[
+            (logs['user_id'] == user_id) &
+            (logs['answer_id'] == 'knowledge_04_01') &
+            (logs['phase_id'] == 'knowledge_after')
+        ]
+
+        # If the user passed the attention check in both phases, add to the list
+        if not before.empty and not after.empty:
+            attention_check_users_list.append(user_id)
+
+    return attention_check_users_list
+
+# Filter logs and users based on a list of user ids
+def filter_logs_users(user_ids_list, logs_raw, users_raw):
+    logs_filtered = logs_raw[logs_raw['user_id'].isin(user_ids_list)]
+    users_filtered = users_raw[users_raw['user_id'].isin(user_ids_list)]
+    return logs_filtered, users_filtered
+
+
 
 ##########################
-######### Main ###########
+###### Filter DB #########
 ##########################
 
-def read_prolific_and_logs():
+def write_filtered_db():
 
     # read batch of experiment
     prolific_info_dict = get_batch_info()
 
     # read db of results
-    logs, users, questions, answers = read_results()
+    logs_raw, users_raw, questions_raw, answers_raw = read_results()
 
     # list of ids of users approved on Prolific
-    approved_users_list = approved_users(prolific_info_dict)
+    prolific_approved_users_list = approved_users(prolific_info_dict)
 
+    # list of ids of approved users who passed the attention check
+    experiment_approved_users_list = attention_check_users(logs_raw, prolific_approved_users_list)
 
+    # keep results only for approved users
+    logs, users = filter_logs_users(experiment_approved_users_list, logs_raw, users_raw)
+
+    # write filtered results to csv files
+    clean_path = Path(os.getenv("DATA_RESULT_PATH")) / CLEAN_FOLDER
+    logs.to_csv(clean_path / LOG_FILENAME, index=False)
+    users.to_csv(clean_path / USER_FILENAME, index=False)
+    questions_raw.to_csv(clean_path / QUESTION_FILENAME, index=False)
+    answers_raw.to_csv(clean_path / ANSWER_FILENAME, index=False)
 
