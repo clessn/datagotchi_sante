@@ -117,3 +117,6 @@ update-prolific:
 
 visualize-logs:
 	poetry run streamlit run scripts/streamlit_logs.py
+
+results-analyses:
+	poetry run python -c "from scripts.results_analyses import read_prolific_and_logs; read_prolific_and_logs()"
