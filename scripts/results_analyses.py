@@ -9,11 +9,25 @@ load_dotenv()
 ##########################
 ####### Constants ########
 ##########################
+
+# info folder from prolific
 USER_BATCH_INFO_FOLDER = "user_batch_info"
+
+# Log file
+LOG_FILENAME = 'Log.csv'
+# User file
+USER_FILENAME = 'User.csv'
+# Question file
+QUESTION_FILENAME = 'Question.csv'  
+# Answer file
+ANSWER_FILENAME = 'Answer.csv'
+
+# Batch selected
+BATCH_SELECTED = 'batch_06'
 
 
 ##########################
-####### Functions ########
+#### Reading functions ###
 ##########################
 
 # Read info from Prolific 
@@ -28,6 +42,20 @@ def get_batch_info():
 
     return batch_info_dict
 
+# Read results from the database
+def read_results():
+    result_path = Path(os.getenv("DATA_RESULT_PATH"))
+    batch_result_path = result_path / BATCH_SELECTED 
+    logs = pd.read_csv(batch_result_path / LOG_FILENAME)
+    users = pd.read_csv(batch_result_path / USER_FILENAME)
+    questions = pd.read_csv(batch_result_path / QUESTION_FILENAME)
+    answers = pd.read_csv(batch_result_path / ANSWER_FILENAME)
+    return logs, users, questions, answers
+
+##########################
+#### Other functions #####
+##########################
+
 # Get a list of ids of users approved on Prolific
 def approved_users(batch_info_dict):
     approved_users_set = set()
@@ -36,16 +64,20 @@ def approved_users(batch_info_dict):
     return list(approved_users_set)
 
 
+##########################
+######### Main ###########
+##########################
+
 def read_prolific_and_logs():
 
     # read batch of experiment
     prolific_info_dict = get_batch_info()
-    #print(prolific_info_dict)
+
+    # read db of results
+    logs, users, questions, answers = read_results()
 
     # list of ids of users approved on Prolific
     approved_users_list = approved_users(prolific_info_dict)
-    print(approved_users_list)
-    print("Tous les éléments sont uniques :", len(approved_users_list) == len(set(approved_users_list)))
 
 
 
