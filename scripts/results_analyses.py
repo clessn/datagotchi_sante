@@ -56,7 +56,7 @@ def read_results():
     
 
 ##########################
-#### Other functions #####
+####### Filter DB ########
 ##########################
 
 # Get a list of ids of users approved on Prolific
@@ -99,12 +99,7 @@ def filter_logs_users(user_ids_list, logs_raw, users_raw):
     users_filtered = users_raw[users_raw['user_id'].isin(user_ids_list)]
     return logs_filtered, users_filtered
 
-
-
-##########################
-###### Filter DB #########
-##########################
-
+# Filter DB and write results to csv files
 def write_filtered_db():
 
     # read batch of experiment
@@ -129,3 +124,39 @@ def write_filtered_db():
     questions_raw.to_csv(clean_path / QUESTION_FILENAME, index=False)
     answers_raw.to_csv(clean_path / ANSWER_FILENAME, index=False)
 
+##########################
+#### Compute scores ######
+##########################
+
+# Read cleaned db
+def read_cleaned_db():
+    clean_path = Path(os.getenv("DATA_RESULT_PATH")) / CLEAN_FOLDER
+    logs = pd.read_csv(clean_path / LOG_FILENAME)
+    users = pd.read_csv(clean_path / USER_FILENAME)
+    questions = pd.read_csv(clean_path / QUESTION_FILENAME)
+    answers = pd.read_csv(clean_path / ANSWER_FILENAME)
+    return logs, users, questions, answers
+
+def clean_results():
+
+    # read results from the database filtered
+    logs, users, questions, answers = read_cleaned_db()
+    # convert timestamp from string to datetime
+    logs['timestamp'] = pd.to_datetime(logs['timestamp'])
+
+    # create df with unique user ids
+    unique_users = users['user_id'].unique()
+    results_df = pd.DataFrame(unique_users, columns=['user_id'])
+    print(results_df)
+
+    for user_id in unique_users:
+
+        # study duration
+        start_time = logs.loc[(logs['user_id'] == user_id) & (logs['log_type'] == 'started'), 'timestamp'].min()
+        end_time = logs.loc[(logs['user_id'] == user_id) & (logs['log_type'] == 'finished'), 'timestamp'].max()
+        study_duration = end_time - start_time
+        results_df.loc[results_df['user_id'] == user_id, 'study_duration'] = study_duration
+    
+        
+
+    print(results_df)
