@@ -151,7 +151,16 @@ def get_phase_logs(logs, phase_id, questions_ids):
     
     return latest_logs_df
 
+# Compute knowledge score based on logs
+def get_knowledge_score(logs, answers):
+    sum_answer_values = 0
+    for log in logs.itertuples():
+        # Get the answer_id and its corresponding value
+        answer_id = log.answer_id
+        answer_value = answers[answers['answer_id'] == answer_id]['answer_weight'].iloc[0]
+        sum_answer_values += answer_value
 
+    return sum_answer_values/len(logs)
 
 def clean_results():
 
@@ -172,18 +181,26 @@ def clean_results():
         ############
         # study duration
         ############
+
         start_time = user_logs.loc[user_logs['log_type'] == 'started', 'timestamp'].min()
         end_time = user_logs.loc[user_logs['log_type'] == 'finished', 'timestamp'].max()
         study_duration = end_time - start_time
         results_df.loc[results_df['user_id'] == user_id, 'study_duration'] = study_duration
 
         ############
-        # knowledge before
+        # knowledge before and after scores
         ############
+
         # get questions ids for knowledge phase, excluding knowledge_04 which is the attention check
         knowledge_questions_ids = questions[(questions['group_id'] == 'knowledge') & (questions['question_id'] != 'knowledge_04')]['question_id'].tolist()
+        # get logs for knowledge before and after phases
         knowledge_before_logs = get_phase_logs(user_logs, 'knowledge_before', knowledge_questions_ids)
-        # compute knowledge before score
-        #knowledge_before_score = get_knowledge_score(knowledge_before_logs)
+        knowledge_after_logs = get_phase_logs(user_logs, 'knowledge_after', knowledge_questions_ids)
+        # compute scores
+        knowledge_before_score = get_knowledge_score(knowledge_before_logs, answers)
+        knowledge_after_score = get_knowledge_score(knowledge_after_logs, answers)
+        # save scores
+        results_df.loc[results_df['user_id'] == user_id, 'knowledge_before_score'] = knowledge_before_score
+        results_df.loc[results_df['user_id'] == user_id, 'knowledge_after_score'] = knowledge_after_score
         
     #print(results_df)
