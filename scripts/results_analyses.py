@@ -137,6 +137,22 @@ def read_cleaned_db():
     answers = pd.read_csv(clean_path / ANSWER_FILENAME)
     return logs, users, questions, answers
 
+
+# Get logs for a phase
+def get_phase_logs(logs, phase_id, questions_ids):
+
+    # Keep logs for the specified phase_id and question_ids
+    filtered_logs = logs[
+        (logs['phase_id'] == phase_id) &
+        (logs['question_id'].isin(questions_ids))
+    ]
+    # For each question_id, keep only the log with the most recent timestamp
+    latest_logs_df = filtered_logs.loc[filtered_logs.groupby('question_id')['timestamp'].idxmax()]
+    
+    return latest_logs_df
+
+
+
 def clean_results():
 
     # read results from the database filtered
@@ -147,16 +163,27 @@ def clean_results():
     # create df with unique user ids
     unique_users = users['user_id'].unique()
     results_df = pd.DataFrame(unique_users, columns=['user_id'])
-    print(results_df)
 
     for user_id in unique_users:
+        
+        # logs of the user
+        user_logs = logs[logs['user_id'] == user_id]
 
+        ############
         # study duration
-        start_time = logs.loc[(logs['user_id'] == user_id) & (logs['log_type'] == 'started'), 'timestamp'].min()
-        end_time = logs.loc[(logs['user_id'] == user_id) & (logs['log_type'] == 'finished'), 'timestamp'].max()
+        ############
+        start_time = user_logs.loc[user_logs['log_type'] == 'started', 'timestamp'].min()
+        end_time = user_logs.loc[user_logs['log_type'] == 'finished', 'timestamp'].max()
         study_duration = end_time - start_time
         results_df.loc[results_df['user_id'] == user_id, 'study_duration'] = study_duration
-    
-        
 
-    print(results_df)
+        ############
+        # knowledge before
+        ############
+        # get questions ids for knowledge phase, excluding knowledge_04 which is the attention check
+        knowledge_questions_ids = questions[(questions['group_id'] == 'knowledge') & (questions['question_id'] != 'knowledge_04')]['question_id'].tolist()
+        knowledge_before_logs = get_phase_logs(user_logs, 'knowledge_before', knowledge_questions_ids)
+        # compute knowledge before score
+        #knowledge_before_score = get_knowledge_score(knowledge_before_logs)
+        
+    #print(results_df)
