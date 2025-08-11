@@ -207,12 +207,16 @@ def get_manipulation_values(logs, answers):
         
     return manipulation_values
 
-#def get_intent_values(logs, answers):
-    #for log in logs.itertuples():
+def get_intent_values(logs, answers):
+    # create a dictionary to hold manipulation values
+    intent_values = {qid: None for qid in INTENT_DICO.keys()}
+    for log in logs.itertuples():
         # Get the answer_id and its corresponding value
-        #answer_id = log.answer_id
-        #answer_value = answers[answers['answer_id'] == answer_id]['answer_weight'].iloc[0]
+        answer_id = log.answer_id
+        answer_value = answers[answers['answer_id'] == answer_id]['answer_weight'].iloc[0]
+        intent_values[log.question_id] = answer_value
         
+    return intent_values
         
 
 def clean_results():
@@ -317,5 +321,19 @@ def clean_results():
         # save scores
         results_df.loc[results_df['user_id'] == user_id, 'satisfaction_score'] = satisfaction_score
         
+        ############
+        # intent
+        ############
+        # get questions ids for intent questions 
+        intent_question_ids = list(INTENT_DICO.keys())
+        # get logs for intent questions
+        intent_logs = get_phase_logs(user_logs, 'intent', intent_question_ids)
+        # get intent values
+        intent_values = get_intent_values(intent_logs, answers)
+        # save manipulation variables
+        for raw_name, value in intent_values.items():
+            clean_name = INTENT_DICO[raw_name]
+            results_df.loc[results_df['user_id'] == user_id, clean_name] = value
         
+
     print(results_df.head())
