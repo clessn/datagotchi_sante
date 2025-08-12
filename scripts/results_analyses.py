@@ -347,7 +347,11 @@ def clean_results():
         for log in sociodemo_logs.itertuples():
             # Get the answer_id and its corresponding content
             answer_id = log.answer_id
-            answer_content = answers[answers['answer_id'] == answer_id]['answer_content'].iloc[0]
+            #age should be a number not a category
+            if log.question_id == 'sociodemo_09':
+                answer_content = int(answers[answers['answer_id'] == answer_id]['answer_weight'].iloc[0])
+            else:
+                answer_content = answers[answers['answer_id'] == answer_id]['answer_content'].iloc[0]
             results_df.loc[results_df['user_id'] == user_id, log.question_id] = answer_content
 
 
