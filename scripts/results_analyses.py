@@ -336,4 +336,20 @@ def clean_results():
             results_df.loc[results_df['user_id'] == user_id, clean_name] = value
         
 
+        ############
+        # socio-demo
+        ############
+        # get questions ids for sociodemo questions
+        sociodemo_questions_ids = questions[questions['group_id'] == 'sociodemo']['question_id'].tolist()
+        # get logs for sociodemo questions
+        sociodemo_logs = get_phase_logs(user_logs, 'sociodemo', sociodemo_questions_ids)
+        # save answer contents
+        for log in sociodemo_logs.itertuples():
+            # Get the answer_id and its corresponding content
+            answer_id = log.answer_id
+            answer_content = answers[answers['answer_id'] == answer_id]['answer_content'].iloc[0]
+            results_df.loc[results_df['user_id'] == user_id, log.question_id] = answer_content
+
+
+    print(results_df.columns.tolist())
     print(results_df.head())
