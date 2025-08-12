@@ -117,3 +117,9 @@ update-prolific:
 
 visualize-logs:
 	poetry run streamlit run scripts/streamlit_logs.py
+
+filter-results:
+	poetry run python -c "from scripts.results_analyses import write_filtered_db; write_filtered_db()"
+
+clean-results:
+	poetry run python -c "from scripts.results_analyses import clean_results; clean_results()"
