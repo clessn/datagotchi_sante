@@ -32,7 +32,7 @@ CLEAN_FOLDER = 'clean'
 MANIPULATION_DICO ={
     "satis_09": "manipulation_visual",
     "satis_10": "manipulation_textual",
-    "satis_11": "manipulation_numerical",
+    "satis_11": "manipulation_quantitative",
     "satis_12": "manipulation_interactive",
     "satis_13": "manipulation_contextual"
 }
