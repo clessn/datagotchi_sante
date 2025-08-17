@@ -48,7 +48,25 @@ sapply(clean_results, class)
 # Manipulation checks
 ###############
 
-# To complete
+# Manipulation model for visual
+manip_model_visual <- lm(manipulation_visual ~ relevel(explain_type, ref = "explain_visual"), data = clean_results)
+summary(manip_model_visual)
+
+# Manipulation model for textual
+manip_model_textual <- lm(manipulation_textual ~ relevel(explain_type, ref = "explain_textual"), data = clean_results)
+summary(manip_model_textual)
+
+# Manipulation model for quantitative
+manip_model_quantitative <- lm(manipulation_quantitative ~ relevel(explain_type, ref = "explain_quantitative"), data = clean_results)
+summary(manip_model_quantitative)
+
+# Manipulation model for interactive
+manip_model_interactive <- lm(manipulation_interactive ~ relevel(explain_type, ref = "explain_interactive"), data = clean_results)
+summary(manip_model_interactive)
+
+# Manipulation model for contextual
+manip_model_contextual <- lm(manipulation_contextual ~ relevel(explain_type, ref = "explain_contextual"), data = clean_results)
+summary(manip_model_contextual)
 
 ###############
 # Main models
