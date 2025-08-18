@@ -6,11 +6,13 @@
 install.packages("readr")
 install.packages("dotenv")
 install.packages("lubridate")
+install.packages("emmeans")
 
 # packages loading
 library(readr) # reading csv files
 library(dotenv) # loading environment variables from .env file
 library(lubridate) # for date manipulation
+library(emmeans) # to compare two by two factors
 
 ###############
 # Loading data 
@@ -72,4 +74,29 @@ summary(manip_model_contextual)
 # Main models
 ###############
 
-# To complete
+# Satisfaction model
+####################
+
+# relevel the explain_type factor to set the baseline
+clean_results$explain_type <- relevel(clean_results$explain_type, ref = "explain_baseline")
+
+# Main model for satisfaction score
+main_model_satisfaction <- lm(
+  satisfaction_score ~ explain_type +
+    sociodemo_01 + sociodemo_02 + sociodemo_03 + sociodemo_05 + sociodemo_07 + 
+    sociodemo_08 + sociodemo_09 + predicted_wellbeing_score,
+  data = clean_results
+)
+summary(main_model_satisfaction)
+anova(main_model_satisfaction)
+
+# Post-hoc analysis for satisfaction score
+emmeans_satisfaction <- emmeans(
+  main_model_satisfaction,
+  ~ explain_type,
+  data = clean_results,
+  cov.reduce = mean   # reduce covariates to their means
+)
+pairwise_satisfaction <- pairs(emmeans_satisfaction)
+summary(pairwise_satisfaction)
+
