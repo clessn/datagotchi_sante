@@ -71,6 +71,12 @@ manip_model_contextual <- lm(manipulation_contextual ~ relevel(explain_type, ref
 summary(manip_model_contextual)
 
 ###############
+# Sociodemo variables
+###############
+
+
+
+###############
 # Main models
 ###############
 
@@ -90,12 +96,12 @@ main_model_satisfaction <- lm(
 summary(main_model_satisfaction)
 anova(main_model_satisfaction)
 
-# Post-hoc analysis for satisfaction score
+# Post-hoc analysis for satisfaction score # does not work for the moment
 emmeans_satisfaction <- emmeans(
   main_model_satisfaction,
   ~ explain_type,
   data = clean_results,
-  cov.reduce = mean   # reduce covariates to their means
+  #cov.reduce = mean   # reduce covariates to their means
 )
 pairwise_satisfaction <- pairs(emmeans_satisfaction)
 summary(pairwise_satisfaction)
