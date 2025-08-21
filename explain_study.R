@@ -6,6 +6,13 @@
 install.packages("readr")
 install.packages("dotenv")
 install.packages("lubridate")
+install.packages("psych") 
+install.packages("corrr") 
+install.packages("tidyverse")
+install.packages("Rnest")
+install.packages("purrr")
+install.packages("broom")
+
 
 # packages loading
 library(readr) # reading csv files
@@ -53,7 +60,10 @@ clean_results[cols_to_factor] <-
 head(clean_results)
 sapply(clean_results, class)
 
+###############
 # Reorder/recategorize factor variables
+###############
+
 # Gender
 table(clean_results$sociodemo_01) # Keeping only women/men
 
