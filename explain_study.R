@@ -87,7 +87,7 @@ wrang_results <- wrang_results %>%
 # Children
 wrang_results <- wrang_results %>%
   mutate(
-    sociodemo_05 = ifelse(sociodemo_05 == "0", "0", "1 or more"),
+    sociodemo_05 = ifelse(sociodemo_05 == "0", "0", "1 or more children"),
     sociodemo_05 = factor(sociodemo_05, level = c("0", "1 or more children"))
   )
 
