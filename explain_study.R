@@ -123,6 +123,10 @@ wrang_results <- wrang_results %>%
 wrang_results <- wrang_results %>% 
   rename(age = sociodemo_09)
 
+# Prediction error
+wrang_results <- wrang_results %>%
+  mutate(prediction_error_wellbeing_score = abs(predicted_wellbeing_score - observed_wellbeing_score))
+
 ###############
 # Manipulation checks
 ###############
@@ -320,14 +324,14 @@ lm_FUN <- function(DV, data, socio_pattern = "socio") {
   if (DV == "knowledge_after_score") {
     lm_formula <- reformulate(c("knowledge_before_score",
                                 "explain_type",
-                                "predicted_wellbeing_score",
+                                "prediction_error_wellbeing_score",
                                 "observed_wellbeing_score",
                                 socio_vec),
                               response = DV)  
   } else{
     lm_formula <- reformulate(c(
                                 "explain_type",
-                                "predicted_wellbeing_score",
+                                "prediction_error_wellbeing_score",
                                 "observed_wellbeing_score",
                                 socio_vec),
                               response = DV)  
@@ -338,8 +342,8 @@ lm_FUN <- function(DV, data, socio_pattern = "socio") {
 }
 
 # Vector of VDs
-vd_vec <- c(#"health_intent_sum",
-            #"social_intent_sum",
+vd_vec <- c("health_intent_sum",
+            "social_intent_sum",
             #"health_intent_weight_sum",
             #"social_intent_weigth_sum",
             "intent_sum",
