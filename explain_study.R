@@ -318,15 +318,15 @@ lm_FUN <- function(DV, data, socio_pattern = "socio") {
   if (DV == "knowledge_after_score") {
     lm_formula <- reformulate(c("knowledge_before_score",
                                 "explain_type",
-                                # "predicted_wellbeing_score", # to include
-                                # "observed_wellbeing score", # to include
+                                "predicted_wellbeing_score",
+                                "observed_wellbeing score",
                                 socio_vec),
                               response = DV)  
   } else(
     lm_formula <- reformulate(c(
                                 "explain_type",
-                                # "predicted_wellbeing_score", # to include
-                                # "observed_wellbeing score", # to include
+                                "predicted_wellbeing_score",
+                                "observed_wellbeing score",
                                 socio_vec),
                               response = DV)  
   )
