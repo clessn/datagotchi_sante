@@ -321,17 +321,17 @@ lm_FUN <- function(DV, data, socio_pattern = "socio") {
     lm_formula <- reformulate(c("knowledge_before_score",
                                 "explain_type",
                                 "predicted_wellbeing_score",
-                                "observed_wellbeing score",
+                                "observed_wellbeing_score",
                                 socio_vec),
                               response = DV)  
-  } else(
+  } else{
     lm_formula <- reformulate(c(
                                 "explain_type",
                                 "predicted_wellbeing_score",
-                                "observed_wellbeing score",
+                                "observed_wellbeing_score",
                                 socio_vec),
                               response = DV)  
-  )
+  }
   
   
   lm(lm_formula, data = data)
