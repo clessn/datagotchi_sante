@@ -300,8 +300,10 @@ wrang_results <- wrang_results %>%
   mutate(
     health_intent_sum = sum_sleep + sum_diet,
     social_intent_sum = sum_social + sum_neigh + sum_vol,
+    intent_sum = health_intent_sum + social_intent_sum,
     health_intent_weight_sum = w_sum_sleep + w_sum_diet,
-    social_intent_weigth_sum = w_sum_social + w_sum_neigh + w_sum_vol
+    social_intent_weigth_sum = w_sum_social + w_sum_neigh + w_sum_vol,
+    intent_weight_sum = health_intent_weight_sum + social_intent_weigth_sum
   )
 
 ###############
@@ -336,10 +338,12 @@ lm_FUN <- function(DV, data, socio_pattern = "socio") {
 }
 
 # Vector of VDs
-vd_vec <- c("health_intent_sum",
-            "social_intent_sum",
-            "health_intent_weight_sum",
-            "social_intent_weigth_sum",
+vd_vec <- c(#"health_intent_sum",
+            #"social_intent_sum",
+            #"health_intent_weight_sum",
+            #"social_intent_weigth_sum",
+            "intent_sum",
+            #"intent_weight_sum",
             "knowledge_after_score",
             "satisfaction_score")
 
