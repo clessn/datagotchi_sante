@@ -362,19 +362,48 @@ lm_outputs
 # For clean results
 library(broom)
 
+# Function to add significance stars
 add_sigstars <- function(tbl) {
-  tbl %>%
-    mutate(
-      sig = case_when(
-        p.value < 0.001 ~ "***",
-        p.value < 0.01  ~ "**",
-        p.value < 0.05  ~ "*",
-        p.value < 0.1   ~ ".",
-        TRUE            ~ ""
-      )
-    )
+  # find the p-value column
+  if ("p.value" %in% names(tbl)) {
+    pcol <- "p.value"
+  } else if ("adj.p.value" %in% names(tbl)) {
+    pcol <- "adj.p.value"
+  } else {
+    stop("No p-value column found in the table.")
+  }
+  
+  tbl[[pcol]] <- as.numeric(tbl[[pcol]])
+
+  # add significance stars based on p-value thresholds
+  tbl$sig <- dplyr::case_when(
+    tbl[[pcol]] < 0.001 ~ "***",
+    tbl[[pcol]] < 0.01  ~ "**",
+    tbl[[pcol]] < 0.05  ~ "*",
+    tbl[[pcol]] < 0.1   ~ ".",
+    TRUE                 ~ ""
+  )
+  
+  return(tbl)
 }
 
 clean_lm_output <- map(lm_outputs, ~ broom::tidy(.x) %>% 
                          add_sigstars())
 clean_lm_output
+
+###############
+# Post-hoc tests
+###############
+
+# satisfaction model
+satisfaction_model <- lm_outputs[["satisfaction_score"]]
+
+# Post-hoc with emmeans
+satisfaction_emm <- emmeans(satisfaction_model, ~ explain_type)
+satisfaction_emm_tbl <- tidy(satisfaction_emm)
+
+# Comparaisons post-hoc (Tukey)
+satisfaction_posthoc <- pairs(satisfaction_emm, adjust = "tukey")
+satisfaction_posthoc_tbl <- tidy(satisfaction_posthoc)
+clean_satisfaction_posthoc <- add_sigstars(satisfaction_posthoc_tbl)
+clean_satisfaction_posthoc
