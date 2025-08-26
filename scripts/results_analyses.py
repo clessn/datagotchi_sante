@@ -23,7 +23,7 @@ QUESTION_FILENAME = 'Question.csv'
 ANSWER_FILENAME = 'Answer.csv'
 
 # Batch selected folder
-BATCH_SELECTED = 'batch_06'
+BATCH_SELECTED = 'batch_10'
 
 # clean folder
 CLEAN_FOLDER = 'clean'
