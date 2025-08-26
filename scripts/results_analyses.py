@@ -357,6 +357,7 @@ def clean_results():
 
     print(results_df.columns.tolist())
     print(results_df.head())
+    print(results_df["explain_type"].value_counts())
     # save results_df to csv file
     clean_path = Path(os.getenv("DATA_RESULT_PATH")) / CLEAN_FOLDER
     results_df.to_csv(clean_path / 'clean_results.csv', index=False)
