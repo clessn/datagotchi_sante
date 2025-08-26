@@ -12,6 +12,7 @@ install.packages("tidyverse")
 install.packages("Rnest")
 install.packages("purrr")
 install.packages("broom")
+install.packages("emmeans")
 
 
 # packages loading
@@ -19,6 +20,7 @@ library(readr) # reading csv files
 library(dotenv) # loading environment variables from .env file
 library(lubridate) # for date manipulation
 library(tidyverse) # for data wrangling
+library(emmeans) # for post-hoc tests
 
 ###############
 # Loading data
