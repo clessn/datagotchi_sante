@@ -77,7 +77,7 @@ wrang_results <- wrang_results %>%
 # Children
 wrang_results <- wrang_results %>%
   mutate(
-    sociodemo_05 = ifelse(sociodemo_05 == "0", "0", "1 or more"),
+    sociodemo_05 = ifelse(sociodemo_05 == "0", "0", "1 or more children"),
     sociodemo_05 = factor(sociodemo_05, level = c("0", "1 or more children"))
   )
 
@@ -285,18 +285,25 @@ efa_w_sum <-
 
 efa_w_sum # The solution reveals a social dimension and an health dimension
 
-# Computing the composite scores (both weighted and raw)
+# Computing the composite scores
 wrang_results <- wrang_results %>%
   mutate(
     health_intent_sum = sum_sleep + sum_diet,
     social_intent_sum = sum_social + sum_neigh + sum_vol,
     health_intent_weight_sum = w_sum_sleep + w_sum_diet,
-    social_intent_weigth_sum = w_sum_social + w_sum_neigh + w_sum_vol
+    social_intent_weigth_sum = w_sum_social + w_sum_neigh + w_sum_vol,
+    total_intention = health_intent_sum + social_intent_sum
   )
 
 ###############
 # Main models
 ###############
+
+# Computing prediction_error_wellbeing_score
+wrang_results <- wrang_results %>% 
+  mutate(prediction_error_wellbeing_score = 
+           abs(predicted_wellbeing_score - observed_wellbeing_score))
+
 library(purrr) # to iterate across a vector in a function
 
 lm_FUN <- function(DV, data, socio_pattern = "socio") {
@@ -308,17 +315,17 @@ lm_FUN <- function(DV, data, socio_pattern = "socio") {
   if (DV == "knowledge_after_score") {
     lm_formula <- reformulate(c("knowledge_before_score",
                                 "explain_type",
-                                # "predicted_wellbeing_score", # to include
-                                # "observed_wellbeing score", # to include
+                                "prediction_error_wellbeing_score",
+                                "observed_wellbeing_score", 
                                 socio_vec),
-                              response = DV)  
+                                response = DV)  
   } else(
     lm_formula <- reformulate(c(
                                 "explain_type",
-                                # "predicted_wellbeing_score", # to include
-                                # "observed_wellbeing score", # to include
+                                "prediction_error_wellbeing_score",
+                                "observed_wellbeing_score", 
                                 socio_vec),
-                              response = DV)  
+                                response = DV)  
   )
   
   
@@ -330,6 +337,7 @@ vd_vec <- c("health_intent_sum",
             "social_intent_sum",
             "health_intent_weight_sum",
             "social_intent_weigth_sum",
+            "total_intention",
             "knowledge_after_score",
             "satisfaction_score")
 
@@ -358,3 +366,33 @@ add_sigstars <- function(tbl) {
 clean_lm_output <- map(lm_outputs, ~ broom::tidy(.x) %>% 
                          add_sigstars())
 clean_lm_output
+
+# Post-hoc ----------------------------------------------------------------
+library(emmeans)
+
+# Exemple for health_intent_sum model
+emm <- emmeans(lm_outputs$satisfaction_score, ~ explain_type)
+
+pairs(emm, adjust = "tukey")
+
+# Moderation analyses -----------------------------------------------------
+library(lavaan)
+
+## Center numeric moderator ####
+## The code below is used as an illustrative example.
+wrang_results <- wrang_results %>%
+  mutate(observed_wellbeing_score_c = scale(observed_wellbeing_score, 
+                                            center = TRUE, 
+                                            scale = FALSE))
+
+# Moderation example with Gender
+satisfaction_moderation <- lm(satisfaction_score ~ explain_type * sociodemo_01,
+                              data = wrang_results)
+
+summary(satisfaction_moderation)
+
+intention_moderation <- lm(total_intention ~ explain_type * sociodemo_01,
+                              data = wrang_results)
+
+summary(intention_moderation)
+
