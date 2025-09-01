@@ -6,6 +6,14 @@
 install.packages("readr")
 install.packages("dotenv")
 install.packages("lubridate")
+install.packages("psych") 
+install.packages("corrr") 
+install.packages("tidyverse")
+install.packages("Rnest")
+install.packages("purrr")
+install.packages("broom")
+install.packages("emmeans")
+install.packages("lavaan")
 
 # packages loading
 library(readr) # reading csv files
@@ -53,7 +61,10 @@ clean_results[cols_to_factor] <-
 head(clean_results)
 sapply(clean_results, class)
 
+###############
 # Reorder/recategorize factor variables
+###############
+
 # Gender
 table(clean_results$sociodemo_01) # Keeping only women/men
 
@@ -112,6 +123,10 @@ wrang_results <- wrang_results %>%
 # Age
 wrang_results <- wrang_results %>% 
   rename(age = sociodemo_09)
+
+# Prediction error
+wrang_results <- wrang_results %>%
+  mutate(prediction_error_wellbeing_score = abs(predicted_wellbeing_score - observed_wellbeing_score))
 
 ###############
 # Manipulation checks
@@ -299,11 +314,6 @@ wrang_results <- wrang_results %>%
 # Main models
 ###############
 
-# Computing prediction_error_wellbeing_score
-wrang_results <- wrang_results %>% 
-  mutate(prediction_error_wellbeing_score = 
-           abs(predicted_wellbeing_score - observed_wellbeing_score))
-
 library(purrr) # to iterate across a vector in a function
 
 lm_FUN <- function(DV, data, socio_pattern = "socio") {
@@ -335,8 +345,8 @@ lm_FUN <- function(DV, data, socio_pattern = "socio") {
 # Vector of VDs
 vd_vec <- c("health_intent_sum",
             "social_intent_sum",
-            "health_intent_weight_sum",
-            "social_intent_weigth_sum",
+            #"health_intent_weight_sum",
+            #"social_intent_weigth_sum",
             "total_intention",
             "knowledge_after_score",
             "satisfaction_score")
@@ -350,32 +360,52 @@ lm_outputs
 # For clean results
 library(broom)
 
+# Function to add significance stars
 add_sigstars <- function(tbl) {
-  tbl %>%
-    mutate(
-      sig = case_when(
-        p.value < 0.001 ~ "***",
-        p.value < 0.01  ~ "**",
-        p.value < 0.05  ~ "*",
-        p.value < 0.1   ~ ".",
-        TRUE            ~ ""
-      )
-    )
+  # find the p-value column
+  if ("p.value" %in% names(tbl)) {
+    pcol <- "p.value"
+  } else if ("adj.p.value" %in% names(tbl)) {
+    pcol <- "adj.p.value"
+  } else {
+    stop("No p-value column found in the table.")
+  }
+
+  tbl[[pcol]] <- as.numeric(tbl[[pcol]])
+
+  # add significance stars based on p-value thresholds
+  tbl$sig <- dplyr::case_when(
+    tbl[[pcol]] < 0.001 ~ "***",
+    tbl[[pcol]] < 0.01  ~ "**",
+    tbl[[pcol]] < 0.05  ~ "*",
+    tbl[[pcol]] < 0.1   ~ ".",
+    TRUE                 ~ ""
+  )
+
+  return(tbl)
 }
 
 clean_lm_output <- map(lm_outputs, ~ broom::tidy(.x) %>% 
                          add_sigstars())
 clean_lm_output
 
-# Post-hoc ----------------------------------------------------------------
+
+###############
+# Post-hoc tests
+###############
+
 library(emmeans)
 
-# Exemple for health_intent_sum model
-emm <- emmeans(lm_outputs$satisfaction_score, ~ explain_type)
+# Satisfcation model
+satisfaction_emm <- emmeans(lm_outputs$satisfaction_score, ~ explain_type)
+satisfaction_posthoc <- add_sigstars(tidy(pairs(satisfaction_emm, adjust = "tukey")))
+satisfaction_posthoc
 
-pairs(emm, adjust = "tukey")
 
-# Moderation analyses -----------------------------------------------------
+###############
+# Moderation analyses
+###############
+
 library(lavaan)
 
 ## Center numeric moderator ####
