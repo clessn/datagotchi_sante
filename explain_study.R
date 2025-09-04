@@ -343,8 +343,8 @@ lm_FUN <- function(DV, data, socio_pattern = "socio") {
 }
 
 # Vector of VDs
-vd_vec <- c("health_intent_sum",
-            "social_intent_sum",
+vd_vec <- c(#"health_intent_sum",
+            #"social_intent_sum",
             #"health_intent_weight_sum",
             #"social_intent_weigth_sum",
             "total_intention",
@@ -415,8 +415,8 @@ wrang_results <- wrang_results %>%
                                             center = TRUE, 
                                             scale = FALSE))
 
-# Moderation example with Gender
-satisfaction_moderation <- lm(satisfaction_score ~ explain_type * sociodemo_01,
+# Moderation example with Children
+satisfaction_moderation <- lm(satisfaction_score ~ explain_type * sociodemo_05,
                               data = wrang_results)
 
 summary(satisfaction_moderation)
