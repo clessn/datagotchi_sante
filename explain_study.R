@@ -426,3 +426,9 @@ intention_moderation <- lm(total_intention ~ explain_type * sociodemo_01,
 
 summary(intention_moderation)
 
+###############
+# Analyses on sociodemo
+###############
+
+# Gender 
+table(wrang_results$sociodemo_01)
