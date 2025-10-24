@@ -427,8 +427,54 @@ intention_moderation <- lm(total_intention ~ explain_type * sociodemo_01,
 summary(intention_moderation)
 
 ###############
-# Analyses on sociodemo
+# Sociodemo summary & balance checks
 ###############
 
-# Gender 
-table(wrang_results$sociodemo_01)
+vars_cat <- c("sociodemo_01", "sociodemo_05", "sociodemo_07", "sociodemo_08")
+var_age <- "age"
+
+cat("Total N:", nrow(wrang_results), "\n\n")
+
+# Categorical variables: counts, % and missing
+for (v in vars_cat) {
+  cat("Variable:", v, "\n")
+  tab <- table(wrang_results[[v]], useNA = "ifany")
+  pct <- round(100 * prop.table(tab), 1)
+  print(data.frame(level = names(tab), n = as.integer(tab), pct = as.numeric(pct)))
+  cat("Missing:", sum(is.na(wrang_results[[v]])), "\n")
+  # balance test across explain_type
+  if ("explain_type" %in% names(wrang_results)) {
+    tbl <- table(wrang_results[[v]], wrang_results$explain_type, useNA = "no")
+    if (all(dim(tbl) > 1)) {
+      chi_res <- suppressWarnings(chisq.test(tbl))
+      cat("Chi-square p:", format.pval(chi_res$p.value), "\n")
+    } else cat("Chi-square: not enough levels for test\n")
+  }
+  cat("\n")
+}
+
+# Age: summary and test by explain_type
+if (var_age %in% names(wrang_results)) {
+  cat("Age summary (overall):\n")
+  print(c(mean = mean(wrang_results[[var_age]], na.rm = TRUE),
+          sd = sd(wrang_results[[var_age]], na.rm = TRUE),
+          median = median(wrang_results[[var_age]], na.rm = TRUE),
+          IQR = IQR(wrang_results[[var_age]], na.rm = TRUE),
+          min = min(wrang_results[[var_age]], na.rm = TRUE),
+          max = max(wrang_results[[var_age]], na.rm = TRUE)))
+  cat("Missing age:", sum(is.na(wrang_results[[var_age]])), "\n\n")
+
+  if ("explain_type" %in% names(wrang_results)) {
+    cat("Age by explain_type (mean ± sd):\n")
+    print(wrang_results %>%
+            group_by(explain_type) %>%
+            summarise(n = n(),
+                      mean = mean(.data[[var_age]], na.rm = TRUE),
+                      sd = sd(.data[[var_age]], na.rm = TRUE),
+                      median = median(.data[[var_age]], na.rm = TRUE),
+                      .groups = "drop"))
+    # normality/variance not checked here — use Kruskal-Wallis as robust default
+    kw <- kruskal.test(as.formula(paste(var_age, "~ explain_type")), data = wrang_results)
+    cat("Kruskal-Wallis p:", format.pval(kw$p.value), "\n")
+  }
+}
