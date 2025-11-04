@@ -70,11 +70,18 @@ To reproduce or extend the analyses and experiments, please follow these steps:
 ├── microapp.py
 ├── poetry.lock
 ├── pyproject.toml
-├── repo_structure.md
-├── repo_structure.txt
 ├── scripts
 └── study_2.R
 ```
+- **Makefile** — Automates the workflow for Study 1 and Study 2, including feature generation, model training, and data tracking.  
+- **app/** — Contains all web application files for Study 2, as well as the machine learning models developed in Study 1 (see `app/ml`).  
+- **config.py** — Configuration file for the Flask web app (database, API keys, and environment settings).  
+- **deploy/** — Contains example configuration files for server deployment using **Nginx** and **Supervisor**.  
+- **microapp.py** — Entry point to launch the Flask web application locally or on a remote server.  
+- **poetry.lock** and **pyproject.toml** — Define and lock Python dependencies to ensure reproducibility via **Poetry**.  
+- **scripts/** — Helper scripts to facilitate launching the web app, populating the database, and handling experiment logistics.  
+- **study_2.R** — R script conducting the statistical analysis of behavioral and survey data collected during Study 2.  
+
 
 
 ## 🚀 Study 1 — Running the Machine Learning Pipeline
