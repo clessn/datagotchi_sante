@@ -89,6 +89,10 @@ def load_results_metrics(path, filename):
     metrics_df = pd.read_csv(path / filename)
     return metrics_df
 
+def load_results_predictions(path, filename):
+    predictions_df = pd.read_csv(path / filename)
+    return predictions_df
+
 
 def load_config(run_path):
     # Opening JSON file

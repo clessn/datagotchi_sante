@@ -6,6 +6,8 @@ Datagotchi Health is an algorithm designed to predict mental health outcomes bas
 1. [Prerequisites / Installation](#prerequisites--installation)
 2. [Getting Started](#getting-started)
 3. [Repository Structure](#repository-structure)
+4. [Launching an Experiment](#when-launching-an-experiment)
+5. [Analysing results of explainability study](#analysing-results-of-explainability-study)
 
 ## Prerequisites / Installation
 
@@ -77,3 +79,35 @@ app/
 ### How to track the incoming data
 - on the remote machine, run 'make regular-track'
 - on the local machine, run 'make regular-download vm=trainmachine DATA_EXPERIMENT_PATH='/Users/cvandekerckh/Code/datagotchi_sante/deploy/data'
+
+## Analysing results of explainability study
+
+To work on the analysis of the explainability study results (using `explain_study.R`), follow these steps:
+
+### Prerequisites
+
+- **R** installed on your machine.
+- You need a `.env` file at the root of the project directory.  
+  This file is used to store environment variables for the analysis scripts.  
+  To create it:
+    1. In the main project folder, create a new file named `.env` (no filename, just `.env`).
+    2. Open the file and add the following line (replace the path with the actual location of your results folder):
+        ```
+        DATA_RESULT_PATH=/path/to/results
+        ```
+    3. Save the file.  
+  This variable should point to the folder containing your results data (for example, where `clean_results.csv` is located).
+- The results file `clean_results.csv` must be present in the folder:  
+  `${DATA_RESULT_PATH}/clean/clean_results.csv`
+
+### How to run the analysis
+
+1. Open `explain_study.R` in your R environment or in VS Code (with the R extension).
+2. Make sure your `.env` file is loaded and the environment variable `DATA_RESULT_PATH` is correctly set.
+3. Run the script. It will:
+    - Load the results data.
+    - Convert columns to appropriate types (e.g., factors, durations).
+    - Prepare the data for manipulation checks and modeling.
+
+You can now complete or extend the analysis in `explain_study.R` as needed.
+

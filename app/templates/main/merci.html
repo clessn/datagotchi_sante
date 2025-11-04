@@ -15,22 +15,15 @@
                     <strong><a href="https://www.ccmhs-ccsms.ca/education/mh-resources-en" target="_blank">Resources</a></strong>
                 </p>
                 <p>
-                    The study is now complete. You HAVE TO return to Prolific by clicking on the button below to validate your participation to the study, your completion code is automatically submitted.
+                    The study is now complete. You HAVE TO return to Prolific and submit your completion code to receive your payment.
                 </p>
-
-                <tr>
-                    <td ALIGN="CENTER">
-                        <br>
-                        <form id="prolificForm" method="POST" action="{{ url_for('main.prolific_redirect') }}">
-                            <input type="hidden" name="completion_code" value="{{ completion_code }}">
-                            <button type="submit" class="btn btn-success btn-lg">
-                                Click here to return to Prolific
-                            </button>
-                        </form>
-                    </td> 
-                </tr>
-
-
+            </td>
+        </tr>
+        <tr> 
+            <td ALIGN="CENTER">
+                <p>
+                    <strong>Prolific Completion code: {{ completion_code }}</strong>
+                </p>
             </td>
         </tr>
     </table>
