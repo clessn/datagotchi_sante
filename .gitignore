@@ -175,12 +175,12 @@ _privatefolder*
 *.ppt
 
 # Images
-.png
-.jpg
-.jpeg
-.gif
-.svg
-.ico
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.ico
 
 # .R
 .Rproj.user
