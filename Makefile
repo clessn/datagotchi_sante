@@ -108,16 +108,16 @@ regular-download:
 		"make download-track vm=$(vm) DATA_EXPERIMENT_PATH='$(DATA_EXPERIMENT_PATH)'"
 
 print-feature-contrib:
-	@python -c "from app.ml.paper_additional_info import print_feature_contribution_table; print_feature_contribution_table()"
+	@python -c "from app.ml.plots import print_feature_contribution_table; print_feature_contribution_table()"
 
 print-vif:
-	@python -c "from app.ml.paper_additional_info import print_vif; print_vif()"
+	@python -c "from app.ml.plots import print_vif; print_vif()"
 
 print-feature-weights:
-	@python -c "from app.ml.paper_additional_info import print_feature_weights; print_feature_weights()"
+	@python -c "from app.ml.plots import print_feature_weights; print_feature_weights()"
 
 print-boxplots:
-	@python -c "from app.ml.paper_additional_info import print_boxplots; print_boxplots()"
+	@python -c "from app.ml.plots import print_boxplots; print_boxplots()"
 
 update-prolific:
 	@if [ -z "$(STUDY_ID)" ] || [ -z "$(COMPLETION_CODE)" ]; then \
