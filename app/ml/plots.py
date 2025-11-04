@@ -4,11 +4,17 @@ import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 import seaborn as sns
 
+from app.ml.constants import Constants as C
+
 
 def print_feature_contribution_table():
     # === Load data ===
-    feature_scores = pd.read_csv("/Users/cvandekerckh/Library/CloudStorage/Dropbox/10_dataset/15_datagotchi_health/_SharedFolder_datagotchi-santé/data/ml/real/feature_selection/feature_library_v10/feature_selection_xgboost_k_20.csv")
-    feature_lookup = pd.read_csv("/Users/cvandekerckh/Library/CloudStorage/Dropbox/10_dataset/15_datagotchi_health/_SharedFolder_datagotchi-santé/data/ml/real/feature_libraries/feature_library_v10/feature_lookup.csv")
+    FEATURE_SELECTION_PATH = C.ML_PATH / 'real' / C.FEATURE_SELECTION_FOLDER_NAME / 'feature_library_v10'
+    FEATURE_LIBARY_PATH = C.ML_PATH / 'real' / C.FEATURE_LIBRARIES_FOLDER_NAME / 'feature_library_v10'
+    feature_selection_filename = C.FEATURE_SELECTION_FILENAME.format('xgboost_k_20')
+
+    feature_scores = pd.read_csv(FEATURE_SELECTION_PATH / feature_selection_filename)
+    feature_lookup = pd.read_csv(FEATURE_LIBARY_PATH / C.FEATURE_LOOKUP_FILENAME)
 
 
     # === Merge to associate each feature with its corresponding question ID ===
@@ -64,8 +70,12 @@ def print_vif():
     """
 
     # --- Load the data ---
-    features_df = pd.read_csv("/Users/cvandekerckh/Library/CloudStorage/Dropbox/10_dataset/15_datagotchi_health/_SharedFolder_datagotchi-santé/data/ml/real/feature_libraries/feature_library_v10/feature_library.csv")
-    selection_df = pd.read_csv("/Users/cvandekerckh/Library/CloudStorage/Dropbox/10_dataset/15_datagotchi_health/_SharedFolder_datagotchi-santé/data/ml/real/feature_selection/feature_library_v10/feature_selection_xgboost_k_20.csv")
+    FEATURE_SELECTION_PATH = C.ML_PATH / 'real' / C.FEATURE_SELECTION_FOLDER_NAME / 'feature_library_v10'
+    FEATURE_LIBARY_PATH = C.ML_PATH / 'real' / C.FEATURE_LIBRARIES_FOLDER_NAME / 'feature_library_v10'
+    feature_selection_filename = C.FEATURE_SELECTION_FILENAME.format('xgboost_k_20')
+
+    features_df = pd.read_csv(FEATURE_LIBARY_PATH / C.FEATURE_LIBRARY_FILENAME)
+    selection_df = pd.read_csv(FEATURE_SELECTION_PATH / feature_selection_filename)
 
     # --- Filter selected features ---
     selected_features = selection_df.loc[selection_df["feature_selected"] == 1, "feature_names"].tolist()
@@ -161,7 +171,9 @@ def compute_metrics(group):
 def print_boxplots():
 
     # Load predictions
-    df = pd.read_csv("/Users/cvandekerckh/Library/CloudStorage/Dropbox/10_dataset/15_datagotchi_health/_SharedFolder_datagotchi-santé/data/ml/real/experiments/11_export_question_with_filter_on_countries/artifacts/KindheartedLeopard2633/predictions.csv")
+    CHOSEN_EXPERIMENT_FOLDER = 'experiments/11_export_question_with_filter_on_countries'
+    CHOSEN_ARTIFACT_FOLDER = 'artifacts/KindheartedLeopard2633'
+    df = pd.read_csv(C.ML_PATH / 'real' / CHOSEN_EXPERIMENT_FOLDER / CHOSEN_ARTIFACT_FOLDER/ "predictions.csv")
 
     # --- Compute metrics (MAE, MSE, R²) by model ---
     metrics_df = df.groupby("model_name").apply(compute_metrics).reset_index()
