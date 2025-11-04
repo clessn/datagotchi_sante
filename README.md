@@ -46,6 +46,37 @@ To reproduce or extend the analyses and experiments, please follow these steps:
 
 ---
 
+## 🧩 Repository Structure
+```
+├── Makefile
+├── README.md
+├── app
+│   ├── auth
+│   ├── main
+│   ├── ml
+│   ├── models.py
+│   ├── recommend
+│   ├── static
+│   │   ├── css
+│   │   ├── data
+│   │   └── img
+│   └── templates
+│       ├── auth
+│       └── main
+├── config.py
+├── deploy
+│   ├── microapp.conf
+│   └── microapp_nginx
+├── microapp.py
+├── poetry.lock
+├── pyproject.toml
+├── repo_structure.md
+├── repo_structure.txt
+├── scripts
+└── study_2.R
+```
+
+
 ## 🚀 Study 1 — Running the Machine Learning Pipeline
 
 The **Makefile** automates the entire workflow, from feature generation to model evaluation. All model configurations and parameter grids are stored in the directory `app/ml/configs`, allowing full reproducibility and easy modification of model settings. 
