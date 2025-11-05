@@ -347,8 +347,8 @@ vd_vec <- c(#"health_intent_sum",
             #"social_intent_sum",
             #"health_intent_weight_sum",
             #"social_intent_weigth_sum",
-            "total_intention",
-            "knowledge_after_score",
+            #"total_intention",
+            #"knowledge_after_score",
             "satisfaction_score")
 
 lm_outputs <- map(vd_vec, ~ lm_FUN(.x, wrang_results))
