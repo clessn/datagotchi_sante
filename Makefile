@@ -10,6 +10,12 @@ clean-python:
 	poetry run isort .
 	poetry run black .
 
+clean-study1-codebook:
+	poetry run python -c "from app.ml.clean import clean_study1_codebook; clean_study1_codebook()"
+
+clean-merge-features: 
+	poetry run python -c "from app.ml.clean import clean_merge_features; clean_merge_features()"
+
 create-features:
 	poetry run python -c "from app.ml.feature_engineering import feature_engineering; feature_engineering()"
 
@@ -108,16 +114,16 @@ regular-download:
 		"make download-track vm=$(vm) DATA_EXPERIMENT_PATH='$(DATA_EXPERIMENT_PATH)'"
 
 print-feature-contrib:
-	@python -c "from app.ml.plots import print_feature_contribution_table; print_feature_contribution_table()"
+	poetry run python -c "from app.ml.plots import print_feature_contribution_table; print_feature_contribution_table()"
 
 print-vif:
-	@python -c "from app.ml.plots import print_vif; print_vif()"
+	poetry run python -c "from app.ml.plots import print_vif; print_vif()"
 
 print-feature-weights:
-	@python -c "from app.ml.plots import print_feature_weights; print_feature_weights()"
+	poetry run python -c "from app.ml.plots import print_feature_weights; print_feature_weights()"
 
 print-boxplots:
-	@python -c "from app.ml.plots import print_boxplots; print_boxplots()"
+	poetry run python -c "from app.ml.plots import print_boxplots; print_boxplots()"
 
 update-prolific:
 	@if [ -z "$(STUDY_ID)" ] || [ -z "$(COMPLETION_CODE)" ]; then \
