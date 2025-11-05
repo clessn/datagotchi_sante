@@ -1,113 +1,172 @@
-# Datagotchi Health
+# Machine Learning and Explainable AI for Well-Being Prediction
 
-Datagotchi Health is an algorithm designed to predict mental health outcomes based on lifestyle behaviors and provide recommendations for improving mental health.
+**Datagotchi Health** is a research platform combining **machine learning** and **behavioral experimentation** to investigate how lifestyle and socio-demographic factors relate to **mental well-being**, and how different explanation formats affect users’ understanding, trust, and behavior.  
+The repository includes all code supporting two empirical studies:
 
-## Table of Contents
-1. [Prerequisites / Installation](#prerequisites--installation)
-2. [Getting Started](#getting-started)
-3. [Repository Structure](#repository-structure)
-4. [Launching an Experiment](#when-launching-an-experiment)
-5. [Analysing results of explainability study](#analysing-results-of-explainability-study)
+1. **Study 1 – Predictive Modeling:** Development and validation of machine learning models predicting well-being from lifestyle data.  
+2. **Study 2 – Explainability Experiment:** Online evaluation of five explanation modalities for model outputs through an interactive web application.
 
-## Prerequisites / Installation
+---
 
-Before you begin, ensure you have met the following requirements:
-- Python 3.9
-- R
-- Poetry (for Python virtual environment)
-- Make (to run the Makefile)
+## ⚙️ Reproducibility and Data Access
 
-To install the required dependencies, follow these steps:
+All analyses were conducted in **Python 3.9** and **R 4.3**, with dependencies managed via **Poetry** for environment reproducibility.  
 
-1. Clone the repository:
-    ```sh
-    git clone https://github.com/yourusername/datagotchi-health.git
-    ```
-2. Navigate to the project directory:
-    ```sh
-    cd datagotchi-health
-    ```
-3. Install the dependencies using Poetry:
-    ```sh
-    poetry install
-    ```
+Data used for Study 1 were collected through the **Léger Panel**, while Study 2 used data from **Prolific**.  
+Because the datasets contain human-subject information, raw data are **not publicly available**.  
+Processed or synthetic examples may be shared upon request in compliance with ethics protocols.
 
-## Getting Started
+---
 
-To get started with the project, follow these steps:
+## 🧭 Getting Started
 
-1. Request access to the data by contacting the repository owner.
-2. Create a `.env` file in the project root directory with the `DATA_PATH` environment variable set to the location of your data:
-    ```env
-    DATA_PATH='path/to/data'
-    ```
-3. Edit the `config.py` file to suit your specific needs.
-4. Run the ML pipeline : 
-- Step 1 : create features : 
-    ```sh
-    make create-features
-    ```
-- Step 2 : select features : 
-    ```sh
-    make select-features
-    ```
-- Step 3 : Run the cross-validation:
-    ```sh
-    make run-crossval
-    ```
+To reproduce or extend the analyses and experiments, please follow these steps:
 
-## Repository Structure
+1. **Install required software**
 
-The repository is organized as follows:
-code
+   Ensure you have the following installed on your system:
+   - **Python 3.9**
+   - **R 4.3**
+   - **Make**
+   - **Poetry** (for Python dependency management)
 
-```markdown
-code/
-├── cleaning/
-│   └── (various cleaning functions)
-├── eda/
-│   └── (exploratory data analysis scripts)
-app/
-├── ml/
-    └── (machine learning workflow from raw data to evaluated predictions)
-``````
-- **cleaning**: Contains scripts for data cleaning.
-- **eda**: Contains scripts for exploratory data analysis to explore and understand the data.
-- **ml**: Contains scripts for the machine learning workflow, including data processing, model training, and evaluation.
+2. **Create a `.env` file**
 
-## When launching an experiment
-### How to track the incoming data
-- on the remote machine, run 'make regular-track'
-- on the local machine, run 'make regular-download vm=trainmachine DATA_EXPERIMENT_PATH='/Users/cvandekerckh/Code/datagotchi_sante/deploy/data'
+   In the project root directory, create a file named `.env` containing the following paths and configuration variables:
 
-## Analysing results of explainability study
+   ```bash
+   # Paths for Study 1 (Machine Learning)
+   DATA_PATH='path/to/ml/data'
 
-To work on the analysis of the explainability study results (using `explain_study.R`), follow these steps:
+   # Paths for Study 2 (Web Application Experiment)
+   DATA_WEBAPP_PATH='/path/to/webapp/data'
+   SECRET_KEY='your_secret_key_here'                   # Protects the web app database
+   PROLIFIC_STUDY_ID='your_prolific_study_id_here'     # Used when running the experiment on Prolific
+   PROLIFIC_COMPLETION_CODE='your_completion_code_here' # Used for study completion validation
 
-### Prerequisites
+---
 
-- **R** installed on your machine.
-- You need a `.env` file at the root of the project directory.  
-  This file is used to store environment variables for the analysis scripts.  
-  To create it:
-    1. In the main project folder, create a new file named `.env` (no filename, just `.env`).
-    2. Open the file and add the following line (replace the path with the actual location of your results folder):
-        ```
-        DATA_RESULT_PATH=/path/to/results
-        ```
-    3. Save the file.  
-  This variable should point to the folder containing your results data (for example, where `clean_results.csv` is located).
-- The results file `clean_results.csv` must be present in the folder:  
-  `${DATA_RESULT_PATH}/clean/clean_results.csv`
+## 🧩 Repository Structure
+```
+├── Makefile
+├── README.md
+├── app
+│   ├── auth
+│   ├── main
+│   ├── ml
+│   ├── models.py
+│   ├── recommend
+│   ├── static
+│   │   ├── css
+│   │   ├── data
+│   │   └── img
+│   └── templates
+│       ├── auth
+│       └── main
+├── config.py
+├── deploy
+│   ├── microapp.conf
+│   └── microapp_nginx
+├── microapp.py
+├── poetry.lock
+├── pyproject.toml
+├── scripts
+└── study_2.R
+```
+- **Makefile** — Automates the workflow for Study 1 and Study 2, including feature generation, model training, and data tracking.  
+- **app/** — Contains all web application files for Study 2, as well as the machine learning models developed in Study 1 (see `app/ml`).  
+- **config.py** — Configuration file for the Flask web app (database, API keys, and environment settings).  
+- **deploy/** — Contains example configuration files for server deployment using **Nginx** and **Supervisor**.  
+- **microapp.py** — Entry point to launch the Flask web application locally or on a remote server.  
+- **poetry.lock** and **pyproject.toml** — Define and lock Python dependencies to ensure reproducibility via **Poetry**.  
+- **scripts/** — Helper scripts to facilitate launching the web app, populating the database, and handling experiment logistics.  
+- **study_2.R** — R script conducting the statistical analysis of behavioral and survey data collected during Study 2.  
 
-### How to run the analysis
 
-1. Open `explain_study.R` in your R environment or in VS Code (with the R extension).
-2. Make sure your `.env` file is loaded and the environment variable `DATA_RESULT_PATH` is correctly set.
-3. Run the script. It will:
-    - Load the results data.
-    - Convert columns to appropriate types (e.g., factors, durations).
-    - Prepare the data for manipulation checks and modeling.
 
-You can now complete or extend the analysis in `explain_study.R` as needed.
+## 🚀 Study 1 — Running the Machine Learning Pipeline
 
+The **Makefile** automates the entire workflow, from feature generation to model evaluation. All model configurations and parameter grids are stored in the directory `app/ml/configs`, allowing full reproducibility and easy modification of model settings. 
+Below is an overview of key commands:
+
+| Command | Description |
+|----------|-------------|
+| `make create-features` | Generates model input features from the raw questionnaire data. |
+| `make select-features` | Selects the most informative predictors using XGBoost feature importance. |
+| `make run-crossval` | Runs nested cross-validation for model comparison and hyperparameter tuning. |
+| `make regular-track` | Monitors new experimental data on the remote server. |
+| `make regular-download` | Downloads updated results from the remote server for local analysis. |
+
+To reproduce Study 1 model training:
+
+```bash
+make create-features
+make select-features
+make run-crossval
+```
+
+## 🧪 Study 2 — Online Explainability Experiment
+
+Study 2 builds upon the predictive model developed in Study 1 and investigates how different **explanation formats** influence users’ interpretation of their predicted well-being scores.  
+An interactive **Flask web application** serves as the experimental platform, where participants are randomly assigned to one of five explanation conditions—**contextual**, **quantitative**, **textual**, **visual**, or **interactive**—or to a control condition without explanation.
+
+Each condition presents a distinct communication strategy for model reasoning, implemented dynamically using HTML templates and Flask rendering logic.  
+Participant interactions, response times, and navigation behaviors are automatically logged for later analysis.
+
+To launch the web interface locally:
+
+```bash
+python app/microapp.py
+```
+
+### 🌐 Running the Application on a Remote Server
+
+The web application can also be deployed on a remote server for conducting online experiments.  
+Once the experiment is running, data can be continuously monitored and synchronized between the server and your local machine.
+
+#### Tracking and Synchronizing Experimental Data
+
+- **On the remote server:**  
+  Start automatic tracking of new incoming participant data  
+  ```bash
+  make regular-track
+  ```
+
+- **On the remote server:**  
+  Download the latest experimental data from the remote server
+  ```bash
+  make regular-download vm=trainmachine DATA_EXPERIMENT_PATH='/root/deploy/data'
+  ```
+  
+### Behavioral and Statistical Analysis
+
+The file `analysis/study_2.R` reproduces the statistical analysis of Study 2, including manipulation checks, between-condition comparisons, and hypothesis testing on user comprehension and trust.  
+Analyses were conducted using **R 4.3**, and results focus on identifying how explanation modality influences perceived understanding, satisfaction, and behavioral intention.
+
+---
+
+## 🧰 Environment Setup
+
+Clone the repository and install dependencies using Poetry:
+
+```bash
+poetry install
+```
+
+Then activate the environment:
+
+```bash
+poetry shell
+```
+
+## 🪪 Contact
+
+For questions or collaboration requests, please contact:  
+**flore.vromman@gmail.com**
+
+---
+
+## 📜 License
+
+This project is distributed under an open academic license.  
+Please contact the authors for reuse or redistribution inquiries.
