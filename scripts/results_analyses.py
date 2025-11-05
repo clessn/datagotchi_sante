@@ -370,7 +370,7 @@ def clean_results():
             (questions["group_id"] == "satisfaction")
             & (~questions["question_id"].isin(manipulation_question_ids))
         ]["question_id"].tolist()
-        # get logs for mediation questions
+        # get logs for manipulation questions
         satisfaction_logs = get_phase_logs(
             user_logs, "satisfaction", satisfaction_questions_ids
         )
