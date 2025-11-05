@@ -1,12 +1,14 @@
 import os
-import pandas as pd
 from pathlib import Path
 
-from app.ml.constants import Constants as C
+import pandas as pd
 from dotenv import load_dotenv
+
+from app.ml.constants import Constants as C
 
 # Load the .env file
 load_dotenv()
+
 
 def clean_study1_codebook():
     # Load the CSV
@@ -16,7 +18,15 @@ def clean_study1_codebook():
     df = df[df["id"] != -1]
 
     # Keep only the specified columns
-    columns_to_keep = ["id", "bloc", "raw_variable_name", "raw_variable_type", "observability", "Questions", "Choix de réponse "]
+    columns_to_keep = [
+        "id",
+        "bloc",
+        "raw_variable_name",
+        "raw_variable_type",
+        "observability",
+        "Questions",
+        "Choix de réponse ",
+    ]
     df = df[columns_to_keep]
 
     # Save the cleaned version
@@ -26,10 +36,14 @@ def clean_study1_codebook():
 
 
 def clean_merge_features():
-    # Input 
-    FEATURE_SELECTION_PATH = C.ML_PATH / 'real' / C.FEATURE_SELECTION_FOLDER_NAME / 'feature_library_v10'
-    FEATURE_LIBARY_PATH = C.ML_PATH / 'real' / C.FEATURE_LIBRARIES_FOLDER_NAME / 'feature_library_v10'
-    feature_selection_filename = C.FEATURE_SELECTION_FILENAME.format('xgboost_k_20')
+    # Input
+    FEATURE_SELECTION_PATH = (
+        C.ML_PATH / "real" / C.FEATURE_SELECTION_FOLDER_NAME / "feature_library_v10"
+    )
+    FEATURE_LIBARY_PATH = (
+        C.ML_PATH / "real" / C.FEATURE_LIBRARIES_FOLDER_NAME / "feature_library_v10"
+    )
+    feature_selection_filename = C.FEATURE_SELECTION_FILENAME.format("xgboost_k_20")
 
     lookup_df = pd.read_csv(FEATURE_LIBARY_PATH / C.FEATURE_LOOKUP_FILENAME)
     selection_df = pd.read_csv(FEATURE_SELECTION_PATH / feature_selection_filename)
@@ -39,7 +53,7 @@ def clean_merge_features():
         lookup_df,
         selection_df,
         on="feature_names",
-        how="inner"  # only keep features present in both files
+        how="inner",  # only keep features present in both files
     )
 
     # Output

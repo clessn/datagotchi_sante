@@ -1,8 +1,9 @@
-import subprocess
-import time
 import datetime
-import sys
 import os
+import subprocess
+import sys
+import time
+
 from dotenv import load_dotenv
 
 LOG_FILE = "regular.log"
@@ -11,11 +12,13 @@ INTERVAL = 10  # seconds
 # Load environment variables from .env file (in the script's directory or above)
 load_dotenv()
 
+
 def log_message(message):
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     with open(LOG_FILE, "a") as f:
         f.write(f"[{timestamp}] {message}\n")
     print(f"[{timestamp}] {message}")
+
 
 def run_command(command_str):
     """Run the given shell command and log its output."""
@@ -34,17 +37,21 @@ def run_command(command_str):
         if e.stderr:
             log_message("ERROR: " + e.stderr.strip())
 
+
 def main():
     if len(sys.argv) < 2:
         print("Usage: python regular_runner.py '<command>'")
         sys.exit(1)
 
     command_str = " ".join(sys.argv[1:])
-    log_message(f"Starting regular loop (every {INTERVAL} seconds) for command: {command_str}")
+    log_message(
+        f"Starting regular loop (every {INTERVAL} seconds) for command: {command_str}"
+    )
 
     while True:
         run_command(command_str)
         time.sleep(INTERVAL)
+
 
 if __name__ == "__main__":
     main()

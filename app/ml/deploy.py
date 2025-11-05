@@ -1,9 +1,9 @@
 import argparse
 import logging
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from pathlib import Path
 from sklearn.model_selection import GridSearchCV
 
 from app.ml.configs.deploy import DeployConfig as Config
@@ -47,7 +47,7 @@ def create_questionnaire(
             C.CODEBOOK_CHOICE_COL,
         ],
     ]
-    #df_questionnaire = df_questionnaire.drop_duplicates(C.CODEBOOK_ID_COL)
+    # df_questionnaire = df_questionnaire.drop_duplicates(C.CODEBOOK_ID_COL)
     return df_questionnaire
 
 
@@ -157,7 +157,9 @@ def train_best_model(ml_run_path, frozen_library_folder_name):
     # - coefficients
     coefficients = best_model.named_steps["regressor"].coef_
     feature_coeff_dict = dict(zip(selected_features, coefficients))
-    sorted_feature_coeff_dict = dict(sorted(feature_coeff_dict.items(), key=lambda item: item[1], reverse=True))
+    sorted_feature_coeff_dict = dict(
+        sorted(feature_coeff_dict.items(), key=lambda item: item[1], reverse=True)
+    )
 
     write_best_model(
         best_model,
@@ -183,11 +185,7 @@ def create_features_for_example(df_attributes_example, ml_run_path):
     return df_features.iloc[-df_attributes_example.shape[0] :, :]
 
 
-def predict_for_example(
-    df_example,
-    model_info,
-    is_df_features = False
-):
+def predict_for_example(df_example, model_info, is_df_features=False):
     # a path is given to acces the model
     if isinstance(model_info, Path):
         ml_run_path = model_info
@@ -203,9 +201,7 @@ def predict_for_example(
 
     # if df is attributes, convert it into features
     if not is_df_features:
-        df_features_example = create_features_for_example(
-            df_example, ml_run_path
-        )
+        df_features_example = create_features_for_example(df_example, ml_run_path)
     else:
         df_features_example = df_example
 
@@ -221,11 +217,11 @@ def predict_for_example(
 
 
 # Run deploy
-#if __name__ == "__main__":
+# if __name__ == "__main__":
 def deploy(deploy_type):
-    #parser = argparse.ArgumentParser(description="Deploy script")
-    #parser.add_argument("function", type=str, help="Function to execute")
-    #args = parser.parse_args()
+    # parser = argparse.ArgumentParser(description="Deploy script")
+    # parser.add_argument("function", type=str, help="Function to execute")
+    # args = parser.parse_args()
 
     logger = configure_main_logger("deploy")
 
@@ -245,15 +241,15 @@ def deploy(deploy_type):
     elif deploy_type == "predict_for_example":
         # Read attributes
         df_attributes_example = pd.read_csv(
-        ml_run_path / C.DEPLOY_FOLDER_NAME / C.EXAMPLE_ANSWERS_FILENAME
+            ml_run_path / C.DEPLOY_FOLDER_NAME / C.EXAMPLE_ANSWERS_FILENAME
         ).set_index(C.ATTRIBUTE_ID_COL)
-        
+
         # Predict
         df_y = predict_for_example(
             df_example=df_attributes_example,
             model_info=ml_run_path,
         )
-        
+
         # Save predictions
         save_example_predictions(
             df_y,
