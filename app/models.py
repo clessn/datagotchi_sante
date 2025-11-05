@@ -1,12 +1,13 @@
+import random
 from datetime import datetime, timezone
 from typing import Optional
+
 import sqlalchemy as sa
 import sqlalchemy.orm as so
-from app import db
-from app import login
-import random
-
 from flask_login import UserMixin
+
+from app import db, login
+
 
 @login.user_loader
 def load_user(id):
@@ -15,14 +16,15 @@ def load_user(id):
 
 class User(UserMixin, db.Model):
     user_id: so.Mapped[str] = so.mapped_column(sa.String(64), primary_key=True)
-    condition_id: so.Mapped[Optional[str]] = so.mapped_column(sa.String(64), nullable=True)                                   
+    condition_id: so.Mapped[Optional[str]] = so.mapped_column(
+        sa.String(64), nullable=True
+    )
 
-    logs: so.WriteOnlyMapped['Log'] = so.relationship(
-        back_populates='participant')
+    logs: so.WriteOnlyMapped["Log"] = so.relationship(back_populates="participant")
 
     def __repr__(self):
-        return f'{self.user_id} - condition : {self.condition_id}'
-    
+        return f"{self.user_id} - condition : {self.condition_id}"
+
     def get_id(self):
         return self.user_id
 
@@ -31,29 +33,27 @@ class User(UserMixin, db.Model):
         self.condition_id = condition_id
         db.session.commit()
 
+
 class Question(db.Model):
     question_id: so.Mapped[str] = so.mapped_column(sa.String(64), primary_key=True)
-    question_content: so.Mapped[str] = so.mapped_column(sa.String(1000)) 
+    question_content: so.Mapped[str] = so.mapped_column(sa.String(1000))
     group_id: so.Mapped[str] = so.mapped_column(sa.String(64))
-    form_id: so.Mapped[str] = so.mapped_column(sa.String(64))  
-    pilote_id: so.Mapped[str] = so.mapped_column(sa.String(64), nullable=True) 
-    question_info: so.Mapped[str] = so.mapped_column(sa.String(1000), nullable=True)                            
+    form_id: so.Mapped[str] = so.mapped_column(sa.String(64))
+    pilote_id: so.Mapped[str] = so.mapped_column(sa.String(64), nullable=True)
+    question_info: so.Mapped[str] = so.mapped_column(sa.String(1000), nullable=True)
 
-    logs: so.WriteOnlyMapped['Log'] = so.relationship(
-        back_populates='question')
-    
-    answers: so.WriteOnlyMapped['Answer'] = so.relationship(
-        back_populates='question')
+    logs: so.WriteOnlyMapped["Log"] = so.relationship(back_populates="question")
+
+    answers: so.WriteOnlyMapped["Answer"] = so.relationship(back_populates="question")
 
     def __repr__(self):
-        return f'{self.question_id} ({self.group_id}) - {self.form_id}'
-
+        return f"{self.question_id} ({self.group_id}) - {self.form_id}"
 
     def get_answer(self):
         query = self.answers.select()
         answers = db.session.scalars(query).all()
         return answers
-    
+
     def get_form(self):
         form = []
         query = self.answers.select()
@@ -65,7 +65,7 @@ class Question(db.Model):
     def get_random_answer(self, seed=None):
         """
         Get a random answer for the question with the given question_id.
-        
+
         :param seed: Seed value for reproducibility (optional).
         :return: Randomly selected Answer object or None if no answers exist.
         """
@@ -83,62 +83,68 @@ class Question(db.Model):
         # Return a random answer
         return random.choice(answers)
 
+
 class Answer(db.Model):
     answer_id: so.Mapped[str] = so.mapped_column(sa.String(64), primary_key=True)
-    answer_content: so.Mapped[str] = so.mapped_column(sa.String(1000)) 
+    answer_content: so.Mapped[str] = so.mapped_column(sa.String(1000))
     answer_weight: so.Mapped[float] = so.mapped_column(sa.Float)
     explain_txt: so.Mapped[str] = so.mapped_column(sa.String(1000), nullable=True)
 
-    question_id: so.Mapped[str] = so.mapped_column(sa.ForeignKey(Question.question_id),index=True)                           
-    question: so.Mapped['Question'] = so.relationship(back_populates='answers')
+    question_id: so.Mapped[str] = so.mapped_column(
+        sa.ForeignKey(Question.question_id), index=True
+    )
+    question: so.Mapped["Question"] = so.relationship(back_populates="answers")
 
-    logs: so.WriteOnlyMapped['Log'] = so.relationship(
-        back_populates='answer')
+    logs: so.WriteOnlyMapped["Log"] = so.relationship(back_populates="answer")
 
     def __repr__(self):
-        return f'{self.answer_id} - weight: {self.answer_weight}'
+        return f"{self.answer_id} - weight: {self.answer_weight}"
 
 
 def get_explains_by_answer_ids(answer_ids):
     # Query the Answer table to get the corresponding 'explain_txt' for each answer_id
     answers = Answer.query.filter(Answer.answer_id.in_(answer_ids)).all()
-    
+
     # Extract the 'explain_txt' from the queried results
     explain_texts = [answer.explain_txt for answer in answers if answer.explain_txt]
-    
+
     return explain_texts
 
 
 class Log(db.Model):
     log_id: so.Mapped[int] = so.mapped_column(primary_key=True)
     timestamp: so.Mapped[datetime] = so.mapped_column(
-        index=True, default=lambda: datetime.now(timezone.utc))
-    
+        index=True, default=lambda: datetime.now(timezone.utc)
+    )
+
     # Type of log: answer, score_computation
     # By default, it is an answer to a question
-    log_type: so.Mapped[str] = so.mapped_column(sa.String(64), default='answer')
+    log_type: so.Mapped[str] = so.mapped_column(sa.String(64), default="answer")
 
     # Additionnal info about the log
     log_info: so.Mapped[Optional[str]] = so.mapped_column(sa.String(64))
-    
-    user_id: so.Mapped[str] = so.mapped_column(sa.ForeignKey(User.user_id),index=True)
-    participant: so.Mapped['User'] = so.relationship(back_populates='logs')
 
-    question_id: so.Mapped[Optional[str]] = so.mapped_column(sa.ForeignKey(Question.question_id),index=True)
-    question: so.Mapped['Question'] = so.relationship(back_populates='logs')
+    user_id: so.Mapped[str] = so.mapped_column(sa.ForeignKey(User.user_id), index=True)
+    participant: so.Mapped["User"] = so.relationship(back_populates="logs")
 
-    answer_id: so.Mapped[Optional[str]] = so.mapped_column(sa.ForeignKey(Answer.answer_id),index=True)
-    answer: so.Mapped['Answer'] = so.relationship(back_populates='logs')
+    question_id: so.Mapped[Optional[str]] = so.mapped_column(
+        sa.ForeignKey(Question.question_id), index=True
+    )
+    question: so.Mapped["Question"] = so.relationship(back_populates="logs")
+
+    answer_id: so.Mapped[Optional[str]] = so.mapped_column(
+        sa.ForeignKey(Answer.answer_id), index=True
+    )
+    answer: so.Mapped["Answer"] = so.relationship(back_populates="logs")
 
     phase_id: so.Mapped[str] = so.mapped_column(sa.String(64))
 
     def __repr__(self):
-        if self.log_type=='answer':
-            return f'{self.timestamp} - User:{self.user_id} - Q:{self.question_id} - A:{self.answer_id} - Ph:{self.phase_id}'
-        elif self.log_type=='score_computation':
-            return f'{self.timestamp} - User:{self.user_id} - Phase:{self.phase_id} - Score:{self.log_info} - Ph:{self.phase_id}'
-        elif self.log_type=='finished':
-            return f'{self.timestamp} - User:{self.user_id} - Type:{self.log_type} - Time:{self.timestamp} - Ph:{self.phase_id}'
+        if self.log_type == "answer":
+            return f"{self.timestamp} - User:{self.user_id} - Q:{self.question_id} - A:{self.answer_id} - Ph:{self.phase_id}"
+        elif self.log_type == "score_computation":
+            return f"{self.timestamp} - User:{self.user_id} - Phase:{self.phase_id} - Score:{self.log_info} - Ph:{self.phase_id}"
+        elif self.log_type == "finished":
+            return f"{self.timestamp} - User:{self.user_id} - Type:{self.log_type} - Time:{self.timestamp} - Ph:{self.phase_id}"
         else:
-            return f'{self.timestamp} - User:{self.user_id} - Type:{self.log_type} - Info:{self.log_info} - Ph:{self.phase_id}'
-
+            return f"{self.timestamp} - User:{self.user_id} - Type:{self.log_type} - Info:{self.log_info} - Ph:{self.phase_id}"

@@ -2,6 +2,7 @@ import json
 import pickle
 
 import pandas as pd
+
 from app.ml.constants import Constants as C
 from app.ml.utils import create_label
 
@@ -88,6 +89,7 @@ def load_selected_features(
 def load_results_metrics(path, filename):
     metrics_df = pd.read_csv(path / filename)
     return metrics_df
+
 
 def load_results_predictions(path, filename):
     predictions_df = pd.read_csv(path / filename)

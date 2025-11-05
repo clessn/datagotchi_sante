@@ -13,7 +13,6 @@ from app.ml.constants import Constants as C
 from app.ml.loaders import load_df_X_y, load_selected_features
 from app.ml.metrics import available_metrics_dict
 from app.ml.models import available_models_dict
-
 from app.ml.tracking import track_results
 from app.ml.utils import configure_main_logger
 
@@ -185,7 +184,7 @@ def crossval(X, y, index, model_list):
 
 
 # Run crossval
-#if __name__ == "__main__":
+# if __name__ == "__main__":
 def run_crossval():
     logger = configure_main_logger("crossval")
     ml_run_path = C.ML_PATH / eval(f"C.{Config.RUN_TYPE}")

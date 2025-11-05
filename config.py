@@ -1,35 +1,41 @@
 import os
-from dotenv import load_dotenv
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 basedir = os.path.abspath(os.path.dirname(__file__))
-load_dotenv(os.path.join(basedir, '.env'))
+load_dotenv(os.path.join(basedir, ".env"))
 
 
 class Config(object):
-    SECRET_KEY = os.environ.get('SECRET_KEY')
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'sqlite:///' + os.path.join(basedir, 'app.db')
+    SECRET_KEY = os.environ.get("SECRET_KEY")
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        "DATABASE_URL"
+    ) or "sqlite:///" + os.path.join(basedir, "app.db")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     POSTS_PER_PAGE = 3
-    PROLIFIC_STUDY_ID = os.environ.get('PROLIFIC_STUDY_ID') # Final study ID
-    PROLIFIC_COMPLETION_CODE = os.environ.get('PROLIFIC_COMPLETION_CODE') # Final completion code
+    PROLIFIC_STUDY_ID = os.environ.get("PROLIFIC_STUDY_ID")  # Final study ID
+    PROLIFIC_COMPLETION_CODE = os.environ.get(
+        "PROLIFIC_COMPLETION_CODE"
+    )  # Final completion code
 
 
 class DefaultConfig(Config):
-    MAIN_PAGE='main.consent'
-    SKIP_VALID=False
-    EXPLAIN_TYPE=None
+    MAIN_PAGE = "main.consent"
+    SKIP_VALID = False
+    EXPLAIN_TYPE = None
+
 
 class DebugConfig(Config):
-    MAIN_PAGE='main.consent'
-    SKIP_VALID=True
-    EXPLAIN_TYPE=None
-    #EXPLAIN_TYPE='explain_interactive'
+    MAIN_PAGE = "main.consent"
+    SKIP_VALID = True
+    EXPLAIN_TYPE = None
+    # EXPLAIN_TYPE='explain_interactive'
     # choose amongts 'explain_baseline', 'explain_visual',
     # 'explain_textual', 'explain_quantitative', 'explain_interactive', 'explain_contextual'
 
+
 configs = {
-  'default'  : DefaultConfig,
-  'debug'  : DebugConfig,
+    "default": DefaultConfig,
+    "debug": DebugConfig,
 }
