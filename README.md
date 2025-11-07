@@ -1,4 +1,4 @@
-# Machine Learning and Explainable AI for Well-Being Prediction
+# XAI for Well-Being Prediction
 
 **Datagotchi Health** is a research platform combining **machine learning** and **behavioral experimentation** to investigate how lifestyle and socio-demographic factors relate to **mental well-being**, and how different explanation formats affect users’ understanding, trust, and behavior.  
 The repository includes all code supporting two empirical studies:
