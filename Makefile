@@ -125,6 +125,9 @@ print-feature-weights:
 print-boxplots:
 	poetry run python -c "from app.ml.plots import print_boxplots; print_boxplots()"
 
+print-sociodemos:
+	poetry run python -c "from app.ml.plots import print_post_exclusion_sociodemos; print_post_exclusion_sociodemos()"
+
 update-prolific:
 	@if [ -z "$(STUDY_ID)" ] || [ -z "$(COMPLETION_CODE)" ]; then \
 		echo "Usage: make update-prolific STUDY_ID=<id> COMPLETION_CODE=<code>"; \

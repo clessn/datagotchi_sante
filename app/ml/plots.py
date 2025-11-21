@@ -247,3 +247,100 @@ def print_boxplots():
     plt.ylim(0, 100)
     plt.tight_layout()
     plt.show()
+
+def print_post_exclusion_sociodemos():
+    # --- 1. Load data ---
+
+    df = pd.read_csv(C.ML_PATH / "real" / C.ATTRIBUTES_FILENAME)
+    fields_of_interest = ['genre', 'age', 'education', 'revenu', 'enfants']
+
+
+    # --- 2. Mappings ---
+
+    gender_map = {
+        1: "Male (cisgender male)",
+        2: "Female (cisgender female)",
+        3: "Male (transgender male)",
+        4: "Female (transgender woman)",
+        5: "Non-binary",
+        6: "Queer",
+        7: "Agender",
+        8: "Other"
+    }
+
+    income_map = {
+        1: "No income",
+        2: "$1 to $30,000",
+        3: "$30,001 to $60,000",
+        4: "$60,001 to $90,000",
+        5: "$90,001 to $110,000",
+        6: "$110,001 to $150,000",
+        7: "$150,001 to $200,000",
+        8: "More than $200,000"
+    }
+
+    education_map = {
+        1: "No schooling",
+        2: "Elementary school",
+        3: "Highchool",
+        4: "College / CEGEP / Classical College",
+        5: "Bachelor's degree",
+        6: "Master's degree",
+        7: "PhD"
+    }
+
+    children_map = {
+        1: "0",
+        2: "1",
+        3: "2",
+        4: "3",
+        5: "4",
+        6: "5 or more"
+    }
+
+    # --- 3. Apply mapping---
+    df["genre_cat"] = df["genre"].map(gender_map)
+    df["education_cat"] = df["education"].map(education_map)
+    df["revenu_cat"] = df["revenu"].map(income_map)
+    df["enfants_cat"] = df["enfants"].map(children_map)
+
+    # --- 4. Final number of participants ---
+    final_n = len(df)
+
+    # --- 5. Age stats ---
+    age_mean = df["age"].mean()
+    age_sd = df["age"].std()
+    age_median = df["age"].median()
+    age_iqr = df["age"].quantile(0.75) - df["age"].quantile(0.25)
+    age_min = df["age"].min()
+    age_max = df["age"].max()
+
+    # --- 6. Distributions % ---
+    gender_dist = df["genre_cat"].value_counts(normalize=True) * 100
+    education_dist = df["education_cat"].value_counts(normalize=True) * 100
+    income_dist = df["revenu_cat"].value_counts(normalize=True) * 100
+    children_dist = df["enfants_cat"].value_counts(normalize=True) * 100
+
+    # --- 7. API friendly ---
+    print("\n--- STUDY 1: FINAL SAMPLE CHARACTERISTICS ---")
+    print(f"Final N: {final_n}\n")
+
+    print("Gender distribution (%):")
+    print(gender_dist.round(1), "\n")
+
+    print("Education distribution (%):")
+    print(education_dist.round(1), "\n")
+
+    print("Income distribution (%):")
+    print(income_dist.round(1), "\n")
+
+    print("Parental status (%):")
+    print(children_dist.round(1), "\n")
+
+    print("Age statistics:")
+    print(f" Mean:   {age_mean:.2f}")
+    print(f" SD:     {age_sd:.2f}")
+    print(f" Median: {age_median:.2f}")
+    print(f" IQR:    {age_iqr:.2f}")
+    print(f" Range:  {age_min} – {age_max}")
+

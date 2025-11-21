@@ -1,43 +1,9 @@
 # Packages ---------------------------------------------------------------------
 library(dplyr)
 
-# Main -------------------------------------------------------------------------
-
-## Load raw data here
-data_raw <- haven::read_sav("_SharedFolder_datagotchi-santé/data/raw/data_raw.sav")  %>% 
-  filter(code == "complete")
-data <- data_raw
-
-## Convert to ESSAIM scales
-data$qol_heureux <- convert_16_to_05(data_raw$CSM_QA1_1)
-data$qol_interet <- convert_16_to_05(data_raw$CSM_QA1_2)
-data$qol_satisfa <- convert_16_to_05(data_raw$CSM_QA1_3)
-data$qol_soc_apport <- convert_61_to_05(data_raw$CSM_QA2_1)
-data$qol_apparten <- convert_61_to_05(data_raw$CSM_QA2_2)
-data$qol_soc_meilleure <- convert_61_to_05(data_raw$CSM_QA2_3)
-data$qol_gens_bons <- convert_61_to_05(data_raw$CSM_QA2_4)
-data$qol_soc_sens <- convert_61_to_05(data_raw$CSM_QA2_5)
-data$qol_aime_perso <- convert_61_to_05(data_raw$CSM_QA2_6)
-data$qol_responsab <- convert_61_to_05(data_raw$CSM_QA2_7)
-data$qol_relations <- convert_61_to_05(data_raw$CSM_QA2_8)
-data$ol_exp_grandirq <- convert_61_to_05(data_raw$CSM_QA2_9)
-data$qol_exprimer <- convert_61_to_05(data_raw$CSM_QA2_10)
-data$qol_vie_but <- convert_61_to_05(data_raw$CSM_QA2_11)
-
-## Compute target
-### Compute scores
-data <- compute_scores(data)
-
-### Compute binary indicators
-data <- compute_indicators(data)
-
-## Attention checks
-data <- filter_attention_checks(data, 2)
-
-## Save data
-write.csv(data, file = "_SharedFolder_datagotchi-santé/data/ml/attributes.csv")
-
-
+# =============================================================================
+# FUNCTION DEFINITIONS  (must come FIRST)
+# =============================================================================
 
 # Convert to ESSAIM scales -----------------------------------------------------
 ## Scales where values are between 1 (= Never) to 6 (=Always) convert to values between 0 (=Never) to 5 (=Always)
@@ -127,3 +93,52 @@ filter_attention_checks <- function(data, attention_check_nb){
   
   return(data)
 }
+
+
+# Main -------------------------------------------------------------------------
+# =============================================================================
+# SETUP: Define file paths
+# =============================================================================
+
+# Base folder for data (modify only this if needed)
+BASE_PATH <- "_SharedFolder_datagotchi-santé/data"
+
+# Input and output files
+RAW_DATA_PATH <- file.path(BASE_PATH, "raw", "data_raw.sav")
+OUTPUT_DATA_PATH <- file.path(BASE_PATH, "ml", "attributes.csv")
+
+## Load raw data here
+data_raw <- haven::read_sav(RAW_DATA_PATH)  %>% 
+  filter(code == "complete")
+cat("N_total (before attention checks):", nrow(data_raw), "\n")
+data <- data_raw
+
+## Convert to ESSAIM scales
+data$qol_heureux <- convert_16_to_05(data_raw$CSM_QA1_1)
+data$qol_interet <- convert_16_to_05(data_raw$CSM_QA1_2)
+data$qol_satisfa <- convert_16_to_05(data_raw$CSM_QA1_3)
+data$qol_soc_apport <- convert_61_to_05(data_raw$CSM_QA2_1)
+data$qol_apparten <- convert_61_to_05(data_raw$CSM_QA2_2)
+data$qol_soc_meilleure <- convert_61_to_05(data_raw$CSM_QA2_3)
+data$qol_gens_bons <- convert_61_to_05(data_raw$CSM_QA2_4)
+data$qol_soc_sens <- convert_61_to_05(data_raw$CSM_QA2_5)
+data$qol_aime_perso <- convert_61_to_05(data_raw$CSM_QA2_6)
+data$qol_responsab <- convert_61_to_05(data_raw$CSM_QA2_7)
+data$qol_relations <- convert_61_to_05(data_raw$CSM_QA2_8)
+data$ol_exp_grandirq <- convert_61_to_05(data_raw$CSM_QA2_9)
+data$qol_exprimer <- convert_61_to_05(data_raw$CSM_QA2_10)
+data$qol_vie_but <- convert_61_to_05(data_raw$CSM_QA2_11)
+
+## Compute target
+### Compute scores
+data <- compute_scores(data)
+
+### Compute binary indicators
+data <- compute_indicators(data)
+
+## Attention checks
+data <- filter_attention_checks(data, 2)
+cat("N_final (after attention checks):", nrow(data), "\n")
+
+## Save data
+#write.csv(data, file = OUTPUT_DATA_PATH)
