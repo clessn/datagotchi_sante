@@ -370,12 +370,22 @@ def clean_results():
             (questions["group_id"] == "satisfaction")
             & (~questions["question_id"].isin(manipulation_question_ids))
         ]["question_id"].tolist()
-        # get logs for mediation questions
+        # get logs for manipulation questions
         satisfaction_logs = get_phase_logs(
             user_logs, "satisfaction", satisfaction_questions_ids
         )
         # compute score
         satisfaction_score = get_average_score(satisfaction_logs, answers)
+
+        # get answer on each item of satisfaction
+        for log in satisfaction_logs.itertuples():
+            # Get the answer_id and its corresponding value
+            answer_id = log.answer_id
+            answer_value = answers[answers["answer_id"] == answer_id]["answer_weight"].iloc[
+                0
+            ]
+            results_df.loc[results_df["user_id"] == user_id, log.question_id] = answer_value
+
         # save scores
         results_df.loc[results_df["user_id"] == user_id, "satisfaction_score"] = (
             satisfaction_score
