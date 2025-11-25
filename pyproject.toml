@@ -34,6 +34,8 @@ cryptography = "^43.0.0"
 certbot = "^3.2.0"
 certbot-nginx = "^3.2.0"
 seaborn = "^0.13.2"
+pypandoc = "^1.16.2"
+pandoc = "^2.4"
 
 [tool.poetry.dev-dependencies]
 

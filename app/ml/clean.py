@@ -10,29 +10,169 @@ from app.ml.constants import Constants as C
 load_dotenv()
 
 
+import pandas as pd
+from pathlib import Path
+
+import pandas as pd
+from pathlib import Path
+import pypandoc
+
 def clean_study1_codebook():
-    # Load the CSV
+    # --- Load ---
     df = pd.read_csv(C.CODEBOOK_PATH / "frozen_codebook_october_15.csv")
 
-    # Filter out rows where id = -1
-    df = df[df["id"] != -1]
+    # --- Keep only observable variables ---
+    df = df[df["observability"] != "perceptif"]
+    df = df[df["raw_variable_type"] != "textual"]
 
-    # Keep only the specified columns
+    # --- Remove duplicated ids (in case duplicates exist) ---
+    df = df[df["id"] != -1]
+    df = df.drop_duplicates(subset="raw_variable_name", keep="first")
+    df = df.drop_duplicates(subset="id", keep="first")
+
+    # --- Keep only needed columns (id dropped entirely) ---
     columns_to_keep = [
         "id",
-        "bloc",
         "raw_variable_name",
         "raw_variable_type",
-        "observability",
         "Questions",
         "Choix de réponse ",
     ]
     df = df[columns_to_keep]
+    print(df.shape)
 
-    # Save the cleaned version
+    # --- Save cleaned CSV ---
     df.to_csv("codebook_study1.csv", index=False)
+    print("✅ CSV cleaned and saved → codebook_study1.csv")
 
-    print("✅ codebook_study1.csv has been created successfully.")
+    # --- Generate Markdown ---
+    md_lines = []
+    md_lines.append("# Questionnaire – Study 1\n")
+
+    for i, row in enumerate(df.itertuples(index=False), start=1):
+        md_lines.append(f"## Question {i}")
+
+        md_lines.append(f"**Question id :** `{row.raw_variable_name}`\n")
+        md_lines.append(f"**Type of variable :** {row.raw_variable_type}\n")
+
+        md_lines.append(f"**Question :** {row.Questions}\n")
+
+        answers = row._4  # Choix de réponse
+        if pd.notna(answers) and str(answers).strip():
+            answers = str(answers).strip()
+            if ";" in answers:
+                md_lines.append("**Possible answers :**")
+                for a in [x.strip() for x in answers.split(";") if x.strip()]:
+                    md_lines.append(f"- {a}")
+                md_lines.append("")
+            else:
+                md_lines.append(f"**Possible answers :** {answers}\n")
+
+        md_lines.append("---\n")
+
+    md_content = "\n".join(md_lines)
+    Path("codebook_study1.md").write_text(md_content, encoding="utf-8")
+    print("📄 Markdown created → codebook_study1.md")
+
+    # --- Convert Markdown to PDF ---
+    try:
+        #pypandoc.download_pandoc()  # ensure pandoc is available
+        pypandoc.convert_text(
+            md_content,
+            to="pdf",
+            format="md",
+            outputfile="codebook_study1.pdf",
+            extra_args=["--standalone"],
+        )
+        print("📘 PDF created → codebook_study1.pdf")
+    except Exception as e:
+        print("⚠️ PDF generation failed. Check if pandoc + pdflatex are installed.")
+        print("Error:", e)
+
+def clean_study2_codebook():
+    # --- Load CSVs ---
+    questions = pd.read_csv("codebook_questions.csv")
+    answers = pd.read_csv("codebook_answers.csv")
+    groups = pd.read_csv("questions_matching_study2.csv", delimiter=';')
+
+    # --- Keep only groups present in the matching table ---
+    valid_groups = set(groups["group_id"].unique())
+    questions = questions[questions["group_id"].isin(valid_groups)]
+
+    # --- Merge questions with answers ---
+    merged = questions.merge(
+        answers,
+        on="question_id",
+        how="left",
+        validate="one_to_many"
+    )
+
+    # --- Sort questions inside each group by question_id ---
+    merged = merged.sort_values(["group_id", "question_id"])
+
+    # --- Sort groups according to the given order ---
+    groups = groups.sort_values("order")
+
+    # --- Build Markdown ---
+    md_lines = []
+    md_lines.append("# Questionnaire – Study 2\n")
+
+    for _, group in groups.iterrows():
+        gid = group["group_id"]
+        label = group["group_label"]
+
+        md_lines.append(f"## {label}\n")
+
+        group_q = merged[merged["group_id"] == gid]
+
+        # List unique questions inside the group
+        for qid, qdf in group_q.groupby("question_id"):
+            question_text = qdf["question_content"].iloc[0]
+            form_id = qdf["form_id"].iloc[0]
+            pilote_id = qdf["pilote_id"].iloc[0] if "pilote_id" in qdf.columns else None
+
+            md_lines.append(f"### Question `{qid}`\n")
+            md_lines.append(f"**Form ID:** `{form_id}`")
+            if pd.notna(pilote_id):
+                md_lines.append(f"**Pilote ID:** `{pilote_id}`")
+
+            md_lines.append(f"\n**Question :** {question_text}\n")
+
+            # Answers
+            answers_list = (
+                qdf["answer_content"]
+                .dropna()
+                .unique()
+                .tolist()
+            )
+
+            if answers_list:
+                md_lines.append("**Possible answers :**")
+                for a in answers_list:
+                    md_lines.append(f"- {a}")
+                md_lines.append("")
+
+            md_lines.append("---\n")
+
+    md_content = "\n".join(md_lines)
+
+    # --- Save Markdown ---
+    Path("codebook_study2.md").write_text(md_content, encoding="utf-8")
+    print("📄 Markdown created → codebook_study2.md")
+
+    # --- Convert to PDF ---
+    try:
+        pypandoc.convert_text(
+            md_content,
+            to="pdf",
+            format="md",
+            outputfile="codebook_study2.pdf",
+            extra_args=["--standalone"],
+        )
+        print("📘 PDF created → codebook_study2.pdf")
+    except Exception as e:
+        print("⚠️ PDF generation failed. Check if pandoc + pdflatex are installed.")
+        print("Error:", e)
 
 
 def clean_merge_features():

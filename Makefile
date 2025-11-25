@@ -13,6 +13,9 @@ clean-python:
 clean-study1-codebook:
 	poetry run python -c "from app.ml.clean import clean_study1_codebook; clean_study1_codebook()"
 
+clean-study2-codebook:
+	poetry run python -c "from app.ml.clean import clean_study2_codebook; clean_study2_codebook()"
+
 clean-merge-features: 
 	poetry run python -c "from app.ml.clean import clean_merge_features; clean_merge_features()"
 
