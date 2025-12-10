@@ -131,7 +131,7 @@ def print_vif():
     bins = np.arange(vmin, vmax + bin_width, bin_width)
 
     plt.figure(figsize=(8, 5))
-    plt.hist(vifs, bins=bins, edgecolor="black", alpha=0.7)
+    plt.hist(vifs, bins=bins, edgecolor="black", alpha=0.7, color="#31b5b7")
     plt.title("Distribution of VIF Values")
     plt.xlabel("VIF")
     plt.ylabel("Frequency")
