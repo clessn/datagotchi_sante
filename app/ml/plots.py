@@ -68,7 +68,7 @@ def print_vif():
     - Keeps only features with feature_selected == 1
     - Handles NaNs by imputing column means
     - Computes and prints the VIF for each selected feature
-    - Plots the VIF distribution
+    - Plots the VIF distribution with fixed bin width 0.01
     """
 
     # --- Load the data ---
@@ -116,9 +116,22 @@ def print_vif():
     print("\n=== Variance Inflation Factor (VIF) ===")
     print(vif_data.to_string(index=False))
 
-    # --- Plot distribution ---
+    # --- Plot distribution with fixed bin width 0.01 ---
+    vifs = vif_data["VIF"].values
+    bin_width = 0.01
+
+    # On part au minimum de 1.0 (théorique pour le VIF) ou du min observé si > 1
+    vmin = max(1.0, vifs.min())
+    vmax = vifs.max()
+
+    # Si tous les VIF sont égaux, on force un petit intervalle
+    if vmax == vmin:
+        vmax = vmin + bin_width
+
+    bins = np.arange(vmin, vmax + bin_width, bin_width)
+
     plt.figure(figsize=(8, 5))
-    plt.hist(vif_data["VIF"], bins=20, edgecolor="black", alpha=0.7)
+    plt.hist(vifs, bins=bins, edgecolor="black", alpha=0.7)
     plt.title("Distribution of VIF Values")
     plt.xlabel("VIF")
     plt.ylabel("Frequency")
