@@ -120,11 +120,11 @@ def print_vif():
     vifs = vif_data["VIF"].values
     bin_width = 0.01
 
-    # On part au minimum de 1.0 (théorique pour le VIF) ou du min observé si > 1
+    # Start at max(1.0, min observed VIF), since VIF is theoretically >= 1
     vmin = max(1.0, vifs.min())
     vmax = vifs.max()
 
-    # Si tous les VIF sont égaux, on force un petit intervalle
+    # If all VIFs are equal, force a small range so that the histogram still displays
     if vmax == vmin:
         vmax = vmin + bin_width
 
